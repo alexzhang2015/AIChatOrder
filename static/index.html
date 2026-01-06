@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 点单意图识别系统 - 技术演示</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.active { background: #22c55e; }
+        .status-dot.inactive { background: #ef4444; }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-top: 15px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-section textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        .input-section textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .method-selector {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .method-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .method-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .method-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .quick-examples {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .example-chip {
+            padding: 6px 12px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-chip:hover {
+            background: #e2e8f0;
+        }
+
+        .result-section {
+            min-height: 400px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .intent-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .confidence-bar {
+            margin-top: 16px;
+        }
+
+        .confidence-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .confidence-track {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .slots-section {
+            margin-top: 20px;
+        }
+
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .slot-item {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .slot-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .slot-value {
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .reasoning-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: #fffbeb;
+            border-radius: 8px;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .reasoning-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #92400e;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .prompt-display {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+
+        .compare-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            border: 2px solid var(--border);
+        }
+
+        .compare-card.best {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .method-name {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .method-tag {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            background: var(--success);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .retrieved-examples {
+            margin-top: 16px;
+        }
+
+        .example-item {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .example-text {
+            font-weight: 500;
+        }
+
+        .example-meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .similarity-score {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .architecture-section {
+            margin-top: 30px;
+        }
+
+        .arch-diagram {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .arch-box {
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            min-width: 140px;
+        }
+
+        .arch-box.input { background: #dbeafe; color: #1e40af; }
+        .arch-box.process { background: #fef3c7; color: #92400e; }
+        .arch-box.llm { background: #dcfce7; color: #166534; }
+        .arch-box.output { background: #f3e8ff; color: #7c3aed; }
+
+        .arch-arrow {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+
+        .slot-labels {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .slot-label-item {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .json-display {
+            background: #1e293b;
+            color: #a5f3fc;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .json-key { color: #93c5fd; }
+        .json-string { color: #86efac; }
+        .json-number { color: #fcd34d; }
+        .json-boolean { color: #f472b6; }
+
+        footer {
+            margin-top: 40px;
+            padding: 24px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>AI 点单意图识别系统</h1>
+            <p>基于大语言模型的智能咖啡店点单意图识别技术演示</p>
+            <a href="/chat" class="nav-btn">💬 体验多轮对话点单</a>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-dot" id="openai-status"></span>
+                    <span id="openai-text">检测中...</span>
+                </div>
+                <div class="status-item">
+                    <span id="model-text">模型: -</span>
+                </div>
+                <div class="status-item">
+                    <span id="examples-text">训练样本: -</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            <!-- 输入区域 -->
+            <div class="card input-section">
+                <div class="card-title">
+                    <span>用户输入</span>
+                </div>
+                <textarea id="user-input" placeholder="请输入点单相关的话语，例如：我要一杯大杯冰美式"></textarea>
+
+                <div class="method-selector">
+                    <button class="method-btn active" data-method="zero_shot">零样本 (Zero-shot)</button>
+                    <button class="method-btn" data-method="few_shot">少样本 (Few-shot)</button>
+                    <button class="method-btn" data-method="rag_enhanced">RAG 增强</button>
+                    <button class="method-btn" data-method="function_calling">Function Calling</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="classify-btn">识别意图</button>
+                    <button class="btn btn-secondary" id="compare-btn">对比所有方法</button>
+                </div>
+
+                <div class="quick-examples">
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">快速测试:</span>
+                    <span class="example-chip" data-text="我要一杯大杯冰美式">点单</span>
+                    <span class="example-chip" data-text="换成燕麦奶">修改</span>
+                    <span class="example-chip" data-text="有什么推荐的">推荐</span>
+                    <span class="example-chip" data-text="拿铁多少钱">咨询</span>
+                    <span class="example-chip" data-text="取消订单">取消</span>
+                    <span class="example-chip" data-text="订单到哪了">查询</span>
+                    <span class="example-chip" data-text="可以用积分吗">支付</span>
+                </div>
+            </div>
+
+            <!-- 结果区域 -->
+            <div class="card result-section">
+                <div class="tabs">
+                    <div class="tab active" data-tab="result">识别结果</div>
+                    <div class="tab" data-tab="prompt">Prompt 详情</div>
+                    <div class="tab" data-tab="compare">方法对比</div>
+                </div>
+
+                <div id="result-tab" class="tab-content active">
+                    <div id="result-content" class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <p>输入文本并点击"识别意图"查看结果</p>
+                    </div>
+                </div>
+
+                <div id="prompt-tab" class="tab-content">
+                    <div id="prompt-content" class="empty-state">
+                        <p>执行识别后查看完整 Prompt</p>
+                    </div>
+                </div>
+
+                <div id="compare-tab" class="tab-content">
+                    <div id="compare-content" class="empty-state">
+                        <p>点击"对比所有方法"查看各方法结果对比</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 架构说明 -->
+        <div class="architecture-section">
+            <div class="card">
+                <div class="card-title">系统架构</div>
+                <div class="arch-diagram">
+                    <div class="arch-flow">
+                        <div class="arch-box input">用户输入<br><small>"我要一杯拿铁"</small></div>
+                        <span class="arch-arrow">→</span>
+                        <div class="arch-box process">Prompt 构建<br><small>选择分类方法</small></div>
+                        <span class="arch-arrow">→</span>
+                        <div class="arch-box llm">LLM 推理<br><small>OpenAI GPT-4o</small></div>
+                        <span class="arch-arrow">→</span>
+                        <div class="arch-box output">结构化输出<br><small>意图 + 槽位</small></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <h4 style="margin-bottom: 12px;">支持的意图类型</h4>
+                    <div class="slot-labels" id="intent-labels"></div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <h4 style="margin-bottom: 12px;">槽位 (Slots) 定义</h4>
+                    <div class="slot-grid">
+                        <div class="slot-item">
+                            <div class="slot-label">product_name</div>
+                            <div class="slot-value">饮品名称</div>
+                        </div>
+                        <div class="slot-item">
+                            <div class="slot-label">size</div>
+                            <div class="slot-value">中杯/大杯/超大杯</div>
+                        </div>
+                        <div class="slot-item">
+                            <div class="slot-label">temperature</div>
+                            <div class="slot-value">热/冰/温/少冰...</div>
+                        </div>
+                        <div class="slot-item">
+                            <div class="slot-label">sweetness</div>
+                            <div class="slot-value">全糖/半糖/无糖...</div>
+                        </div>
+                        <div class="slot-item">
+                            <div class="slot-label">milk_type</div>
+                            <div class="slot-value">燕麦奶/椰奶/豆奶...</div>
+                        </div>
+                        <div class="slot-item">
+                            <div class="slot-label">extras</div>
+                            <div class="slot-value">浓缩/糖浆/奶油...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>AI 点单意图识别系统 - 技术演示 | 基于 FastAPI + OpenAI</p>
+    </footer>
+
+    <script>
+        // 状态
+        let currentMethod = 'zero_shot';
+        let intentTypes = {};
+        let lastResult = null;
+
+        // 初始化
+        async function init() {
+            try {
+                const response = await fetch('/api/status');
+                const status = await response.json();
+
+                // 更新状态栏
+                const openaiStatus = document.getElementById('openai-status');
+                const openaiText = document.getElementById('openai-text');
+                if (status.openai_available) {
+                    openaiStatus.classList.add('active');
+                    openaiText.textContent = 'OpenAI 已连接';
+                } else {
+                    openaiStatus.classList.add('inactive');
+                    openaiText.textContent = 'OpenAI 未连接 (规则引擎模式)';
+                }
+
+                document.getElementById('model-text').textContent = `模型: ${status.model}`;
+                document.getElementById('examples-text').textContent = `训练样本: ${status.example_count}`;
+
+                intentTypes = status.intent_types;
+                renderIntentLabels();
+            } catch (e) {
+                console.error('初始化失败:', e);
+            }
+        }
+
+        function renderIntentLabels() {
+            const container = document.getElementById('intent-labels');
+            container.innerHTML = Object.entries(intentTypes).map(([key, info]) => `
+                <span class="slot-label-item" style="background: ${info.color}20; color: ${info.color}; border: 1px solid ${info.color}40;">
+                    ${info.icon} ${info.name}
+                </span>
+            `).join('');
+        }
+
+        // 方法选择器
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMethod = btn.dataset.method;
+            });
+        });
+
+        // Tab 切换
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
+        // 快速示例
+        document.querySelectorAll('.example-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.getElementById('user-input').value = chip.dataset.text;
+            });
+        });
+
+        // 识别意图
+        document.getElementById('classify-btn').addEventListener('click', async () => {
+            const text = document.getElementById('user-input').value.trim();
+            if (!text) {
+                alert('请输入文本');
+                return;
+            }
+
+            const btn = document.getElementById('classify-btn');
+            btn.disabled = true;
+            btn.textContent = '识别中...';
+
+            document.getElementById('result-content').innerHTML = `
+                <div class="loading"><div class="spinner"></div></div>
+            `;
+
+            try {
+                const response = await fetch('/api/classify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, method: currentMethod })
+                });
+
+                const result = await response.json();
+                lastResult = result;
+                renderResult(result);
+                renderPrompt(result);
+
+                // 切换到结果 tab
+                document.querySelector('.tab[data-tab="result"]').click();
+            } catch (e) {
+                document.getElementById('result-content').innerHTML = `
+                    <div class="empty-state">
+                        <p style="color: var(--danger);">请求失败: ${e.message}</p>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '识别意图';
+            }
+        });
+
+        // 对比所有方法
+        document.getElementById('compare-btn').addEventListener('click', async () => {
+            const text = document.getElementById('user-input').value.trim();
+            if (!text) {
+                alert('请输入文本');
+                return;
+            }
+
+            const btn = document.getElementById('compare-btn');
+            btn.disabled = true;
+            btn.textContent = '对比中...';
+
+            document.getElementById('compare-content').innerHTML = `
+                <div class="loading"><div class="spinner"></div></div>
+            `;
+
+            try {
+                const response = await fetch('/api/compare', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+
+                const result = await response.json();
+                renderCompare(result);
+
+                // 切换到对比 tab
+                document.querySelector('.tab[data-tab="compare"]').click();
+            } catch (e) {
+                document.getElementById('compare-content').innerHTML = `
+                    <div class="empty-state">
+                        <p style="color: var(--danger);">请求失败: ${e.message}</p>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '对比所有方法';
+            }
+        });
+
+        function renderResult(result) {
+            const intentInfo = result.intent_info || intentTypes[result.intent] || { name: result.intent, color: '#9E9E9E', icon: '?' };
+            const confidence = (result.confidence * 100).toFixed(1);
+
+            let slotsHtml = '';
+            const slots = result.slots || {};
+            if (Object.keys(slots).length > 0) {
+                slotsHtml = `
+                    <div class="slots-section">
+                        <h4 style="margin-bottom: 12px;">提取的槽位</h4>
+                        <div class="slot-grid">
+                            ${Object.entries(slots).map(([key, value]) => `
+                                <div class="slot-item">
+                                    <div class="slot-label">${key}</div>
+                                    <div class="slot-value">${Array.isArray(value) ? value.join(', ') : value}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            let retrievedHtml = '';
+            if (result.retrieved_examples) {
+                retrievedHtml = `
+                    <div class="retrieved-examples">
+                        <h4 style="margin-bottom: 12px;">检索到的相似案例 (RAG)</h4>
+                        ${result.retrieved_examples.map(ex => `
+                            <div class="example-item">
+                                <div class="example-text">"${ex.text}"</div>
+                                <div class="example-meta">
+                                    <span>意图: ${ex.intent}</span>
+                                    <span class="similarity-score">相似度: ${(ex.similarity * 100).toFixed(1)}%</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            let clarificationHtml = '';
+            if (result.requires_clarification && result.clarification_question) {
+                clarificationHtml = `
+                    <div class="reasoning-section" style="background: #fef2f2; border-left-color: #ef4444;">
+                        <div class="reasoning-title" style="color: #dc2626;">需要澄清</div>
+                        <p>${result.clarification_question}</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('result-content').innerHTML = `
+                <div class="result-header">
+                    <div>
+                        <div class="intent-badge" style="background: ${intentInfo.color}">
+                            <span>${intentInfo.icon}</span>
+                            <span>${intentInfo.name}</span>
+                        </div>
+                        <div style="margin-top: 8px; color: var(--text-secondary); font-size: 0.9rem;">
+                            ${intentInfo.desc}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">分类方法</div>
+                        <div style="font-weight: 600;">${getMethodName(result.method)}</div>
+                    </div>
+                </div>
+
+                <div class="confidence-bar">
+                    <div class="confidence-label">
+                        <span>置信度</span>
+                        <span style="font-weight: 600;">${confidence}%</span>
+                    </div>
+                    <div class="confidence-track">
+                        <div class="confidence-fill" style="width: ${confidence}%; background: ${getConfidenceColor(result.confidence)}"></div>
+                    </div>
+                </div>
+
+                ${slotsHtml}
+
+                ${retrievedHtml}
+
+                ${clarificationHtml}
+
+                ${result.reasoning ? `
+                    <div class="reasoning-section">
+                        <div class="reasoning-title">推理过程</div>
+                        <p>${result.reasoning}</p>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function renderPrompt(result) {
+            let content = '';
+
+            if (result.prompt) {
+                content += `<h4 style="margin-bottom: 12px;">发送给 LLM 的 Prompt</h4>`;
+                content += `<div class="prompt-display">${escapeHtml(result.prompt)}</div>`;
+            }
+
+            if (result.llm_response) {
+                content += `<h4 style="margin: 20px 0 12px;">LLM 返回结果</h4>`;
+                content += `<div class="json-display">${formatJson(result.llm_response)}</div>`;
+            }
+
+            if (result.function_schema) {
+                content += `<h4 style="margin: 20px 0 12px;">Function Schema</h4>`;
+                content += `<div class="json-display">${formatJson(JSON.stringify(result.function_schema, null, 2))}</div>`;
+            }
+
+            if (!content) {
+                content = '<div class="empty-state"><p>暂无 Prompt 信息</p></div>';
+            }
+
+            document.getElementById('prompt-content').innerHTML = content;
+        }
+
+        function renderCompare(result) {
+            const methods = result.methods;
+            let bestMethod = null;
+            let bestConfidence = 0;
+
+            for (const [method, data] of Object.entries(methods)) {
+                if (data.confidence > bestConfidence) {
+                    bestConfidence = data.confidence;
+                    bestMethod = method;
+                }
+            }
+
+            document.getElementById('compare-content').innerHTML = `
+                <div style="margin-bottom: 16px;">
+                    <strong>输入:</strong> "${result.input_text}"
+                </div>
+                <div class="compare-grid">
+                    ${Object.entries(methods).map(([method, data]) => {
+                        const intentInfo = data.intent_info || intentTypes[data.intent] || { name: data.intent, color: '#9E9E9E', icon: '?' };
+                        const isBest = method === bestMethod;
+                        return `
+                            <div class="compare-card ${isBest ? 'best' : ''}">
+                                <div class="method-name">
+                                    ${getMethodName(method)}
+                                    ${isBest ? '<span class="method-tag">最高置信度</span>' : ''}
+                                </div>
+                                <div class="intent-badge" style="background: ${intentInfo.color}; font-size: 0.9rem; padding: 8px 12px;">
+                                    ${intentInfo.icon} ${intentInfo.name}
+                                </div>
+                                <div class="confidence-bar" style="margin-top: 12px;">
+                                    <div class="confidence-label">
+                                        <span>置信度</span>
+                                        <span>${(data.confidence * 100).toFixed(1)}%</span>
+                                    </div>
+                                    <div class="confidence-track">
+                                        <div class="confidence-fill" style="width: ${data.confidence * 100}%; background: ${getConfidenceColor(data.confidence)}"></div>
+                                    </div>
+                                </div>
+                                ${Object.keys(data.slots || {}).length > 0 ? `
+                                    <div style="margin-top: 12px; font-size: 0.85rem;">
+                                        <strong>槽位:</strong> ${JSON.stringify(data.slots)}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function getMethodName(method) {
+            const names = {
+                'zero_shot': '零样本 (Zero-shot)',
+                'few_shot': '少样本 (Few-shot)',
+                'rag_enhanced': 'RAG 增强',
+                'function_calling': 'Function Calling'
+            };
+            return names[method] || method;
+        }
+
+        function getConfidenceColor(confidence) {
+            if (confidence >= 0.9) return '#22c55e';
+            if (confidence >= 0.7) return '#84cc16';
+            if (confidence >= 0.5) return '#f59e0b';
+            return '#ef4444';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatJson(jsonStr) {
+            try {
+                const obj = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
+                return escapeHtml(JSON.stringify(obj, null, 2))
+                    .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
+                    .replace(/: "([^"]*)"/g, ': <span class="json-string">"$1"</span>')
+                    .replace(/: (\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
+                    .replace(/: (true|false)/g, ': <span class="json-boolean">$1</span>');
+            } catch {
+                return escapeHtml(jsonStr);
+            }
+        }
+
+        // 初始化
+        init();
+    </script>
+</body>
+</html>

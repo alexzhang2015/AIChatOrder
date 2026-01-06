@@ -1,0 +1,625 @@
+# Skills 定义配置文件
+# AI点单意图识别系统 - 可配置执行层
+# 版本: 1.0.0
+#
+# Skill 规范说明:
+# ================
+# 每个 Skill 定义了一个可执行的能力单元，包含:
+# - name: 技能显示名称
+# - description: 技能描述
+# - category: 技能分类
+# - triggers: 触发条件（关键词/意图）
+# - parameters: 输入参数定义
+# - returns: 返回值定义
+# - handler: 处理器标识
+# - examples: 使用示例
+# - test_cases: 测试用例
+
+version: "1.0.0"
+description: "AI点单系统技能定义"
+
+# ==================== 技能分类 ====================
+categories:
+  order:
+    name: "订单管理"
+    description: "订单相关操作"
+    icon: "shopping-cart"
+
+  inventory:
+    name: "库存管理"
+    description: "库存查询和管理"
+    icon: "warehouse"
+
+  payment:
+    name: "支付相关"
+    description: "支付和优惠"
+    icon: "credit-card"
+
+  recommendation:
+    name: "推荐系统"
+    description: "智能推荐"
+    icon: "star"
+
+  customer:
+    name: "客户服务"
+    description: "客户信息和服务"
+    icon: "user"
+
+
+# ==================== 技能定义 ====================
+skills:
+
+  # ---------- 库存查询技能 ----------
+  check_inventory:
+    name: "库存查询"
+    description: "查询指定商品的库存状态和可用数量"
+    category: "inventory"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "有没有"
+        - "还有吗"
+        - "卖完了吗"
+        - "有货吗"
+        - "能做吗"
+      intents:
+        - "PRODUCT_INFO"
+
+    parameters:
+      product_name:
+        type: string
+        description: "要查询的商品名称"
+        required: true
+      size:
+        type: string
+        description: "杯型"
+        required: false
+        default: null
+
+    returns:
+      type: object
+      properties:
+        available:
+          type: boolean
+          description: "是否有货"
+        quantity:
+          type: integer
+          description: "剩余数量"
+        estimated_time:
+          type: string
+          description: "预计补货时间(如缺货)"
+
+    handler: "inventory.check_stock"
+
+    examples:
+      - input: "拿铁还有吗"
+        output:
+          available: true
+          quantity: 50
+          message: "拿铁库存充足，随时可以为您制作！"
+
+    test_cases:
+      - name: "测试有库存商品"
+        input:
+          product_name: "拿铁"
+        expected:
+          available: true
+        validate: "result['available'] == True"
+
+      - name: "测试缺货商品"
+        input:
+          product_name: "季节限定款"
+        expected:
+          available: false
+
+
+  # ---------- 优惠券应用技能 ----------
+  apply_coupon:
+    name: "应用优惠券"
+    description: "验证并应用优惠券到当前订单"
+    category: "payment"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "优惠券"
+        - "折扣码"
+        - "优惠码"
+        - "兑换码"
+      intents:
+        - "PAYMENT"
+
+    parameters:
+      coupon_code:
+        type: string
+        description: "优惠券码"
+        required: true
+        validation:
+          pattern: "^[A-Z0-9]{6,12}$"
+          message: "优惠券码格式不正确"
+      order_total:
+        type: number
+        description: "订单金额"
+        required: true
+
+    returns:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: "是否有效"
+        discount_type:
+          type: string
+          enum: ["percentage", "fixed", "free_item"]
+          description: "折扣类型"
+        discount_value:
+          type: number
+          description: "折扣值"
+        final_price:
+          type: number
+          description: "折后价格"
+        message:
+          type: string
+          description: "提示信息"
+
+    handler: "payment.apply_coupon"
+
+    examples:
+      - input: "我有优惠券 COFFEE20"
+        output:
+          valid: true
+          discount_type: "percentage"
+          discount_value: 20
+          message: "优惠券已应用，享受8折优惠！"
+
+    test_cases:
+      - name: "测试有效优惠券"
+        input:
+          coupon_code: "WELCOME10"
+          order_total: 50
+        expected:
+          valid: true
+          discount_type: "percentage"
+
+      - name: "测试无效优惠券"
+        input:
+          coupon_code: "INVALID"
+          order_total: 50
+        expected:
+          valid: false
+
+
+  # ---------- 会员积分查询技能 ----------
+  check_points:
+    name: "积分查询"
+    description: "查询会员积分余额和可用权益"
+    category: "customer"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "积分"
+        - "会员"
+        - "星星"
+        - "等级"
+      intents:
+        - "PAYMENT"
+        - "ORDER_QUERY"
+
+    parameters:
+      member_id:
+        type: string
+        description: "会员ID"
+        required: false
+      phone:
+        type: string
+        description: "手机号"
+        required: false
+
+    returns:
+      type: object
+      properties:
+        points:
+          type: integer
+          description: "当前积分"
+        level:
+          type: string
+          description: "会员等级"
+        available_rewards:
+          type: array
+          description: "可兑换奖励"
+
+    handler: "customer.check_points"
+
+    examples:
+      - input: "我有多少积分"
+        output:
+          points: 350
+          level: "金星会员"
+          message: "您当前有350积分，可兑换一杯中杯饮品！"
+
+    test_cases:
+      - name: "测试积分查询"
+        input:
+          member_id: "M001"
+        expected:
+          points: 350
+          level: "金星会员"
+
+
+  # ---------- 智能推荐技能 ----------
+  smart_recommend:
+    name: "智能推荐"
+    description: "基于用户偏好和上下文进行个性化推荐"
+    category: "recommendation"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "推荐"
+        - "建议"
+        - "什么好"
+        - "适合"
+        - "喝什么"
+      intents:
+        - "RECOMMEND"
+
+    parameters:
+      preference:
+        type: string
+        description: "用户偏好描述"
+        required: false
+        examples:
+          - "不太甜"
+          - "提神"
+          - "适合减肥"
+      weather:
+        type: string
+        description: "天气情况"
+        required: false
+        enum: ["hot", "cold", "rainy", "normal"]
+      time_of_day:
+        type: string
+        description: "时间段"
+        required: false
+        enum: ["morning", "afternoon", "evening"]
+      history:
+        type: array
+        description: "历史订单"
+        required: false
+
+    returns:
+      type: object
+      properties:
+        recommendations:
+          type: array
+          items:
+            type: object
+            properties:
+              product_name:
+                type: string
+              reason:
+                type: string
+              match_score:
+                type: number
+        top_pick:
+          type: string
+          description: "首选推荐"
+
+    handler: "recommendation.smart_recommend"
+
+    examples:
+      - input: "天气很热，推荐点什么"
+        output:
+          recommendations:
+            - product_name: "冰美式"
+              reason: "清爽提神，适合炎热天气"
+              match_score: 0.95
+          top_pick: "冰美式"
+
+    test_cases:
+      - name: "测试热天推荐"
+        input:
+          weather: "hot"
+        expected:
+          top_pick: "冰美式"
+
+      - name: "测试减肥推荐"
+        input:
+          preference: "适合减肥"
+        expected:
+          top_pick: "美式咖啡"
+
+
+  # ---------- 订单预估时间技能 ----------
+  estimate_time:
+    name: "预估时间"
+    description: "预估订单制作和取餐时间"
+    category: "order"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "多久"
+        - "等多长时间"
+        - "什么时候好"
+        - "几分钟"
+      intents:
+        - "ORDER_QUERY"
+
+    parameters:
+      order_items:
+        type: array
+        description: "订单商品列表"
+        required: true
+      store_id:
+        type: string
+        description: "门店ID"
+        required: false
+
+    returns:
+      type: object
+      properties:
+        estimated_minutes:
+          type: integer
+          description: "预计分钟数"
+        queue_position:
+          type: integer
+          description: "排队位置"
+        message:
+          type: string
+          description: "友好提示"
+
+    handler: "order.estimate_time"
+
+    examples:
+      - input: "我的订单要等多久"
+        output:
+          estimated_minutes: 5
+          queue_position: 3
+          message: "预计5分钟后可取，您前面还有3位顾客"
+
+    test_cases:
+      - name: "测试单品预估"
+        input:
+          order_items: ["拿铁"]
+        expected:
+          estimated_minutes: 3
+
+      - name: "测试多品预估"
+        input:
+          order_items: ["拿铁", "美式咖啡", "星冰乐"]
+        expected:
+          estimated_minutes: 6
+
+
+  # ---------- 营养信息查询技能 ----------
+  nutrition_info:
+    name: "营养查询"
+    description: "查询商品的营养成分信息"
+    category: "inventory"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "卡路里"
+        - "热量"
+        - "营养"
+        - "成分"
+        - "咖啡因"
+        - "糖分"
+      intents:
+        - "PRODUCT_INFO"
+
+    parameters:
+      product_name:
+        type: string
+        description: "商品名称"
+        required: true
+      size:
+        type: string
+        description: "杯型"
+        required: false
+        default: "中杯"
+      milk_type:
+        type: string
+        description: "奶类"
+        required: false
+        default: "全脂奶"
+
+    returns:
+      type: object
+      properties:
+        calories:
+          type: integer
+          description: "卡路里"
+        caffeine:
+          type: integer
+          description: "咖啡因(mg)"
+        sugar:
+          type: integer
+          description: "糖分(g)"
+        protein:
+          type: integer
+          description: "蛋白质(g)"
+        fat:
+          type: integer
+          description: "脂肪(g)"
+
+    handler: "inventory.nutrition_info"
+
+    examples:
+      - input: "拿铁有多少卡路里"
+        output:
+          calories: 190
+          caffeine: 150
+          sugar: 18
+          message: "中杯拿铁约190大卡，含150mg咖啡因"
+
+    test_cases:
+      - name: "测试拿铁营养"
+        input:
+          product_name: "拿铁"
+          size: "中杯"
+        expected:
+          calories: 190
+
+      - name: "测试燕麦奶版本"
+        input:
+          product_name: "拿铁"
+          milk_type: "燕麦奶"
+        expected:
+          calories: 170
+
+
+  # ---------- 门店信息查询技能 ----------
+  store_info:
+    name: "门店查询"
+    description: "查询门店营业信息和位置"
+    category: "customer"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "门店"
+        - "营业时间"
+        - "地址"
+        - "几点关门"
+        - "最近的店"
+      intents:
+        - "PRODUCT_INFO"
+        - "CHITCHAT"
+
+    parameters:
+      store_id:
+        type: string
+        description: "门店ID"
+        required: false
+      location:
+        type: object
+        description: "用户位置"
+        required: false
+        properties:
+          lat:
+            type: number
+          lng:
+            type: number
+
+    returns:
+      type: object
+      properties:
+        store_name:
+          type: string
+        address:
+          type: string
+        hours:
+          type: string
+        phone:
+          type: string
+        distance:
+          type: string
+
+    handler: "customer.store_info"
+
+    examples:
+      - input: "你们几点关门"
+        output:
+          hours: "07:00-22:00"
+          message: "本店营业时间 07:00-22:00，欢迎光临！"
+
+    test_cases:
+      - name: "测试营业时间查询"
+        input:
+          store_id: "SH001"
+        expected:
+          hours: "07:00-22:00"
+
+
+  # ---------- 订单修改技能 ----------
+  modify_order:
+    name: "修改订单"
+    description: "修改已下单但未制作的订单"
+    category: "order"
+    enabled: true
+
+    triggers:
+      keywords:
+        - "修改"
+        - "改一下"
+        - "换成"
+        - "不要"
+      intents:
+        - "ORDER_MODIFY"
+        - "CUSTOMIZE"
+
+    parameters:
+      order_id:
+        type: string
+        description: "订单号"
+        required: true
+      modifications:
+        type: object
+        description: "修改内容"
+        required: true
+        properties:
+          size:
+            type: string
+          temperature:
+            type: string
+          sweetness:
+            type: string
+          milk_type:
+            type: string
+          extras:
+            type: array
+
+    returns:
+      type: object
+      properties:
+        success:
+          type: boolean
+        updated_order:
+          type: object
+        price_diff:
+          type: number
+        message:
+          type: string
+
+    handler: "order.modify_order"
+
+    examples:
+      - input: "把拿铁换成大杯"
+        output:
+          success: true
+          price_diff: 4
+          message: "已修改为大杯，需补差价4元"
+
+    test_cases:
+      - name: "测试升杯修改"
+        input:
+          order_id: "ORD001"
+          modifications:
+            size: "大杯"
+        expected:
+          success: true
+          price_diff: 4
+
+
+# ==================== 全局配置 ====================
+settings:
+  # 默认超时时间（毫秒）
+  default_timeout: 5000
+
+  # 是否启用技能缓存
+  enable_cache: true
+  cache_ttl: 300  # 秒
+
+  # 失败重试次数
+  max_retries: 2
+
+  # 是否记录执行日志
+  enable_logging: true
+
+  # 测试模式
+  test_mode: false

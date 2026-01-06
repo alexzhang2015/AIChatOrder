@@ -1,0 +1,427 @@
+# 槽位定义配置文件
+# AI点单意图识别系统 - 槽位Schema定义
+# 版本: 1.0.0
+
+version: "1.0.0"
+description: "咖啡点单系统槽位定义"
+
+# ==================== 槽位定义 ====================
+slots:
+  # 产品名称
+  product_name:
+    type: string
+    description: "饮品名称，如拿铁、美式咖啡、卡布奇诺等"
+    required: true
+    examples:
+      - "拿铁"
+      - "美式咖啡"
+      - "卡布奇诺"
+    # 产品名称规范化映射
+    normalization:
+      冰美式: "美式咖啡"
+      热美式: "美式咖啡"
+      美式: "美式咖啡"
+      冰拿铁: "拿铁"
+      热拿铁: "拿铁"
+      冰摩卡: "摩卡"
+      热摩卡: "摩卡"
+      澳白: "馥芮白"
+      flat white: "馥芮白"
+      latte: "拿铁"
+      americano: "美式咖啡"
+      cappuccino: "卡布奇诺"
+      mocha: "摩卡"
+
+  # 杯型
+  size:
+    type: enum
+    description: "杯型大小"
+    default: "中杯"
+    values:
+      - value: "中杯"
+        aliases: ["中", "regular", "M", "标准", "小杯"]
+        price_delta: 0
+      - value: "大杯"
+        aliases: ["大", "大的", "large", "L", "格兰德", "grande"]
+        price_delta: 4
+      - value: "超大杯"
+        aliases: ["超大", "特大", "venti", "XL", "最大"]
+        price_delta: 7
+
+  # 温度
+  temperature:
+    type: enum
+    description: "饮品温度"
+    default: "热"
+    values:
+      - value: "热"
+        aliases: ["热的", "烫", "hot", "温热"]
+      - value: "冰"
+        aliases: ["冰的", "冷", "冰冻", "iced", "加冰", "冷的"]
+      - value: "温"
+        aliases: ["温的", "常温", "不烫"]
+      - value: "去冰"
+        aliases: ["不要冰", "无冰", "不加冰"]
+      - value: "少冰"
+        aliases: ["少少冰", "冰少一点"]
+      - value: "多冰"
+        aliases: ["冰多", "多加冰"]
+
+  # 甜度
+  sweetness:
+    type: enum
+    description: "甜度选择"
+    default: "标准"
+    values:
+      - value: "标准"
+        aliases: ["正常", "正常糖", "标准糖"]
+      - value: "全糖"
+        aliases: ["全糖", "正常甜"]
+      - value: "半糖"
+        aliases: ["五分糖", "50%糖"]
+      - value: "三分糖"
+        aliases: ["三成糖", "30%糖", "微糖"]
+      - value: "少糖"
+        aliases: ["糖少", "少甜", "不太甜"]
+      - value: "无糖"
+        aliases: ["不要糖", "不加糖", "零糖", "0糖"]
+
+  # 奶类
+  milk_type:
+    type: enum
+    description: "奶类选择"
+    default: "全脂奶"
+    values:
+      - value: "全脂奶"
+        aliases: ["全脂", "普通奶", "正常奶", "牛奶"]
+        price_delta: 0
+      - value: "脱脂奶"
+        aliases: ["脱脂", "低脂", "脱脂牛奶"]
+        price_delta: 0
+      - value: "燕麦奶"
+        aliases: ["燕麦", "oat", "oat milk", "燕麦奶拿铁"]
+        price_delta: 6
+      - value: "椰奶"
+        aliases: ["椰子奶", "coconut", "椰浆"]
+        price_delta: 6
+      - value: "豆奶"
+        aliases: ["豆浆", "soy", "soy milk"]
+        price_delta: 4
+      - value: "杏仁奶"
+        aliases: ["杏仁", "almond", "almond milk"]
+        price_delta: 6
+
+  # 额外配料
+  extras:
+    type: array
+    description: "额外配料，可多选"
+    items:
+      type: enum
+      values:
+        - value: "浓缩shot"
+          aliases: ["浓缩", "extra shot", "加浓", "加一份浓缩", "多一份浓缩", "espresso"]
+          price_delta: 6
+        - value: "香草糖浆"
+          aliases: ["香草", "vanilla", "vanilla syrup"]
+          price_delta: 4
+        - value: "焦糖糖浆"
+          aliases: ["焦糖", "caramel", "caramel syrup"]
+          price_delta: 4
+        - value: "榛果糖浆"
+          aliases: ["榛果", "hazelnut"]
+          price_delta: 4
+        - value: "奶油"
+          aliases: ["奶油顶", "whipped cream", "cream"]
+          price_delta: 4
+        - value: "巧克力酱"
+          aliases: ["巧克力", "chocolate"]
+          price_delta: 4
+        - value: "珍珠"
+          aliases: ["波霸", "tapioca"]
+          price_delta: 6
+
+  # 数量
+  quantity:
+    type: number
+    description: "饮品数量"
+    default: 1
+    validation:
+      min: 1
+      max: 20
+    # 中文数字映射
+    number_mapping:
+      一: 1
+      二: 2
+      两: 2
+      三: 3
+      四: 4
+      五: 5
+      六: 6
+      七: 7
+      八: 8
+      九: 9
+      十: 10
+
+
+# ==================== 意图定义 ====================
+intents:
+  ORDER_NEW:
+    name: "新建订单"
+    description: "用户想点新饮品"
+    color: "#4CAF50"
+    icon: "cart"
+    examples:
+      - "我要一杯拿铁"
+      - "来杯美式咖啡"
+      - "给我点一杯大杯冰美式"
+      - "两杯卡布奇诺"
+    keywords:
+      - "要"
+      - "来"
+      - "点"
+      - "给我"
+      - "帮我"
+      - "想喝"
+      - "来份"
+      - "来杯"
+
+  ORDER_MODIFY:
+    name: "修改订单"
+    description: "修改已点饮品的配置"
+    color: "#2196F3"
+    icon: "edit"
+    examples:
+      - "换成大杯"
+      - "改成冰的"
+      - "能换燕麦奶吗"
+      - "少冰少糖"
+    keywords:
+      - "换"
+      - "改"
+      - "换成"
+      - "改成"
+      - "不要"
+      - "少"
+      - "多"
+
+  ORDER_CANCEL:
+    name: "取消订单"
+    description: "取消订单"
+    color: "#f44336"
+    icon: "cancel"
+    examples:
+      - "取消订单"
+      - "不要了"
+      - "算了不点了"
+    keywords:
+      - "取消"
+      - "不要了"
+      - "算了"
+      - "不点"
+
+  ORDER_QUERY:
+    name: "查询订单"
+    description: "查询订单状态"
+    color: "#9C27B0"
+    icon: "search"
+    examples:
+      - "我的订单到哪了"
+      - "订单什么时候好"
+      - "查一下订单状态"
+    keywords:
+      - "查"
+      - "到哪"
+      - "多久"
+      - "状态"
+      - "什么时候"
+
+  PRODUCT_INFO:
+    name: "商品咨询"
+    description: "价格、成分、卡路里等信息"
+    color: "#FF9800"
+    icon: "info"
+    examples:
+      - "拿铁多少钱"
+      - "这个有多少卡路里"
+      - "美式咖啡里面有什么"
+    keywords:
+      - "多少钱"
+      - "价格"
+      - "卡路里"
+      - "成分"
+      - "有什么"
+
+  RECOMMEND:
+    name: "推荐请求"
+    description: "请求推荐饮品"
+    color: "#E91E63"
+    icon: "star"
+    examples:
+      - "有什么推荐的"
+      - "什么比较好喝"
+      - "帮我推荐一款不太甜的"
+    keywords:
+      - "推荐"
+      - "好喝"
+      - "建议"
+      - "适合"
+
+  CUSTOMIZE:
+    name: "定制需求"
+    description: "特殊定制需求"
+    color: "#00BCD4"
+    icon: "customize"
+    examples:
+      - "加一份浓缩"
+      - "可以加珍珠吗"
+    keywords:
+      - "加"
+      - "可以"
+      - "能不能"
+
+  PAYMENT:
+    name: "支付相关"
+    description: "支付方式、优惠券、积分等"
+    color: "#8BC34A"
+    icon: "payment"
+    examples:
+      - "可以用微信支付吗"
+      - "有优惠券吗"
+      - "积分可以抵扣吗"
+      - "确认下单"
+      - "结账"
+    keywords:
+      - "支付"
+      - "付款"
+      - "优惠"
+      - "积分"
+      - "微信"
+      - "支付宝"
+      - "确认"
+      - "下单"
+      - "结账"
+      - "买单"
+
+  COMPLAINT:
+    name: "投诉反馈"
+    description: "投诉反馈"
+    color: "#FF5722"
+    icon: "complaint"
+    examples:
+      - "咖啡太苦了"
+      - "做错了我要的是冰的"
+      - "等太久了"
+    keywords:
+      - "投诉"
+      - "错了"
+      - "太久"
+      - "不满意"
+      - "差评"
+
+  CHITCHAT:
+    name: "闲聊"
+    description: "问候、感谢等"
+    color: "#607D8B"
+    icon: "chat"
+    examples:
+      - "今天天气真好"
+      - "你好"
+      - "谢谢"
+    keywords:
+      - "你好"
+      - "谢谢"
+      - "天气"
+      - "再见"
+
+  UNKNOWN:
+    name: "未知意图"
+    description: "无法识别的意图"
+    color: "#9E9E9E"
+    icon: "question"
+    examples: []
+    keywords: []
+
+
+# ==================== 菜单定义 ====================
+menu:
+  products:
+    拿铁:
+      price: 32
+      calories: 190
+      description: "经典意式浓缩咖啡与蒸奶的完美结合"
+      category: "咖啡"
+      available: true
+
+    美式咖啡:
+      price: 28
+      calories: 15
+      description: "浓缩咖啡加水，简单纯粹"
+      category: "咖啡"
+      available: true
+
+    卡布奇诺:
+      price: 32
+      calories: 120
+      description: "浓缩咖啡、蒸奶和奶泡的经典组合"
+      category: "咖啡"
+      available: true
+
+    摩卡:
+      price: 36
+      calories: 290
+      description: "浓缩咖啡、巧克力和蒸奶的完美融合"
+      category: "咖啡"
+      available: true
+
+    星冰乐:
+      price: 38
+      calories: 350
+      description: "冰爽混合饮品，多种口味可选"
+      category: "冰饮"
+      available: true
+
+    馥芮白:
+      price: 34
+      calories: 140
+      description: "澳洲风格，浓缩咖啡与丝滑奶泡"
+      category: "咖啡"
+      available: true
+
+    抹茶拿铁:
+      price: 34
+      calories: 240
+      description: "优质抹茶与蒸奶的清新搭配"
+      category: "茶饮"
+      available: true
+
+    焦糖玛奇朵:
+      price: 35
+      calories: 250
+      description: "香草糖浆、蒸奶、浓缩咖啡和焦糖淋酱"
+      category: "咖啡"
+      available: true
+
+    香草拿铁:
+      price: 34
+      calories: 220
+      description: "香草糖浆与经典拿铁的完美融合"
+      category: "咖啡"
+      available: true
+
+
+# ==================== 配置项 ====================
+settings:
+  # 是否支持热更新
+  hot_reload: true
+
+  # 默认分类方法
+  default_classification_method: "function_calling"
+
+  # 置信度阈值
+  confidence_threshold: 0.7
+
+  # 是否启用模糊匹配
+  fuzzy_matching: true
+
+  # 模糊匹配阈值
+  fuzzy_threshold: 0.8

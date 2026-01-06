@@ -1,0 +1,715 @@
+# 槽位定义配置文件 v2.0
+# AI点单意图识别系统 - 多层级槽位Schema定义
+# Phase 1: 基础能力增强
+# 版本: 2.0.0
+
+version: "2.0.0"
+description: "咖啡点单系统多层级槽位定义 - 支持产品约束和模糊表达"
+
+# ==================== 产品分类定义 ====================
+product_categories:
+  espresso_based:
+    name: "浓缩咖啡系列"
+    description: "以浓缩咖啡为基底的饮品"
+    products: ["拿铁", "美式咖啡", "卡布奇诺", "馥芮白", "焦糖玛奇朵", "香草拿铁"]
+    allowed_customizations:
+      - temperature
+      - size
+      - milk_type
+      - sweetness
+      - espresso_options
+      - extras
+    default_espresso_shots:
+      中杯: 2
+      大杯: 2
+      超大杯: 3
+
+  mocha_based:
+    name: "摩卡系列"
+    description: "巧克力与咖啡的组合"
+    products: ["摩卡"]
+    allowed_customizations:
+      - temperature
+      - size
+      - milk_type
+      - sweetness
+      - espresso_options
+      - extras
+    default_espresso_shots:
+      中杯: 2
+      大杯: 2
+      超大杯: 3
+
+  blended:
+    name: "冰沙/星冰乐系列"
+    description: "冰爽混合饮品"
+    products: ["星冰乐"]
+    allowed_customizations:
+      - size
+      - sweetness
+      - extras
+    # 温度约束：只能冰/冰沙
+    temperature_constraint:
+      only: ["冰", "冰沙"]
+      default: "冰沙"
+    # 不支持换奶
+    milk_type_constraint:
+      forbidden: true
+
+  tea_based:
+    name: "茶饮系列"
+    description: "茶类饮品"
+    products: ["抹茶拿铁"]
+    allowed_customizations:
+      - temperature
+      - size
+      - milk_type
+      - sweetness
+      - extras
+
+# ==================== 产品级别约束规则 ====================
+product_constraints:
+  星冰乐:
+    temperature:
+      only: ["冰", "冰沙"]
+      error_message: "星冰乐只能做冰的哦"
+      auto_correct: "冰沙"
+    milk_type:
+      forbidden: true
+      error_message: "星冰乐不支持换奶类"
+
+  美式咖啡:
+    milk_type:
+      only: ["无奶", "全脂奶"]
+      default: "无奶"
+      warning_message: "美式咖啡通常不加奶，确定要加吗？"
+
+  馥芮白:
+    temperature:
+      only: ["热"]
+      error_message: "馥芮白建议热饮，口感最佳"
+      auto_correct: "热"
+    milk_type:
+      only: ["全脂奶"]
+      error_message: "馥芮白使用特制奶泡，不支持换奶"
+
+# ==================== 槽位定义 ====================
+slots:
+  # 产品名称
+  product_name:
+    type: string
+    description: "饮品名称"
+    required: true
+    examples:
+      - "拿铁"
+      - "美式咖啡"
+      - "星冰乐"
+    normalization:
+      # 标准化映射
+      冰美式: "美式咖啡"
+      热美式: "美式咖啡"
+      美式: "美式咖啡"
+      冰拿铁: "拿铁"
+      热拿铁: "拿铁"
+      冰摩卡: "摩卡"
+      热摩卡: "摩卡"
+      澳白: "馥芮白"
+      flat white: "馥芮白"
+      flatwhite: "馥芮白"
+      latte: "拿铁"
+      americano: "美式咖啡"
+      cappuccino: "卡布奇诺"
+      mocha: "摩卡"
+      frappuccino: "星冰乐"
+      卡布: "卡布奇诺"
+      玛奇朵: "焦糖玛奇朵"
+      抹茶: "抹茶拿铁"
+    # 俚语/网络用语映射
+    colloquial_mappings:
+      续命水: "美式咖啡"
+      续命咖啡: "美式咖啡"
+      续命液: "美式咖啡"
+      肥宅快乐水: "星冰乐"
+      dirty: "馥芮白"
+      澳瑞白: "馥芮白"
+
+  # 杯型
+  size:
+    type: enum
+    description: "杯型大小"
+    default: "中杯"
+    values:
+      - value: "中杯"
+        aliases: ["中", "regular", "M", "标准", "小杯", "tall", "Tall"]
+        price_delta: 0
+      - value: "大杯"
+        aliases: ["大", "大的", "large", "L", "格兰德", "grande", "Grande"]
+        price_delta: 4
+      - value: "超大杯"
+        aliases: ["超大", "特大", "venti", "Venti", "XL", "最大", "特大杯"]
+        price_delta: 7
+
+  # 温度 - 增强版
+  temperature:
+    type: enum
+    description: "饮品温度"
+    default: "热"
+    values:
+      - value: "热"
+        aliases: ["热的", "烫", "hot", "温热", "烫的", "热乎"]
+      - value: "冰"
+        aliases: ["冰的", "冷", "冰冻", "iced", "加冰", "冷的", "凉的"]
+      - value: "温"
+        aliases: ["温的", "常温", "不烫", "温温的", "不要太烫"]
+      - value: "去冰"
+        aliases: ["不要冰", "无冰", "不加冰", "不放冰"]
+      - value: "少冰"
+        aliases: ["少少冰", "冰少一点", "少点冰"]
+      - value: "多冰"
+        aliases: ["冰多", "多加冰", "冰多点", "多点冰"]
+      - value: "冰沙"
+        aliases: ["沙冰", "碎冰", "blended"]
+
+  # 甜度 - 增强版
+  sweetness:
+    type: enum
+    description: "甜度选择"
+    default: "标准"
+    values:
+      - value: "标准"
+        aliases: ["正常", "正常糖", "标准糖", "正常甜度"]
+      - value: "全糖"
+        aliases: ["全甜", "正常甜", "满糖"]
+      - value: "七分糖"
+        aliases: ["七成糖", "70%糖"]
+      - value: "半糖"
+        aliases: ["五分糖", "50%糖", "一半糖"]
+      - value: "三分糖"
+        aliases: ["三成糖", "30%糖", "微糖", "微甜"]
+      - value: "少糖"
+        aliases: ["糖少", "少甜", "不太甜", "少一点糖"]
+      - value: "无糖"
+        aliases: ["不要糖", "不加糖", "零糖", "0糖", "去糖"]
+
+  # 奶类 - 增强版
+  milk_type:
+    type: enum
+    description: "奶类选择"
+    default: "全脂奶"
+    values:
+      - value: "全脂奶"
+        aliases: ["全脂", "普通奶", "正常奶", "牛奶", "鲜奶"]
+        price_delta: 0
+      - value: "脱脂奶"
+        aliases: ["脱脂", "低脂", "脱脂牛奶", "零脂奶"]
+        price_delta: 0
+      - value: "燕麦奶"
+        aliases: ["燕麦", "oat", "oat milk", "燕麦奶拿铁", "oatly"]
+        price_delta: 6
+      - value: "椰奶"
+        aliases: ["椰子奶", "coconut", "椰浆", "椰子"]
+        price_delta: 6
+      - value: "豆奶"
+        aliases: ["豆浆", "soy", "soy milk"]
+        price_delta: 4
+      - value: "杏仁奶"
+        aliases: ["杏仁", "almond", "almond milk"]
+        price_delta: 6
+      - value: "无奶"
+        aliases: ["不要奶", "不加奶", "黑咖啡"]
+        price_delta: 0
+
+  # 浓缩选项 - 新增层级
+  espresso_options:
+    type: object
+    description: "浓缩咖啡定制选项"
+    properties:
+      shots:
+        type: enum
+        description: "浓缩份数"
+        default: "标准"
+        values:
+          - value: "标准"
+            aliases: ["正常", "默认"]
+          - value: "单份"
+            aliases: ["一份", "single", "单shot"]
+          - value: "双份"
+            aliases: ["两份", "double", "加浓", "extra shot", "2份"]
+            price_delta: 6
+          - value: "三份"
+            aliases: ["triple", "超浓", "3份"]
+            price_delta: 12
+      decaf:
+        type: enum
+        description: "咖啡因选项"
+        default: "正常"
+        values:
+          - value: "正常"
+            aliases: ["普通", "含咖啡因"]
+          - value: "半低因"
+            aliases: ["半咖", "half caf", "一半低因"]
+          - value: "低因"
+            aliases: ["低咖啡因", "decaf", "脱咖", "无咖啡因"]
+
+  # 糖浆选项 - 新增层级
+  syrup_options:
+    type: array
+    description: "糖浆定制，可多选"
+    max_items: 3
+    items:
+      type: object
+      properties:
+        syrup_type:
+          type: enum
+          values: ["香草", "焦糖", "榛果", "太妃", "摩卡", "白摩卡"]
+        pumps:
+          type: integer
+          min: 0
+          max: 8
+          default_by_size:
+            中杯: 3
+            大杯: 4
+            超大杯: 5
+
+  # 额外配料
+  extras:
+    type: array
+    description: "额外配料，可多选"
+    items:
+      type: enum
+      values:
+        - value: "浓缩shot"
+          aliases: ["浓缩", "extra shot", "加浓", "加一份浓缩", "多一份浓缩", "espresso", "加shot"]
+          price_delta: 6
+        - value: "香草糖浆"
+          aliases: ["香草", "vanilla", "vanilla syrup"]
+          price_delta: 4
+        - value: "焦糖糖浆"
+          aliases: ["焦糖", "caramel", "caramel syrup"]
+          price_delta: 4
+        - value: "榛果糖浆"
+          aliases: ["榛果", "hazelnut", "榛子"]
+          price_delta: 4
+        - value: "奶油"
+          aliases: ["奶油顶", "whipped cream", "cream", "加奶油"]
+          price_delta: 4
+        - value: "巧克力酱"
+          aliases: ["巧克力", "chocolate", "可可"]
+          price_delta: 4
+        - value: "焦糖淋酱"
+          aliases: ["焦糖酱", "caramel drizzle"]
+          price_delta: 4
+        - value: "珍珠"
+          aliases: ["波霸", "tapioca", "黑珍珠"]
+          price_delta: 6
+        - value: "椰果"
+          aliases: ["椰子果肉", "nata de coco"]
+          price_delta: 4
+
+  # 数量
+  quantity:
+    type: number
+    description: "饮品数量"
+    default: 1
+    validation:
+      min: 1
+      max: 20
+    number_mapping:
+      一: 1
+      二: 2
+      两: 2
+      三: 3
+      四: 4
+      五: 5
+      六: 6
+      七: 7
+      八: 8
+      九: 9
+      十: 10
+
+# ==================== 模糊表达映射规则 ====================
+fuzzy_expressions:
+  sweetness:
+    - pattern: "不要(那么|太)甜"
+      maps_to: "半糖"
+      confidence: 0.85
+    - pattern: "甜一(点|些)"
+      maps_to: "全糖"
+      confidence: 0.75
+    - pattern: "(健康|减肥|控糖|怕胖)"
+      maps_to: "无糖"
+      confidence: 0.70
+    - pattern: "稍微甜(一点)?"
+      maps_to: "三分糖"
+      confidence: 0.75
+    - pattern: "不(要|用)加糖"
+      maps_to: "无糖"
+      confidence: 0.95
+
+  temperature:
+    - pattern: "(凉|冰冰凉|透心凉|冰凉)"
+      maps_to: "冰"
+      confidence: 0.90
+    - pattern: "(温温|不要太烫|温热|不烫)"
+      maps_to: "温"
+      confidence: 0.85
+    - pattern: "(烫|热乎|暖和|热热)"
+      maps_to: "热"
+      confidence: 0.90
+    - pattern: "室温|常温"
+      maps_to: "温"
+      confidence: 0.80
+
+  intensity:
+    - pattern: "(浓一点|咖啡味重|提神|浓郁|加浓)"
+      action: "add_extra_shot"
+      maps_to_extras: ["浓缩shot"]
+      confidence: 0.85
+    - pattern: "(淡一点|不要太苦|轻一点|清淡)"
+      action: "reduce_shot"
+      maps_to_espresso: "单份"
+      confidence: 0.80
+
+  milk:
+    - pattern: "(植物奶|素食|vegan)"
+      maps_to: "燕麦奶"
+      confidence: 0.75
+    - pattern: "(减脂|低脂|健身)"
+      maps_to: "脱脂奶"
+      confidence: 0.80
+    - pattern: "不要奶|纯咖啡"
+      maps_to: "无奶"
+      confidence: 0.90
+
+  colloquial:
+    - pattern: "续命(水|咖啡|液)?"
+      maps_to_product: "美式咖啡"
+      maps_to_espresso: "双份"
+      confidence: 0.90
+    - pattern: "肥宅快乐(水|茶|冰)?"
+      maps_to_product: "星冰乐"
+      confidence: 0.85
+    - pattern: "dirty"
+      maps_to_product: "馥芮白"
+      maps_to_espresso: "双份"
+      confidence: 0.90
+    - pattern: "黑咖(啡)?"
+      maps_to_product: "美式咖啡"
+      maps_to_milk: "无奶"
+      confidence: 0.95
+
+# ==================== 组合约束规则 ====================
+combination_rules:
+  # 禁止的组合
+  forbidden_combinations:
+    - condition:
+        product_category: "blended"
+        temperature: ["热", "温"]
+      fix:
+        temperature: "冰沙"
+      message: "星冰乐只能做冰的哦，已为您调整"
+      severity: "auto_fix"
+
+    - condition:
+        product_name: "馥芮白"
+        temperature: ["冰", "去冰", "少冰", "多冰"]
+      fix:
+        temperature: "热"
+      message: "馥芮白建议热饮口感最佳，已为您调整"
+      severity: "warning"
+
+  # 建议的组合
+  suggested_combinations:
+    - condition:
+        product_name: "美式咖啡"
+        time_of_day: "morning"
+      suggestion:
+        espresso_options:
+          shots: "双份"
+      message: "早晨来杯加浓更提神哦"
+
+  # 默认值规则
+  smart_defaults:
+    - condition:
+        temperature: "冰"
+        season: "winter"
+      apply:
+        sweetness: "标准"
+      reason: "冬天冰饮加点甜度更好喝"
+
+    - condition:
+        milk_type: "燕麦奶"
+      apply:
+        sweetness: "少糖"
+      reason: "燕麦奶自带甜味，建议少糖"
+
+# ==================== 意图定义 ====================
+intents:
+  ORDER_NEW:
+    name: "新建订单"
+    description: "用户想点新饮品"
+    color: "#4CAF50"
+    icon: "cart"
+    examples:
+      - "我要一杯拿铁"
+      - "来杯美式咖啡"
+      - "给我点一杯大杯冰美式"
+      - "两杯卡布奇诺"
+      - "来杯续命水"
+    keywords:
+      - "要"
+      - "来"
+      - "点"
+      - "给我"
+      - "帮我"
+      - "想喝"
+      - "来份"
+      - "来杯"
+
+  ORDER_MODIFY:
+    name: "修改订单"
+    description: "修改已点饮品的配置"
+    color: "#2196F3"
+    icon: "edit"
+    examples:
+      - "换成大杯"
+      - "改成冰的"
+      - "能换燕麦奶吗"
+      - "少冰少糖"
+      - "不要那么甜"
+    keywords:
+      - "换"
+      - "改"
+      - "换成"
+      - "改成"
+      - "不要"
+      - "少"
+      - "多"
+
+  ORDER_CANCEL:
+    name: "取消订单"
+    description: "取消订单"
+    color: "#f44336"
+    icon: "cancel"
+    examples:
+      - "取消订单"
+      - "不要了"
+      - "算了不点了"
+    keywords:
+      - "取消"
+      - "不要了"
+      - "算了"
+      - "不点"
+
+  ORDER_QUERY:
+    name: "查询订单"
+    description: "查询订单状态"
+    color: "#9C27B0"
+    icon: "search"
+    examples:
+      - "我的订单到哪了"
+      - "订单什么时候好"
+      - "查一下订单状态"
+    keywords:
+      - "查"
+      - "到哪"
+      - "多久"
+      - "状态"
+      - "什么时候"
+
+  PRODUCT_INFO:
+    name: "商品咨询"
+    description: "价格、成分、卡路里等信息"
+    color: "#FF9800"
+    icon: "info"
+    examples:
+      - "拿铁多少钱"
+      - "这个有多少卡路里"
+      - "美式咖啡里面有什么"
+    keywords:
+      - "多少钱"
+      - "价格"
+      - "卡路里"
+      - "成分"
+      - "有什么"
+
+  RECOMMEND:
+    name: "推荐请求"
+    description: "请求推荐饮品"
+    color: "#E91E63"
+    icon: "star"
+    examples:
+      - "有什么推荐的"
+      - "什么比较好喝"
+      - "帮我推荐一款不太甜的"
+    keywords:
+      - "推荐"
+      - "好喝"
+      - "建议"
+      - "适合"
+
+  CUSTOMIZE:
+    name: "定制需求"
+    description: "特殊定制需求"
+    color: "#00BCD4"
+    icon: "customize"
+    examples:
+      - "加一份浓缩"
+      - "可以加珍珠吗"
+      - "咖啡味重一点"
+    keywords:
+      - "加"
+      - "可以"
+      - "能不能"
+
+  PAYMENT:
+    name: "支付相关"
+    description: "支付方式、优惠券、积分等"
+    color: "#8BC34A"
+    icon: "payment"
+    examples:
+      - "可以用微信支付吗"
+      - "有优惠券吗"
+      - "确认下单"
+      - "结账"
+    keywords:
+      - "支付"
+      - "付款"
+      - "优惠"
+      - "积分"
+      - "确认"
+      - "下单"
+      - "结账"
+      - "买单"
+
+  COMPLAINT:
+    name: "投诉反馈"
+    description: "投诉反馈"
+    color: "#FF5722"
+    icon: "complaint"
+    examples:
+      - "咖啡太苦了"
+      - "做错了我要的是冰的"
+      - "等太久了"
+    keywords:
+      - "投诉"
+      - "错了"
+      - "太久"
+      - "不满意"
+      - "差评"
+
+  CHITCHAT:
+    name: "闲聊"
+    description: "问候、感谢等"
+    color: "#607D8B"
+    icon: "chat"
+    examples:
+      - "今天天气真好"
+      - "你好"
+      - "谢谢"
+    keywords:
+      - "你好"
+      - "谢谢"
+      - "天气"
+      - "再见"
+
+  UNKNOWN:
+    name: "未知意图"
+    description: "无法识别的意图"
+    color: "#9E9E9E"
+    icon: "question"
+    examples: []
+    keywords: []
+
+# ==================== 菜单定义 ====================
+menu:
+  products:
+    拿铁:
+      price: 32
+      calories: 190
+      description: "经典意式浓缩咖啡与蒸奶的完美结合"
+      category: "espresso_based"
+      available: true
+      default_options:
+        temperature: "热"
+        size: "中杯"
+        milk_type: "全脂奶"
+
+    美式咖啡:
+      price: 28
+      calories: 15
+      description: "浓缩咖啡加水，简单纯粹"
+      category: "espresso_based"
+      available: true
+      default_options:
+        temperature: "热"
+        size: "中杯"
+        milk_type: "无奶"
+
+    卡布奇诺:
+      price: 32
+      calories: 120
+      description: "浓缩咖啡、蒸奶和奶泡的经典组合"
+      category: "espresso_based"
+      available: true
+
+    摩卡:
+      price: 36
+      calories: 290
+      description: "浓缩咖啡、巧克力和蒸奶的完美融合"
+      category: "mocha_based"
+      available: true
+
+    星冰乐:
+      price: 38
+      calories: 350
+      description: "冰爽混合饮品，多种口味可选"
+      category: "blended"
+      available: true
+      default_options:
+        temperature: "冰沙"
+
+    馥芮白:
+      price: 34
+      calories: 140
+      description: "澳洲风格，浓缩咖啡与丝滑奶泡"
+      category: "espresso_based"
+      available: true
+      default_options:
+        temperature: "热"
+        milk_type: "全脂奶"
+
+    抹茶拿铁:
+      price: 34
+      calories: 240
+      description: "优质抹茶与蒸奶的清新搭配"
+      category: "tea_based"
+      available: true
+
+    焦糖玛奇朵:
+      price: 35
+      calories: 250
+      description: "香草糖浆、蒸奶、浓缩咖啡和焦糖淋酱"
+      category: "espresso_based"
+      available: true
+
+    香草拿铁:
+      price: 34
+      calories: 220
+      description: "香草糖浆与经典拿铁的完美融合"
+      category: "espresso_based"
+      available: true
+
+# ==================== 配置项 ====================
+settings:
+  hot_reload: true
+  default_classification_method: "function_calling"
+  confidence_threshold: 0.7
+  fuzzy_matching: true
+  fuzzy_threshold: 0.8
+  # Phase 1 新增配置
+  enable_rules_engine: true
+  enable_fuzzy_expressions: true
+  enable_colloquial_mapping: true
+  auto_correct_constraints: true
+  show_constraint_warnings: true
