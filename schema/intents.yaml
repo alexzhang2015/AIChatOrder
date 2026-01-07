@@ -1,0 +1,178 @@
+# 意图配置文件
+# 支持动态加载，无需修改代码即可添加新意图
+
+version: "1.0.0"
+
+intents:
+  ORDER_NEW:
+    name: "新建订单"
+    description: "用户想点新饮品"
+    color: "#4CAF50"
+    icon: "🛒"
+    keywords:
+      - "要"
+      - "来"
+      - "点"
+      - "给我"
+      - "帮我"
+      - "想喝"
+      - "来杯"
+      - "来份"
+    priority: 10
+
+  ORDER_MODIFY:
+    name: "修改订单"
+    description: "修改已点饮品的配置"
+    color: "#2196F3"
+    icon: "✏️"
+    keywords:
+      - "换成"
+      - "改成"
+      - "加一份"
+      - "不要"
+      - "少"
+      - "多"
+    priority: 20
+
+  ORDER_CANCEL:
+    name: "取消订单"
+    description: "取消订单"
+    color: "#f44336"
+    icon: "❌"
+    keywords:
+      - "取消"
+      - "不要了"
+      - "算了"
+      - "不点"
+    priority: 30
+
+  ORDER_QUERY:
+    name: "查询订单"
+    description: "查询订单状态"
+    color: "#9C27B0"
+    icon: "🔍"
+    keywords:
+      - "到哪"
+      - "多久"
+      - "状态"
+      - "查订单"
+    priority: 40
+
+  PRODUCT_INFO:
+    name: "商品咨询"
+    description: "价格、成分、卡路里等信息"
+    color: "#FF9800"
+    icon: "ℹ️"
+    keywords:
+      - "多少钱"
+      - "价格"
+      - "卡路里"
+      - "成分"
+      - "有什么"
+    priority: 50
+
+  RECOMMEND:
+    name: "推荐请求"
+    description: "请求推荐饮品"
+    color: "#E91E63"
+    icon: "⭐"
+    keywords:
+      - "推荐"
+      - "好喝"
+      - "建议"
+      - "适合"
+    priority: 60
+
+  CUSTOMIZE:
+    name: "定制需求"
+    description: "特殊定制需求"
+    color: "#00BCD4"
+    icon: "🎨"
+    keywords:
+      - "定制"
+      - "特别"
+      - "能不能"
+    priority: 70
+
+  PAYMENT:
+    name: "支付相关"
+    description: "支付方式、优惠券、积分等"
+    color: "#8BC34A"
+    icon: "💳"
+    keywords:
+      - "支付"
+      - "付款"
+      - "优惠"
+      - "积分"
+      - "买一送一"
+    priority: 80
+
+  COMPLAINT:
+    name: "投诉反馈"
+    description: "投诉反馈"
+    color: "#FF5722"
+    icon: "😤"
+    keywords:
+      - "投诉"
+      - "做错"
+      - "太久"
+      - "不满意"
+    priority: 90
+
+  CHITCHAT:
+    name: "闲聊"
+    description: "问候、感谢等"
+    color: "#607D8B"
+    icon: "💬"
+    keywords:
+      - "你好"
+      - "谢谢"
+      - "天气"
+      - "再见"
+    priority: 100
+
+  UNKNOWN:
+    name: "未知意图"
+    description: "无法识别的意图"
+    color: "#9E9E9E"
+    icon: "❓"
+    keywords: []
+    priority: 999
+
+# 规则匹配配置
+rules:
+  - pattern: "取消|不要了|算了|不点"
+    intent: ORDER_CANCEL
+    confidence: 0.95
+
+  - pattern: "换成?|改成?|加[一份]*|不要.*加"
+    intent: ORDER_MODIFY
+    confidence: 0.88
+
+  - pattern: "到哪|多久|状态|查.*订单"
+    intent: ORDER_QUERY
+    confidence: 0.92
+
+  - pattern: "多少钱|价格|卡路里|成分|有什么"
+    intent: PRODUCT_INFO
+    confidence: 0.85
+
+  - pattern: "推荐|好喝|建议|适合"
+    intent: RECOMMEND
+    confidence: 0.87
+
+  - pattern: "支付|付款|优惠|积分|买一送一"
+    intent: PAYMENT
+    confidence: 0.90
+
+  - pattern: "投诉|做错|太久|不满意"
+    intent: COMPLAINT
+    confidence: 0.88
+
+  - pattern: "你好|谢谢|天气|再见"
+    intent: CHITCHAT
+    confidence: 0.80
+
+  - pattern: "要|来|点|给我|帮我|想喝|来[份杯]"
+    intent: ORDER_NEW
+    confidence: 0.90

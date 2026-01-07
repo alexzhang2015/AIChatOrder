@@ -9,6 +9,7 @@ import json
 import re
 import uuid
 import time
+import asyncio
 import logging
 import threading
 from typing import Dict, List, Optional, Any
@@ -20,12 +21,13 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
-from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field, field_validator
 import numpy as np
 
-# 尝试导入 OpenAI
+# 尝试导入 OpenAI (同步和异步)
 try:
-    from openai import OpenAI
+    from openai import OpenAI, AsyncOpenAI
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
@@ -49,6 +51,8 @@ from database import (
     SessionModel, OrderModel, OrderItemModel, MessageModel
 )
 from vector_store import create_retriever, is_chroma_available
+from cache import get_api_cache, get_session_cache, APICache
+from intent_registry import get_intent_registry, IntentRegistry
 
 # 设置日志
 logging.basicConfig(
@@ -59,8 +63,11 @@ logger = logging.getLogger(__name__)
 
 # ==================== 意图与槽位定义 ====================
 
+# 从配置文件加载意图定义
+_intent_registry = get_intent_registry()
+
 class Intent(str, Enum):
-    """点单系统意图分类"""
+    """点单系统意图分类（从配置加载）"""
     ORDER_NEW = "ORDER_NEW"
     ORDER_MODIFY = "ORDER_MODIFY"
     ORDER_CANCEL = "ORDER_CANCEL"
@@ -74,19 +81,13 @@ class Intent(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
-INTENT_DESCRIPTIONS = {
-    "ORDER_NEW": {"name": "新建订单", "desc": "用户想点新饮品", "color": "#4CAF50", "icon": "🛒"},
-    "ORDER_MODIFY": {"name": "修改订单", "desc": "修改已点饮品的配置", "color": "#2196F3", "icon": "✏️"},
-    "ORDER_CANCEL": {"name": "取消订单", "desc": "取消订单", "color": "#f44336", "icon": "❌"},
-    "ORDER_QUERY": {"name": "查询订单", "desc": "查询订单状态", "color": "#9C27B0", "icon": "🔍"},
-    "PRODUCT_INFO": {"name": "商品咨询", "desc": "价格、成分、卡路里等信息", "color": "#FF9800", "icon": "ℹ️"},
-    "RECOMMEND": {"name": "推荐请求", "desc": "请求推荐饮品", "color": "#E91E63", "icon": "⭐"},
-    "CUSTOMIZE": {"name": "定制需求", "desc": "特殊定制需求", "color": "#00BCD4", "icon": "🎨"},
-    "PAYMENT": {"name": "支付相关", "desc": "支付方式、优惠券、积分等", "color": "#8BC34A", "icon": "💳"},
-    "COMPLAINT": {"name": "投诉反馈", "desc": "投诉反馈", "color": "#FF5722", "icon": "😤"},
-    "CHITCHAT": {"name": "闲聊", "desc": "问候、感谢等", "color": "#607D8B", "icon": "💬"},
-    "UNKNOWN": {"name": "未知意图", "desc": "无法识别的意图", "color": "#9E9E9E", "icon": "❓"},
-}
+# 从意图注册中心获取描述（支持热更新）
+def get_intent_descriptions() -> Dict:
+    """获取意图描述（动态加载）"""
+    return _intent_registry.get_intent_descriptions()
+
+# 兼容旧代码的静态引用
+INTENT_DESCRIPTIONS = _intent_registry.get_intent_descriptions()
 
 
 # ==================== 训练数据 ====================
@@ -420,7 +421,9 @@ class OpenAIClassifier:
 
     def __init__(self):
         self.client = None
+        self.async_client = None
         self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
         # 使用 Chroma 向量检索器（如果可用）
         self.retriever = create_retriever(
             examples=TRAINING_EXAMPLES,
@@ -429,18 +432,36 @@ class OpenAIClassifier:
         )
         self.slot_extractor = SlotExtractor()
 
+        # API 响应缓存
+        self._cache = get_api_cache()
+
+        # 意图注册中心（用于规则匹配）
+        self._intent_registry = get_intent_registry()
+
         if OPENAI_AVAILABLE and os.getenv("OPENAI_API_KEY"):
             try:
                 base_url = os.getenv("OPENAI_BASE_URL")
+                api_key = os.getenv("OPENAI_API_KEY")
+
+                # 同步客户端
                 self.client = OpenAI(
-                    api_key=os.getenv("OPENAI_API_KEY"),
+                    api_key=api_key,
                     base_url=base_url or None,
-                    timeout=30.0  # 添加超时
+                    timeout=30.0
                 )
+
+                # 异步客户端
+                self.async_client = AsyncOpenAI(
+                    api_key=api_key,
+                    base_url=base_url or None,
+                    timeout=30.0
+                )
+
                 logger.info(f"OpenAI 客户端初始化成功，模型: {self.model}")
             except Exception as e:
                 logger.error(f"OpenAI 客户端初始化失败: {e}")
                 self.client = None
+                self.async_client = None
 
     def is_available(self) -> bool:
         return self.client is not None
@@ -511,24 +532,184 @@ class OpenAIClassifier:
         raise RetryableError("所有重试都失败了")
 
     def _rule_based_intent(self, text: str) -> tuple:
-        """基于规则的意图识别 (fallback)"""
-        rules = [
-            (r'取消|不要了|算了|不点', 'ORDER_CANCEL', 0.95),
-            (r'换成?|改成?|加[一份]*|不要.*加', 'ORDER_MODIFY', 0.88),
-            (r'到哪|多久|状态|查.*订单', 'ORDER_QUERY', 0.92),
-            (r'多少钱|价格|卡路里|成分|有什么', 'PRODUCT_INFO', 0.85),
-            (r'推荐|好喝|建议|适合', 'RECOMMEND', 0.87),
-            (r'支付|付款|优惠|积分|买一送一', 'PAYMENT', 0.90),
-            (r'投诉|做错|太久|不满意', 'COMPLAINT', 0.88),
-            (r'你好|谢谢|天气|再见', 'CHITCHAT', 0.80),
-            (r'要|来|点|给我|帮我|想喝|来[份杯]', 'ORDER_NEW', 0.90),
-        ]
+        """基于规则的意图识别 (fallback)
 
-        for pattern, intent, confidence in rules:
-            if re.search(pattern, text):
-                return intent, confidence
+        使用意图注册中心的规则进行匹配。
+        """
+        return self._intent_registry.match_rules(text)
 
-        return 'UNKNOWN', 0.5
+    async def _call_openai_async(
+        self,
+        messages: List[Dict],
+        tools: Optional[List] = None,
+        tool_choice: Optional[Dict] = None,
+        max_retries: int = 3
+    ) -> Any:
+        """异步 OpenAI API 调用（带重试）"""
+        if not self.async_client:
+            raise FatalError("异步 OpenAI 客户端不可用")
+
+        last_error = None
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                kwargs = {
+                    "model": self.model,
+                    "messages": messages,
+                    "temperature": 0.1,
+                    "max_tokens": 500
+                }
+                if tools:
+                    kwargs["tools"] = tools
+                if tool_choice:
+                    kwargs["tool_choice"] = tool_choice
+
+                response = await self.async_client.chat.completions.create(**kwargs)
+                return response
+
+            except Exception as e:
+                classified_error = classify_openai_error(e)
+                last_error = classified_error
+
+                if isinstance(classified_error, FatalError):
+                    logger.error(f"OpenAI API 不可重试错误: {e}")
+                    raise classified_error
+
+                if attempt < max_retries:
+                    wait_time = min(1.0 * (2 ** (attempt - 1)), 30.0)
+                    if isinstance(classified_error, RateLimitError) and classified_error.retry_after:
+                        wait_time = min(classified_error.retry_after, 30.0)
+
+                    logger.warning(
+                        f"OpenAI API 异步调用失败 (尝试 {attempt}/{max_retries}): {e}. "
+                        f"将在 {wait_time:.1f}秒后重试"
+                    )
+                    await asyncio.sleep(wait_time)
+                else:
+                    logger.error(f"OpenAI API 异步调用最终失败 ({max_retries}次尝试后): {e}")
+
+        if last_error:
+            raise last_error
+        raise RetryableError("所有重试都失败了")
+
+    async def classify_zero_shot_async(self, text: str) -> Dict:
+        """异步零样本分类"""
+        # 检查缓存
+        cached = self._cache.get(text, "zero_shot")
+        if cached:
+            return cached
+
+        prompt = PROMPT_TEMPLATES["zero_shot"].format(user_input=text)
+
+        if not self.async_client:
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": "规则引擎 fallback (OpenAI 不可用)",
+                "prompt": prompt,
+                "llm_response": None
+            }
+
+        try:
+            response = await self._call_openai_async(
+                messages=[{"role": "user", "content": prompt}]
+            )
+
+            llm_response = response.choices[0].message.content
+            result = self._parse_json_response(llm_response)
+            result["prompt"] = prompt
+            result["llm_response"] = llm_response
+
+            # 缓存结果
+            self._cache.set(text, "zero_shot", result)
+            return result
+
+        except (FatalError, RetryableError) as e:
+            logger.warning(f"异步零样本分类失败，使用规则引擎: {e}")
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": f"LLM 调用失败: {e.message}",
+                "prompt": prompt,
+                "llm_response": None
+            }
+
+    async def classify_function_calling_async(self, text: str) -> Dict:
+        """异步 Function Calling 分类"""
+        # 检查缓存
+        cached = self._cache.get(text, "function_calling")
+        if cached:
+            return cached
+
+        if not self.async_client:
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": "规则引擎 fallback (OpenAI 不可用)",
+                "tool_call": None
+            }
+
+        try:
+            response = await self._call_openai_async(
+                messages=[
+                    {"role": "system", "content": "你是一个咖啡店点单助手，负责理解顾客的意图。"},
+                    {"role": "user", "content": text}
+                ],
+                tools=[{"type": "function", "function": FUNCTION_SCHEMA}],
+                tool_choice={"type": "function", "function": {"name": "classify_intent"}}
+            )
+
+            message = response.choices[0].message
+            if message.tool_calls and len(message.tool_calls) > 0:
+                tool_call = message.tool_calls[0]
+                arguments = json.loads(tool_call.function.arguments)
+
+                result = {
+                    "intent": arguments.get("intent", "UNKNOWN"),
+                    "confidence": arguments.get("confidence", 0.0),
+                    "slots": arguments.get("slots", {}),
+                    "reasoning": arguments.get("reasoning", ""),
+                    "tool_call": {
+                        "name": tool_call.function.name,
+                        "arguments": arguments
+                    }
+                }
+
+                # 缓存结果
+                self._cache.set(text, "function_calling", result)
+                return result
+
+            # 无工具调用，降级到规则引擎
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": "无工具调用，规则引擎 fallback",
+                "tool_call": None
+            }
+
+        except (FatalError, RetryableError) as e:
+            logger.warning(f"Function Calling 失败，使用规则引擎: {e}")
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": f"LLM 调用失败: {e.message}",
+                "tool_call": None
+            }
 
     def classify_zero_shot(self, text: str) -> Dict:
         """零样本分类"""
@@ -1498,9 +1679,23 @@ class OrderingAssistant:
 app = FastAPI(
     title="AI 点单意图识别系统",
     description="基于大语言模型的咖啡店智能点单意图识别可视化 Demo - 支持多轮对话 (LangGraph 架构)",
-    version="3.0.0"
+    version="3.1.0"  # 版本升级：添加异步支持和缓存
 )
 
+# ==================== CORS 中间件 ====================
+
+# 允许的来源（生产环境应该限制为具体域名）
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+    expose_headers=["X-Request-ID", "X-Cache-Status"],
+    max_age=600  # 预检请求缓存10分钟
+)
 
 # ==================== 异常处理器 ====================
 
@@ -1561,13 +1756,84 @@ def get_langgraph_workflow():
     return _langgraph_workflow
 
 
+# ==================== 请求模型（增强验证）====================
+
+VALID_METHODS = {"zero_shot", "few_shot", "rag_enhanced", "function_calling"}
+MAX_TEXT_LENGTH = 500
+MIN_TEXT_LENGTH = 1
+
+
 class ClassifyRequest(BaseModel):
-    text: str
-    method: str = "zero_shot"  # zero_shot, few_shot, rag_enhanced, function_calling
+    """意图分类请求"""
+    text: str = Field(
+        ...,
+        min_length=MIN_TEXT_LENGTH,
+        max_length=MAX_TEXT_LENGTH,
+        description="要分类的用户输入文本"
+    )
+    method: str = Field(
+        default="function_calling",
+        description="分类方法: zero_shot, few_shot, rag_enhanced, function_calling"
+    )
+
+    @field_validator('text')
+    @classmethod
+    def validate_text(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("输入文本不能为空")
+        if len(v) > MAX_TEXT_LENGTH:
+            raise ValueError(f"输入文本过长，最大 {MAX_TEXT_LENGTH} 字符")
+        return v
+
+    @field_validator('method')
+    @classmethod
+    def validate_method(cls, v: str) -> str:
+        if v not in VALID_METHODS:
+            raise ValueError(f"无效的分类方法: {v}，可选: {', '.join(VALID_METHODS)}")
+        return v
 
 
 class CompareRequest(BaseModel):
-    text: str
+    """方法对比请求"""
+    text: str = Field(
+        ...,
+        min_length=MIN_TEXT_LENGTH,
+        max_length=MAX_TEXT_LENGTH,
+        description="要对比的用户输入文本"
+    )
+
+    @field_validator('text')
+    @classmethod
+    def validate_text(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("输入文本不能为空")
+        return v
+
+
+class ChatRequest(BaseModel):
+    """对话请求"""
+    session_id: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        description="会话ID"
+    )
+    message: str = Field(
+        ...,
+        min_length=MIN_TEXT_LENGTH,
+        max_length=MAX_TEXT_LENGTH,
+        description="用户消息"
+    )
+
+    @field_validator('message')
+    @classmethod
+    def validate_message(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("消息不能为空")
+        return v
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -1592,36 +1858,65 @@ async def chat_page():
 async def get_status():
     """获取系统状态"""
     workflow = get_langgraph_workflow()
+    api_cache = get_api_cache()
+    session_cache = get_session_cache()
+
     return {
         "openai_available": classifier.is_available(),
+        "async_available": classifier.async_client is not None,
         "model": classifier.model,
-        "methods": ["zero_shot", "few_shot", "rag_enhanced", "function_calling"],
-        "intent_types": INTENT_DESCRIPTIONS,
+        "methods": list(VALID_METHODS),
+        "intent_types": get_intent_descriptions(),
         "example_count": len(TRAINING_EXAMPLES),
         "langgraph_available": workflow is not None,
-        "version": "3.0.0",
-        "engines": ["langgraph", "legacy"]
+        "version": "3.1.0",
+        "engines": ["langgraph", "legacy"],
+        "cache": {
+            "api": api_cache.stats(),
+            "session": session_cache.stats()
+        },
+        "intent_registry": _intent_registry.stats()
     }
+
+
+@app.get("/api/cache/stats")
+async def get_cache_stats():
+    """获取缓存统计"""
+    api_cache = get_api_cache()
+    session_cache = get_session_cache()
+
+    return {
+        "api_cache": api_cache.stats(),
+        "session_cache": session_cache.stats()
+    }
+
+
+@app.post("/api/cache/clear")
+async def clear_cache():
+    """清空 API 缓存"""
+    api_cache = get_api_cache()
+    cleared = api_cache.clear()
+    return {"cleared": cleared, "message": f"已清空 {cleared} 条缓存"}
 
 
 @app.post("/api/classify")
 async def classify_intent(request: ClassifyRequest):
-    """执行意图分类"""
-    text = request.text.strip()
-    if not text:
-        raise HTTPException(status_code=400, detail="输入文本不能为空")
-
+    """执行意图分类（异步，带缓存）"""
+    text = request.text  # 已在 validator 中 strip
     method = request.method
 
+    # 优先使用异步方法
     if method == "zero_shot":
-        result = classifier.classify_zero_shot(text)
+        result = await classifier.classify_zero_shot_async(text)
     elif method == "few_shot":
+        # few_shot 暂时使用同步（可后续添加异步版本）
         result = classifier.classify_few_shot(text)
     elif method == "rag_enhanced":
         result = classifier.classify_rag(text)
     elif method == "function_calling":
-        result = classifier.classify_function_calling(text)
+        result = await classifier.classify_function_calling_async(text)
     else:
+        # 不应该到这里，validator 已经检查过
         raise HTTPException(status_code=400, detail=f"未知方法: {method}")
 
     # 添加意图描述信息
@@ -1629,6 +1924,9 @@ async def classify_intent(request: ClassifyRequest):
     result["intent_info"] = INTENT_DESCRIPTIONS.get(intent, INTENT_DESCRIPTIONS["UNKNOWN"])
     result["method"] = method
     result["input_text"] = text
+
+    # 标记是否来自缓存
+    result["from_cache"] = result.pop("_cached", False)
 
     return result
 

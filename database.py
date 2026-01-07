@@ -123,7 +123,14 @@ class MessageModel:
 
 
 class Database:
-    """SQLite 数据库管理器（单例模式）"""
+    """SQLite 数据库管理器（单例模式，优化的连接管理）
+
+    特性:
+    - 线程本地连接池（每线程一个连接）
+    - WAL 模式支持更好的并发
+    - 连接健康检查
+    - 统计跟踪
+    """
 
     _instance = None
     _lock = threading.Lock()
@@ -144,6 +151,10 @@ class Database:
         self._local = threading.local()
         self._write_lock = threading.Lock()
 
+        # 连接统计
+        self._connection_count = 0
+        self._stats_lock = threading.Lock()
+
         # 确保目录存在
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -154,20 +165,52 @@ class Database:
         logger.info(f"数据库初始化完成: {self.db_path}")
 
     def _get_connection(self) -> sqlite3.Connection:
-        """获取当前线程的数据库连接"""
+        """获取当前线程的数据库连接（带健康检查）"""
         if not hasattr(self._local, "connection") or self._local.connection is None:
             try:
-                self._local.connection = sqlite3.connect(
+                conn = sqlite3.connect(
                     str(self.db_path),
                     check_same_thread=False,
-                    timeout=30.0
+                    timeout=30.0,
+                    isolation_level=None  # 自动提交模式，配合 WAL
                 )
-                self._local.connection.row_factory = sqlite3.Row
-                # 启用外键约束
-                self._local.connection.execute("PRAGMA foreign_keys = ON")
+                conn.row_factory = sqlite3.Row
+
+                # 优化 PRAGMA 设置
+                conn.execute("PRAGMA foreign_keys = ON")
+                conn.execute("PRAGMA journal_mode = WAL")  # Write-Ahead Logging
+                conn.execute("PRAGMA synchronous = NORMAL")  # 平衡性能和安全
+                conn.execute("PRAGMA cache_size = -64000")  # 64MB 缓存
+                conn.execute("PRAGMA temp_store = MEMORY")  # 临时表存内存
+
+                self._local.connection = conn
+
+                with self._stats_lock:
+                    self._connection_count += 1
+
+                logger.debug(f"创建新数据库连接 (总连接数: {self._connection_count})")
+
             except sqlite3.Error as e:
                 raise DatabaseConnectionError(f"数据库连接失败: {e}")
+
+        # 连接健康检查
+        try:
+            self._local.connection.execute("SELECT 1")
+        except sqlite3.Error:
+            logger.warning("数据库连接已断开，正在重连...")
+            self._local.connection = None
+            return self._get_connection()
+
         return self._local.connection
+
+    def stats(self) -> Dict:
+        """获取数据库统计"""
+        with self._stats_lock:
+            return {
+                "db_path": str(self.db_path),
+                "connection_count": self._connection_count,
+                "initialized": self._initialized
+            }
 
     @contextmanager
     def get_cursor(self, write: bool = False):
