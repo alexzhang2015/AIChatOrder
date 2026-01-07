@@ -53,6 +53,12 @@ from database import (
 from vector_store import create_retriever, is_chroma_available
 from cache import get_api_cache, get_session_cache, APICache
 from intent_registry import get_intent_registry, IntentRegistry
+from health import get_health_checker, HealthStatus
+from retry_manager import RetryManager, ExponentialBackoffPolicy, create_openai_retry_manager
+from monitoring import (
+    MonitoringMiddleware, get_metrics_collector, get_structured_logger,
+    setup_logging, monitor_performance
+)
 
 # 设置日志
 logging.basicConfig(
@@ -1697,6 +1703,9 @@ app.add_middleware(
     max_age=600  # 预检请求缓存10分钟
 )
 
+# 添加监控中间件
+app.add_middleware(MonitoringMiddleware, logger=get_structured_logger("http"))
+
 # ==================== 异常处理器 ====================
 
 @app.exception_handler(APIError)
@@ -1897,6 +1906,57 @@ async def clear_cache():
     api_cache = get_api_cache()
     cleared = api_cache.clear()
     return {"cleared": cleared, "message": f"已清空 {cleared} 条缓存"}
+
+
+# ==================== 健康检查端点 ====================
+
+@app.get("/health")
+async def health_check():
+    """系统健康检查
+
+    检查数据库、OpenAI API、缓存等服务状态。
+    """
+    health_checker = get_health_checker()
+    report = await health_checker.check_all()
+
+    status_code = 200 if report.status == HealthStatus.HEALTHY else 503
+    return JSONResponse(
+        status_code=status_code,
+        content=report.to_dict()
+    )
+
+
+@app.get("/health/{check_name}")
+async def health_check_single(check_name: str):
+    """单项健康检查
+
+    Args:
+        check_name: 检查项名称 (database, openai, cache, vector_store, intent_registry)
+    """
+    health_checker = get_health_checker()
+    result = await health_checker.check_one(check_name)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"未知的检查项: {check_name}")
+
+    status_code = 200 if result.status == HealthStatus.HEALTHY else 503
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "name": result.name,
+            "status": result.status.value,
+            "latency_ms": round(result.latency_ms, 2),
+            "details": result.details,
+            **({"error": result.error} if result.error else {})
+        }
+    )
+
+
+@app.get("/api/metrics")
+async def get_metrics():
+    """获取性能指标"""
+    metrics = get_metrics_collector()
+    return metrics.get_all_stats(window_seconds=300)
 
 
 @app.post("/api/classify")
