@@ -51,6 +51,13 @@ from rules_engine import (
     CustomizationRulesEngine, FuzzyExpressionMatcher, EnhancedSlotNormalizer
 )
 
+# 导入优化模块
+from monitoring import (
+    get_structured_logger, get_metrics_collector,
+    monitor_performance
+)
+from config import get_settings
+
 
 # ==================== 状态定义 ====================
 
@@ -976,6 +983,10 @@ class OrderingWorkflow:
         # 监听配置变更
         self.registry.on_change(self._on_schema_change)
 
+        # 结构化日志和监控
+        self._logger = get_structured_logger("workflow")
+        self._metrics = get_metrics_collector()
+
         # 数据库持久化
         self.use_db = use_db
         if use_db:
@@ -984,9 +995,9 @@ class OrderingWorkflow:
                 self._session_repo = SessionRepository(self._db)
                 self._order_repo = OrderRepository(self._db)
                 self._message_repo = MessageRepository(self._db)
-                logger.info("工作流已启用数据库持久化")
+                self._logger.info("workflow_init", details="工作流已启用数据库持久化")
             except Exception as e:
-                logger.warning(f"数据库初始化失败，仅使用内存模式: {e}")
+                self._logger.warning("workflow_init", details=f"数据库初始化失败，仅使用内存模式: {e}")
                 self.use_db = False
 
     def _on_schema_change(self, registry: SlotSchemaRegistry):
@@ -1047,6 +1058,7 @@ class OrderingWorkflow:
 
         return workflow
 
+    @monitor_performance("workflow.process_message")
     def process_message(self, session_id: Optional[str], user_message: str) -> Dict:
         """
         处理用户消息
@@ -1058,17 +1070,24 @@ class OrderingWorkflow:
         Returns:
             包含响应、订单状态等信息的字典
         """
+        start_time = time.time()
+
         # 生成或使用会话ID
         is_new_session = not session_id
         if not session_id:
             session_id = str(uuid.uuid4())[:8]
+
+        self._logger.info("process_message_start",
+                          session_id=session_id,
+                          is_new_session=is_new_session,
+                          message_length=len(user_message))
 
         # 数据库：确保会话存在
         if self.use_db and is_new_session:
             try:
                 self._session_repo.create(session_id)
             except Exception as e:
-                logger.error(f"创建会话失败: {e}")
+                self._logger.error("session_create_failed", session_id=session_id, error=str(e))
 
         # 配置线程ID用于状态持久化
         config = {"configurable": {"thread_id": session_id}}
@@ -1133,7 +1152,24 @@ class OrderingWorkflow:
                     self._persist_order(session_id, order)
 
             except Exception as e:
-                logger.error(f"持久化失败: {e}")
+                self._logger.error("persist_failed", session_id=session_id, error=str(e))
+
+        # 记录处理完成
+        elapsed_time = time.time() - start_time
+        intent_result = result.get("intent_result", {})
+        self._logger.info("process_message_complete",
+                          session_id=session_id,
+                          intent=intent_result.get("intent"),
+                          confidence=intent_result.get("confidence"),
+                          elapsed_ms=round(elapsed_time * 1000, 2))
+
+        # 记录指标
+        self._metrics.record_request(
+            endpoint="workflow.process_message",
+            method="POST",
+            status_code=200,
+            duration=elapsed_time
+        )
 
         # 构建返回结果
         return {

@@ -212,6 +212,18 @@ class MetricsCollector:
         """记录持续时间（毫秒）"""
         self.record(name, duration_seconds * 1000, labels)
 
+    def record_request(self, endpoint: str, method: str, status_code: int, duration: float):
+        """记录请求指标"""
+        labels = {
+            "endpoint": endpoint,
+            "method": method,
+            "status": str(status_code)
+        }
+        # 记录持续时间
+        self.record_duration(f"{endpoint}.duration", duration, labels)
+        # 记录请求数
+        self.record(f"{endpoint}.count", 1, labels)
+
     def get_stats(self, name: str, window_seconds: int = 300) -> Dict[str, Any]:
         """获取指标统计"""
         now = time.time()

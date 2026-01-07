@@ -262,6 +262,79 @@ class SessionCache:
         logger.info("会话缓存清理线程已停止")
 
 
+# ==================== 向量检索缓存 ====================
+
+class VectorCache:
+    """向量检索结果缓存
+
+    缓存语义检索结果，减少重复向量查询开销。
+    """
+
+    def __init__(
+        self,
+        maxsize: int = 500,
+        ttl: int = 600  # 10分钟
+    ):
+        """初始化向量缓存
+
+        Args:
+            maxsize: 最大缓存条目数
+            ttl: 缓存过期时间（秒）
+        """
+        self._cache = TTLCache(maxsize=maxsize, ttl=ttl)
+        self._lock = threading.Lock()
+        self._hits = 0
+        self._misses = 0
+
+    @staticmethod
+    def _generate_key(query: str, top_k: int) -> str:
+        """生成缓存键"""
+        content = f"vector:{query}:{top_k}"
+        return hashlib.md5(content.encode()).hexdigest()
+
+    def get(self, query: str, top_k: int = 3) -> Optional[list]:
+        """获取缓存的检索结果"""
+        key = self._generate_key(query, top_k)
+        with self._lock:
+            result = self._cache.get(key)
+            if result is not None:
+                self._hits += 1
+                logger.debug(f"向量缓存命中: {query[:20]}...")
+                return result
+            self._misses += 1
+            return None
+
+    def set(self, query: str, top_k: int, results: list) -> None:
+        """设置缓存"""
+        key = self._generate_key(query, top_k)
+        with self._lock:
+            self._cache[key] = results
+            logger.debug(f"向量缓存设置: {query[:20]}...")
+
+    def invalidate_all(self) -> int:
+        """清空所有缓存（新增示例时使用）"""
+        with self._lock:
+            count = len(self._cache)
+            self._cache.clear()
+            self._hits = 0
+            self._misses = 0
+            return count
+
+    def stats(self) -> Dict:
+        """获取缓存统计"""
+        with self._lock:
+            total = self._hits + self._misses
+            hit_rate = self._hits / total if total > 0 else 0
+            return {
+                "size": len(self._cache),
+                "maxsize": self._cache.maxsize,
+                "ttl": self._cache.ttl,
+                "hits": self._hits,
+                "misses": self._misses,
+                "hit_rate": round(hit_rate, 4)
+            }
+
+
 # ==================== 缓存装饰器 ====================
 
 def cached_classify(cache: APICache, method: str):
@@ -322,6 +395,9 @@ api_cache = APICache(maxsize=1000, ttl=300)
 # 会话缓存（30分钟过期，最多10000个会话）
 session_cache = SessionCache(maxsize=10000, ttl=1800, cleanup_interval=60)
 
+# 向量检索缓存（10分钟过期，最多500条）
+vector_cache = VectorCache(maxsize=500, ttl=600)
+
 
 def get_api_cache() -> APICache:
     """获取 API 缓存实例"""
@@ -331,3 +407,8 @@ def get_api_cache() -> APICache:
 def get_session_cache() -> SessionCache:
     """获取会话缓存实例"""
     return session_cache
+
+
+def get_vector_cache() -> VectorCache:
+    """获取向量检索缓存实例"""
+    return vector_cache

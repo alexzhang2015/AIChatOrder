@@ -45,7 +45,7 @@ from exceptions import (
     ServiceError, AuthError, BadRequestError, SessionNotFoundError,
     classify_openai_error
 )
-from retry import with_openai_retry, with_fallback
+# retry 模块已废弃，使用 retry_manager 替代
 from database import (
     Database, SessionRepository, OrderRepository, MessageRepository,
     SessionModel, OrderModel, OrderItemModel, MessageModel
@@ -58,6 +58,11 @@ from retry_manager import RetryManager, ExponentialBackoffPolicy, create_openai_
 from monitoring import (
     MonitoringMiddleware, get_metrics_collector, get_structured_logger,
     setup_logging, monitor_performance
+)
+from config import get_settings, get_openai_settings
+from resilience import (
+    get_rate_limiter, get_circuit_breaker, CircuitOpenError,
+    RateLimitMiddleware
 )
 
 # 设置日志
@@ -428,7 +433,10 @@ class OpenAIClassifier:
     def __init__(self):
         self.client = None
         self.async_client = None
-        self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+        # 从配置获取设置
+        openai_settings = get_openai_settings()
+        self.model = openai_settings.model
 
         # 使用 Chroma 向量检索器（如果可用）
         self.retriever = create_retriever(
@@ -444,23 +452,33 @@ class OpenAIClassifier:
         # 意图注册中心（用于规则匹配）
         self._intent_registry = get_intent_registry()
 
-        if OPENAI_AVAILABLE and os.getenv("OPENAI_API_KEY"):
-            try:
-                base_url = os.getenv("OPENAI_BASE_URL")
-                api_key = os.getenv("OPENAI_API_KEY")
+        # 重试管理器
+        self._retry_manager = create_openai_retry_manager(
+            max_attempts=openai_settings.max_retries
+        )
 
+        # 熔断器
+        self._circuit_breaker = get_circuit_breaker(
+            name="openai",
+            failure_threshold=5,
+            success_threshold=3,
+            timeout=30.0
+        )
+
+        if OPENAI_AVAILABLE and openai_settings.api_key:
+            try:
                 # 同步客户端
                 self.client = OpenAI(
-                    api_key=api_key,
-                    base_url=base_url or None,
-                    timeout=30.0
+                    api_key=openai_settings.api_key,
+                    base_url=openai_settings.base_url or None,
+                    timeout=openai_settings.timeout
                 )
 
                 # 异步客户端
                 self.async_client = AsyncOpenAI(
-                    api_key=api_key,
-                    base_url=base_url or None,
-                    timeout=30.0
+                    api_key=openai_settings.api_key,
+                    base_url=openai_settings.base_url or None,
+                    timeout=openai_settings.timeout
                 )
 
                 logger.info(f"OpenAI 客户端初始化成功，模型: {self.model}")
@@ -479,63 +497,48 @@ class OpenAIClassifier:
         tool_choice: Optional[Dict] = None,
         max_retries: int = 3
     ) -> Any:
-        """带重试逻辑的 OpenAI API 调用
+        """带重试逻辑的 OpenAI API 调用（使用 retry_manager 和熔断器）
 
         Args:
             messages: 消息列表
             tools: Function calling 工具定义
             tool_choice: 工具选择
-            max_retries: 最大重试次数
+            max_retries: 最大重试次数（已废弃，使用配置）
 
         Returns:
             OpenAI API 响应
 
         Raises:
             FatalError: 不可重试的错误
+            CircuitOpenError: 熔断器开启
             RetryableError: 重试后仍然失败
         """
-        last_error = None
+        # 检查熔断器
+        if not self._circuit_breaker.allow_request():
+            raise CircuitOpenError("OpenAI 熔断器处于开启状态，请稍后重试")
 
-        for attempt in range(1, max_retries + 1):
+        def _make_request():
+            kwargs = {
+                "model": self.model,
+                "messages": messages,
+                "temperature": 0.1,
+                "max_tokens": 500
+            }
+            if tools:
+                kwargs["tools"] = tools
+            if tool_choice:
+                kwargs["tool_choice"] = tool_choice
+
             try:
-                kwargs = {
-                    "model": self.model,
-                    "messages": messages,
-                    "temperature": 0.1,
-                    "max_tokens": 500
-                }
-                if tools:
-                    kwargs["tools"] = tools
-                if tool_choice:
-                    kwargs["tool_choice"] = tool_choice
-
                 response = self.client.chat.completions.create(**kwargs)
+                self._circuit_breaker.record_success()
                 return response
-
             except Exception as e:
                 classified_error = classify_openai_error(e)
-                last_error = classified_error
+                self._circuit_breaker.record_failure()
+                raise classified_error
 
-                if isinstance(classified_error, FatalError):
-                    logger.error(f"OpenAI API 不可重试错误: {e}")
-                    raise classified_error
-
-                if attempt < max_retries:
-                    wait_time = min(1.0 * (2 ** (attempt - 1)), 30.0)
-                    if isinstance(classified_error, RateLimitError) and classified_error.retry_after:
-                        wait_time = min(classified_error.retry_after, 30.0)
-
-                    logger.warning(
-                        f"OpenAI API 调用失败 (尝试 {attempt}/{max_retries}): {e}. "
-                        f"将在 {wait_time:.1f}秒后重试"
-                    )
-                    time.sleep(wait_time)
-                else:
-                    logger.error(f"OpenAI API 调用最终失败 ({max_retries}次尝试后): {e}")
-
-        if last_error:
-            raise last_error
-        raise RetryableError("所有重试都失败了")
+        return self._retry_manager.execute(_make_request)
 
     def _rule_based_intent(self, text: str) -> tuple:
         """基于规则的意图识别 (fallback)
@@ -551,52 +554,36 @@ class OpenAIClassifier:
         tool_choice: Optional[Dict] = None,
         max_retries: int = 3
     ) -> Any:
-        """异步 OpenAI API 调用（带重试）"""
+        """异步 OpenAI API 调用（使用 retry_manager 和熔断器）"""
         if not self.async_client:
             raise FatalError("异步 OpenAI 客户端不可用")
 
-        last_error = None
+        # 检查熔断器
+        if not self._circuit_breaker.allow_request():
+            raise CircuitOpenError("OpenAI 熔断器处于开启状态，请稍后重试")
 
-        for attempt in range(1, max_retries + 1):
+        async def _make_request():
+            kwargs = {
+                "model": self.model,
+                "messages": messages,
+                "temperature": 0.1,
+                "max_tokens": 500
+            }
+            if tools:
+                kwargs["tools"] = tools
+            if tool_choice:
+                kwargs["tool_choice"] = tool_choice
+
             try:
-                kwargs = {
-                    "model": self.model,
-                    "messages": messages,
-                    "temperature": 0.1,
-                    "max_tokens": 500
-                }
-                if tools:
-                    kwargs["tools"] = tools
-                if tool_choice:
-                    kwargs["tool_choice"] = tool_choice
-
                 response = await self.async_client.chat.completions.create(**kwargs)
+                self._circuit_breaker.record_success()
                 return response
-
             except Exception as e:
                 classified_error = classify_openai_error(e)
-                last_error = classified_error
+                self._circuit_breaker.record_failure()
+                raise classified_error
 
-                if isinstance(classified_error, FatalError):
-                    logger.error(f"OpenAI API 不可重试错误: {e}")
-                    raise classified_error
-
-                if attempt < max_retries:
-                    wait_time = min(1.0 * (2 ** (attempt - 1)), 30.0)
-                    if isinstance(classified_error, RateLimitError) and classified_error.retry_after:
-                        wait_time = min(classified_error.retry_after, 30.0)
-
-                    logger.warning(
-                        f"OpenAI API 异步调用失败 (尝试 {attempt}/{max_retries}): {e}. "
-                        f"将在 {wait_time:.1f}秒后重试"
-                    )
-                    await asyncio.sleep(wait_time)
-                else:
-                    logger.error(f"OpenAI API 异步调用最终失败 ({max_retries}次尝试后): {e}")
-
-        if last_error:
-            raise last_error
-        raise RetryableError("所有重试都失败了")
+        return await self._retry_manager.execute_async(_make_request)
 
     async def classify_zero_shot_async(self, text: str) -> Dict:
         """异步零样本分类"""

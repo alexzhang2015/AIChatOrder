@@ -152,47 +152,23 @@ def test_exceptions_classify():
     print("  - OpenAI 错误分类正确")
 
 
-# ==================== 2. 重试模块测试 ====================
+# ==================== 2. 重试模块测试 (retry_manager) ====================
 
-@test_case("重试模块 - RetryContext")
-def test_retry_context():
-    from retry import RetryContext
-    from exceptions import RetryableError, FatalError
-
-    # 测试基本重试上下文
-    ctx = RetryContext(max_attempts=3, min_wait=0.1, max_wait=1.0)
-
-    attempts = []
-    for attempt in ctx:
-        attempts.append(attempt)
-        if attempt < 3:
-            ctx.record_error(RetryableError("临时错误"))
-        else:
-            break
-
-    assert len(attempts) == 3
-    assert ctx.current_attempt == 3
-
-    # 测试 should_retry
-    ctx2 = RetryContext(max_attempts=2)
-    for _ in ctx2:
-        ctx2.record_error(FatalError("致命错误"))
-        assert not ctx2.should_retry()
-        break
-
-    print("  - RetryContext 迭代正确")
-    print("  - should_retry 判断正确")
-
-
-@test_case("重试模块 - 重试装饰器")
-def test_retry_decorators():
-    from retry import create_retry_decorator, retry_standard, retry_fast
+@test_case("重试管理器 - 基本执行")
+def test_retry_manager_basic():
+    from retry_manager import RetryManager, ExponentialBackoffPolicy
     from exceptions import RetryableError
 
-    # 测试自定义重试装饰器
+    # 创建重试管理器
+    policy = ExponentialBackoffPolicy(
+        initial_delay=0.01,
+        max_delay=0.1,
+        exponential_base=2.0
+    )
+    manager = RetryManager(max_attempts=3, backoff_policy=policy)
+
     call_count = 0
 
-    @create_retry_decorator(max_attempts=3, min_wait=0.01, max_wait=0.1)
     def flaky_function():
         nonlocal call_count
         call_count += 1
@@ -200,30 +176,64 @@ def test_retry_decorators():
             raise RetryableError("临时失败")
         return "success"
 
-    result = flaky_function()
+    result = manager.execute(flaky_function)
     assert result == "success"
     assert call_count == 3
 
-    print("  - 重试装饰器工作正常")
+    print("  - RetryManager 基本执行正确")
     print(f"  - 函数被调用 {call_count} 次后成功")
 
 
-@test_case("重试模块 - with_fallback")
-def test_retry_fallback():
-    from retry import with_fallback
+@test_case("重试管理器 - 异步执行")
+def test_retry_manager_async():
+    import asyncio
+    from retry_manager import RetryManager, ExponentialBackoffPolicy
     from exceptions import RetryableError
 
-    def fallback_func():
-        return "fallback_value"
+    policy = ExponentialBackoffPolicy(
+        initial_delay=0.01,
+        max_delay=0.1,
+        exponential_base=2.0
+    )
+    manager = RetryManager(max_attempts=3, backoff_policy=policy)
 
-    @with_fallback(fallback_func, log_error=False)
-    def always_fails():
-        raise RetryableError("总是失败")
+    call_count = 0
 
-    result = always_fails()
-    assert result == "fallback_value"
+    async def flaky_async_function():
+        nonlocal call_count
+        call_count += 1
+        if call_count < 2:
+            raise RetryableError("临时失败")
+        return "async_success"
 
-    print("  - 降级装饰器工作正常")
+    result = asyncio.run(manager.execute_async(flaky_async_function))
+    assert result == "async_success"
+    assert call_count == 2
+
+    print("  - RetryManager 异步执行正确")
+
+
+@test_case("重试管理器 - OpenAI 专用")
+def test_retry_manager_openai():
+    from retry_manager import create_openai_retry_manager
+    from exceptions import RetryableError
+
+    manager = create_openai_retry_manager(max_attempts=2)
+
+    call_count = 0
+
+    def failing_function():
+        nonlocal call_count
+        call_count += 1
+        if call_count < 2:
+            raise RetryableError("API 错误")
+        return {"status": "ok"}
+
+    result = manager.execute(failing_function)
+    assert result == {"status": "ok"}
+    assert call_count == 2
+
+    print("  - OpenAI 重试管理器工作正常")
 
 
 # ==================== 3. 数据库模块测试 ====================

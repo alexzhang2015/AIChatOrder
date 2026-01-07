@@ -2,6 +2,7 @@
 Chroma 向量数据库封装
 
 使用 Chroma 进行语义检索，替代基于关键词的 SimpleVectorRetriever。
+支持检索结果缓存以提升性能。
 """
 
 import json
@@ -10,6 +11,7 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 
 from exceptions import VectorStoreError, VectorStoreInitError, EmbeddingError
+from cache import get_vector_cache, VectorCache
 
 logger = logging.getLogger(__name__)
 
@@ -31,13 +33,15 @@ class ChromaRetriever:
 
     使用 Chroma 内置的 embedding 模型进行语义检索。
     API 与 SimpleVectorRetriever 兼容。
+    支持检索结果缓存以提升性能。
     """
 
     def __init__(
         self,
         examples: List[Dict],
         collection_name: str = "training_examples",
-        persist_directory: Optional[Path] = None
+        persist_directory: Optional[Path] = None,
+        cache: Optional[VectorCache] = None
     ):
         """初始化 Chroma 检索器
 
@@ -45,10 +49,12 @@ class ChromaRetriever:
             examples: 训练示例列表，每个示例包含 text, intent, slots
             collection_name: Chroma 集合名称
             persist_directory: 持久化目录
+            cache: 可选的向量缓存实例
         """
         self.examples = examples
         self.collection_name = collection_name
         self.persist_directory = persist_directory or DEFAULT_CHROMA_PATH
+        self._cache = cache or get_vector_cache()
 
         if not CHROMA_AVAILABLE:
             raise VectorStoreInitError("chromadb 未安装，请运行: pip install chromadb")
@@ -121,6 +127,11 @@ class ChromaRetriever:
         Returns:
             相似示例列表，每个包含 text, intent, slots, similarity
         """
+        # 检查缓存
+        cached = self._cache.get(query, top_k)
+        if cached is not None:
+            return cached
+
         try:
             results = self.collection.query(
                 query_texts=[query],
@@ -145,6 +156,8 @@ class ChromaRetriever:
                         "similarity": round(similarity, 4)
                     })
 
+            # 缓存结果
+            self._cache.set(query, top_k, retrieved)
             return retrieved
 
         except Exception as e:
@@ -179,6 +192,9 @@ class ChromaRetriever:
                 "slots": slots or {}
             })
 
+            # 清空缓存（新示例可能影响检索结果）
+            self._cache.invalidate_all()
+
             logger.debug(f"添加新示例: {text[:50]}...")
 
         except Exception as e:
@@ -194,6 +210,8 @@ class ChromaRetriever:
                 metadata={"hnsw:space": "cosine"}
             )
             self._index_examples()
+            # 清空缓存
+            self._cache.invalidate_all()
             logger.info("向量索引已重置")
         except Exception as e:
             raise VectorStoreError(f"重置失败: {e}")
@@ -202,15 +220,21 @@ class ChromaRetriever:
         """返回索引的示例数量"""
         return self.collection.count()
 
+    def cache_stats(self) -> Dict:
+        """获取缓存统计信息"""
+        return self._cache.stats()
+
 
 class FallbackRetriever:
     """降级检索器（当 Chroma 不可用时使用）
 
     基于关键词匹配的简单检索器，与 SimpleVectorRetriever 类似。
+    支持检索结果缓存。
     """
 
-    def __init__(self, examples: List[Dict]):
+    def __init__(self, examples: List[Dict], cache: Optional[VectorCache] = None):
         self.examples = examples
+        self._cache = cache or get_vector_cache()
         self.keywords = {
             'order': ['要', '来', '点', '给我', '帮我', '杯', '份'],
             'modify': ['换', '改', '加', '减', '不要', '少', '多'],
@@ -243,6 +267,11 @@ class FallbackRetriever:
 
     def retrieve(self, query: str, top_k: int = 3) -> List[Dict]:
         """检索最相似的示例"""
+        # 检查缓存
+        cached = self._cache.get(query, top_k)
+        if cached is not None:
+            return cached
+
         query_features = self._extract_features(query)
         scored_examples = []
 
@@ -260,7 +289,11 @@ class FallbackRetriever:
             })
 
         scored_examples.sort(key=lambda x: x['similarity'], reverse=True)
-        return scored_examples[:top_k]
+        results = scored_examples[:top_k]
+
+        # 缓存结果
+        self._cache.set(query, top_k, results)
+        return results
 
     def add_example(self, text: str, intent: str, slots: Optional[Dict] = None):
         """添加新示例"""
@@ -269,10 +302,16 @@ class FallbackRetriever:
             "intent": intent,
             "slots": slots or {}
         })
+        # 清空缓存
+        self._cache.invalidate_all()
 
     def count(self) -> int:
         """返回示例数量"""
         return len(self.examples)
+
+    def cache_stats(self) -> Dict:
+        """获取缓存统计信息"""
+        return self._cache.stats()
 
 
 def create_retriever(
