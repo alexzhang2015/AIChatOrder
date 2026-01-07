@@ -5,7 +5,7 @@ LangGraph 工作流实现 - AI点单意图识别系统
 1. 意图识别节点
 2. 业务处理节点 (新订单/修改/取消/查询/推荐等)
 3. 响应生成节点
-4. 状态持久化支持
+4. 状态持久化支持 (SQLite 数据库)
 5. 配置化槽位支持 (YAML Schema)
 6. 技能执行层 (Skills) 支持
 """
@@ -14,6 +14,7 @@ import os
 import json
 import time
 import uuid
+import logging
 from typing import Dict, List, Optional, Any, Annotated, TypedDict, Literal, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -29,6 +30,14 @@ from main import (
     INTENT_DESCRIPTIONS, TRAINING_EXAMPLES,
     SlotExtractor
 )
+
+# 导入数据库模块
+from database import (
+    Database, SessionRepository, OrderRepository, MessageRepository,
+    SessionModel, OrderModel, OrderItemModel, MessageModel
+)
+
+logger = logging.getLogger(__name__)
 
 # 导入配置化槽位模块
 from slot_schema import get_schema_registry, SlotSchemaRegistry
@@ -932,7 +941,7 @@ def route_by_intent(state: OrderState) -> str:
 
 class OrderingWorkflow:
     """
-    AI点单对话工作流 - 支持配置化
+    AI点单对话工作流 - 支持配置化和数据库持久化
 
     使用 LangGraph 实现的状态机:
 
@@ -946,10 +955,12 @@ class OrderingWorkflow:
     - 支持YAML配置化槽位定义
     - 自动槽位值规范化
     - 从配置读取菜单和价格
+    - SQLite 数据库持久化会话和订单
     """
 
     def __init__(self, classifier: Optional[OpenAIClassifier] = None,
-                 schema_registry: Optional[SlotSchemaRegistry] = None):
+                 schema_registry: Optional[SlotSchemaRegistry] = None,
+                 use_db: bool = True):
         if classifier is None:
             classifier = OpenAIClassifier()
 
@@ -964,6 +975,19 @@ class OrderingWorkflow:
 
         # 监听配置变更
         self.registry.on_change(self._on_schema_change)
+
+        # 数据库持久化
+        self.use_db = use_db
+        if use_db:
+            try:
+                self._db = Database()
+                self._session_repo = SessionRepository(self._db)
+                self._order_repo = OrderRepository(self._db)
+                self._message_repo = MessageRepository(self._db)
+                logger.info("工作流已启用数据库持久化")
+            except Exception as e:
+                logger.warning(f"数据库初始化失败，仅使用内存模式: {e}")
+                self.use_db = False
 
     def _on_schema_change(self, registry: SlotSchemaRegistry):
         """配置变更回调"""
@@ -1035,8 +1059,16 @@ class OrderingWorkflow:
             包含响应、订单状态等信息的字典
         """
         # 生成或使用会话ID
+        is_new_session = not session_id
         if not session_id:
             session_id = str(uuid.uuid4())[:8]
+
+        # 数据库：确保会话存在
+        if self.use_db and is_new_session:
+            try:
+                self._session_repo.create(session_id)
+            except Exception as e:
+                logger.error(f"创建会话失败: {e}")
 
         # 配置线程ID用于状态持久化
         config = {"configurable": {"thread_id": session_id}}
@@ -1065,6 +1097,44 @@ class OrderingWorkflow:
         # 执行工作流
         result = self.app.invoke(input_state, config)
 
+        # 数据库：持久化消息
+        if self.use_db:
+            try:
+                # 保存用户消息
+                intent_result = result.get("intent_result", {})
+                self._message_repo.add(MessageModel(
+                    session_id=session_id,
+                    role="user",
+                    content=user_message,
+                    intent=intent_result.get("intent"),
+                    confidence=intent_result.get("confidence"),
+                    slots=intent_result.get("slots")
+                ))
+
+                # 保存助手回复
+                self._message_repo.add(MessageModel(
+                    session_id=session_id,
+                    role="assistant",
+                    content=result.get("response", "")
+                ))
+
+                # 更新会话状态
+                db_session = self._session_repo.get(session_id)
+                if db_session:
+                    db_session.state = result.get("conversation_state", "taking_order")
+                    order = result.get("current_order")
+                    if order:
+                        db_session.current_order_id = order.get("order_id")
+                    self._session_repo.update(db_session)
+
+                # 持久化订单
+                order = result.get("current_order")
+                if order and order.get("order_id"):
+                    self._persist_order(session_id, order)
+
+            except Exception as e:
+                logger.error(f"持久化失败: {e}")
+
         # 构建返回结果
         return {
             "session_id": session_id,
@@ -1079,9 +1149,60 @@ class OrderingWorkflow:
             "execution_trace": result.get("execution_trace", [])
         }
 
+    def _persist_order(self, session_id: str, order: Dict):
+        """持久化订单到数据库"""
+        if not self.use_db:
+            return
+
+        try:
+            order_id = order.get("order_id")
+
+            # 检查订单是否已存在
+            existing = self._order_repo.get(order_id)
+            if not existing:
+                # 创建新订单
+                order_model = self._order_repo.create(order_id, session_id)
+            else:
+                order_model = existing
+
+            # 更新订单状态和总价
+            order_model.status = order.get("status", "pending")
+            order_model.total = order.get("total", 0.0)
+            self._order_repo.update(order_model)
+
+            # 同步订单项（简化处理：先删除再添加）
+            existing_items = self._order_repo.get_items(order_id)
+            for item in existing_items:
+                self._order_repo.delete_item(item.id)
+
+            for item_dict in order.get("items", []):
+                item_model = OrderItemModel(
+                    order_id=order_id,
+                    product_name=item_dict.get("product_name", ""),
+                    size=item_dict.get("size", "中杯"),
+                    temperature=item_dict.get("temperature", "热"),
+                    sweetness=item_dict.get("sweetness", "标准"),
+                    milk_type=item_dict.get("milk_type", "全脂奶"),
+                    extras=item_dict.get("extras", []),
+                    quantity=item_dict.get("quantity", 1),
+                    price=item_dict.get("price", 0.0)
+                )
+                self._order_repo.add_item(item_model)
+
+        except Exception as e:
+            logger.error(f"订单持久化失败: {e}")
+
     def create_session(self) -> Dict:
         """创建新会话"""
         session_id = str(uuid.uuid4())[:8]
+
+        # 数据库：持久化会话
+        if self.use_db:
+            try:
+                self._session_repo.create(session_id)
+                logger.debug(f"会话已持久化: {session_id}")
+            except Exception as e:
+                logger.error(f"会话持久化失败: {e}")
 
         welcome_message = MessageDict(
             role="assistant",

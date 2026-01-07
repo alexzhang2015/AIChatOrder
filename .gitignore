@@ -53,5 +53,9 @@ Thumbs.db
 .coverage
 htmlcov/
 
+# Local data (do not commit)
+chroma_data/
+data/
+
 # Documentation (contains brand-specific content)
 docs/

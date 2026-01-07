@@ -9,15 +9,17 @@ import json
 import re
 import uuid
 import time
+import logging
+import threading
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field, asdict
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel
 import numpy as np
 
@@ -34,6 +36,26 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+# 导入自定义模块
+from exceptions import (
+    APIError, RetryableError, FatalError, RateLimitError, NetworkError,
+    ServiceError, AuthError, BadRequestError, SessionNotFoundError,
+    classify_openai_error
+)
+from retry import with_openai_retry, with_fallback
+from database import (
+    Database, SessionRepository, OrderRepository, MessageRepository,
+    SessionModel, OrderModel, OrderItemModel, MessageModel
+)
+from vector_store import create_retriever, is_chroma_available
+
+# 设置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # ==================== 意图与槽位定义 ====================
 
@@ -399,18 +421,94 @@ class OpenAIClassifier:
     def __init__(self):
         self.client = None
         self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-        self.retriever = SimpleVectorRetriever(TRAINING_EXAMPLES)
+        # 使用 Chroma 向量检索器（如果可用）
+        self.retriever = create_retriever(
+            examples=TRAINING_EXAMPLES,
+            use_chroma=is_chroma_available(),
+            collection_name="coffee_order_examples"
+        )
         self.slot_extractor = SlotExtractor()
 
         if OPENAI_AVAILABLE and os.getenv("OPENAI_API_KEY"):
-            base_url = os.getenv("OPENAI_BASE_URL")
-            if base_url:
-                self.client = OpenAI(base_url=base_url)
-            else:
-                self.client = OpenAI()
+            try:
+                base_url = os.getenv("OPENAI_BASE_URL")
+                self.client = OpenAI(
+                    api_key=os.getenv("OPENAI_API_KEY"),
+                    base_url=base_url or None,
+                    timeout=30.0  # 添加超时
+                )
+                logger.info(f"OpenAI 客户端初始化成功，模型: {self.model}")
+            except Exception as e:
+                logger.error(f"OpenAI 客户端初始化失败: {e}")
+                self.client = None
 
     def is_available(self) -> bool:
         return self.client is not None
+
+    def _call_openai_with_retry(
+        self,
+        messages: List[Dict],
+        tools: Optional[List] = None,
+        tool_choice: Optional[Dict] = None,
+        max_retries: int = 3
+    ) -> Any:
+        """带重试逻辑的 OpenAI API 调用
+
+        Args:
+            messages: 消息列表
+            tools: Function calling 工具定义
+            tool_choice: 工具选择
+            max_retries: 最大重试次数
+
+        Returns:
+            OpenAI API 响应
+
+        Raises:
+            FatalError: 不可重试的错误
+            RetryableError: 重试后仍然失败
+        """
+        last_error = None
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                kwargs = {
+                    "model": self.model,
+                    "messages": messages,
+                    "temperature": 0.1,
+                    "max_tokens": 500
+                }
+                if tools:
+                    kwargs["tools"] = tools
+                if tool_choice:
+                    kwargs["tool_choice"] = tool_choice
+
+                response = self.client.chat.completions.create(**kwargs)
+                return response
+
+            except Exception as e:
+                classified_error = classify_openai_error(e)
+                last_error = classified_error
+
+                if isinstance(classified_error, FatalError):
+                    logger.error(f"OpenAI API 不可重试错误: {e}")
+                    raise classified_error
+
+                if attempt < max_retries:
+                    wait_time = min(1.0 * (2 ** (attempt - 1)), 30.0)
+                    if isinstance(classified_error, RateLimitError) and classified_error.retry_after:
+                        wait_time = min(classified_error.retry_after, 30.0)
+
+                    logger.warning(
+                        f"OpenAI API 调用失败 (尝试 {attempt}/{max_retries}): {e}. "
+                        f"将在 {wait_time:.1f}秒后重试"
+                    )
+                    time.sleep(wait_time)
+                else:
+                    logger.error(f"OpenAI API 调用最终失败 ({max_retries}次尝试后): {e}")
+
+        if last_error:
+            raise last_error
+        raise RetryableError("所有重试都失败了")
 
     def _rule_based_intent(self, text: str) -> tuple:
         """基于规则的意图识别 (fallback)"""
@@ -449,11 +547,8 @@ class OpenAIClassifier:
             }
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.1,
-                max_tokens=500
+            response = self._call_openai_with_retry(
+                messages=[{"role": "user", "content": prompt}]
             )
 
             llm_response = response.choices[0].message.content
@@ -462,7 +557,20 @@ class OpenAIClassifier:
             result["llm_response"] = llm_response
             return result
 
+        except (FatalError, RetryableError) as e:
+            logger.warning(f"零样本分类失败，使用规则引擎: {e}")
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": f"LLM 调用失败: {e.message}",
+                "prompt": prompt,
+                "llm_response": None
+            }
         except Exception as e:
+            logger.error(f"零样本分类未知错误: {e}")
             intent, confidence = self._rule_based_intent(text)
             slots = self.slot_extractor.extract(text)
             return {
@@ -491,11 +599,8 @@ class OpenAIClassifier:
             }
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.1,
-                max_tokens=500
+            response = self._call_openai_with_retry(
+                messages=[{"role": "user", "content": prompt}]
             )
 
             llm_response = response.choices[0].message.content
@@ -504,7 +609,20 @@ class OpenAIClassifier:
             result["llm_response"] = llm_response
             return result
 
+        except (FatalError, RetryableError) as e:
+            logger.warning(f"少样本分类失败，使用规则引擎: {e}")
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": f"LLM 调用失败: {e.message}",
+                "prompt": prompt,
+                "llm_response": None
+            }
         except Exception as e:
+            logger.error(f"少样本分类未知错误: {e}")
             intent, confidence = self._rule_based_intent(text)
             slots = self.slot_extractor.extract(text)
             return {
@@ -547,18 +665,15 @@ class OpenAIClassifier:
                 "intent": best_intent,
                 "confidence": confidence,
                 "slots": slots,
-                "reasoning": f"基于检索投票 (OpenAI 不可用): 最相似案例 \"{similar_examples[0]['text']}\"",
+                "reasoning": f"基于检索投票 (OpenAI 不可用): 最相似案例 \"{similar_examples[0]['text'] if similar_examples else 'N/A'}\"",
                 "retrieved_examples": similar_examples,
                 "prompt": prompt,
                 "llm_response": None
             }
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.1,
-                max_tokens=500
+            response = self._call_openai_with_retry(
+                messages=[{"role": "user", "content": prompt}]
             )
 
             llm_response = response.choices[0].message.content
@@ -568,7 +683,21 @@ class OpenAIClassifier:
             result["llm_response"] = llm_response
             return result
 
+        except (FatalError, RetryableError) as e:
+            logger.warning(f"RAG分类失败，使用规则引擎: {e}")
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": f"LLM 调用失败: {e.message}",
+                "retrieved_examples": similar_examples,
+                "prompt": prompt,
+                "llm_response": None
+            }
         except Exception as e:
+            logger.error(f"RAG分类未知错误: {e}")
             intent, confidence = self._rule_based_intent(text)
             slots = self.slot_extractor.extract(text)
             return {
@@ -596,19 +725,45 @@ class OpenAIClassifier:
             }
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
+            response = self._call_openai_with_retry(
                 messages=[
                     {"role": "system", "content": "你是一个智能咖啡店点单助手，负责识别用户的点单意图。"},
                     {"role": "user", "content": text}
                 ],
                 tools=[{"type": "function", "function": FUNCTION_SCHEMA}],
-                tool_choice={"type": "function", "function": {"name": "process_order_intent"}},
-                temperature=0.1
+                tool_choice={"type": "function", "function": {"name": "process_order_intent"}}
             )
 
+            # 安全地访问 tool_calls
+            if not response.choices or not response.choices[0].message.tool_calls:
+                logger.warning("Function Calling 未返回工具调用，使用规则引擎")
+                intent, confidence = self._rule_based_intent(text)
+                slots = self.slot_extractor.extract(text)
+                return {
+                    "intent": intent,
+                    "confidence": confidence,
+                    "slots": slots,
+                    "reasoning": "Function Calling 未返回工具调用",
+                    "function_schema": FUNCTION_SCHEMA,
+                    "llm_response": None
+                }
+
             tool_call = response.choices[0].message.tool_calls[0]
-            result = json.loads(tool_call.function.arguments)
+
+            try:
+                result = json.loads(tool_call.function.arguments)
+            except json.JSONDecodeError as e:
+                logger.warning(f"Function Calling 返回的 JSON 解析失败: {e}")
+                intent, confidence = self._rule_based_intent(text)
+                slots = self.slot_extractor.extract(text)
+                return {
+                    "intent": intent,
+                    "confidence": confidence,
+                    "slots": slots,
+                    "reasoning": "Function Calling 返回的 JSON 解析失败",
+                    "function_schema": FUNCTION_SCHEMA,
+                    "llm_response": tool_call.function.arguments
+                }
 
             # 标准化结果
             slots = result.get("order_details", {})
@@ -623,7 +778,20 @@ class OpenAIClassifier:
                 "llm_response": tool_call.function.arguments
             }
 
+        except (FatalError, RetryableError) as e:
+            logger.warning(f"Function Calling 失败，使用规则引擎: {e}")
+            intent, confidence = self._rule_based_intent(text)
+            slots = self.slot_extractor.extract(text)
+            return {
+                "intent": intent,
+                "confidence": confidence,
+                "slots": slots,
+                "reasoning": f"LLM 调用失败: {e.message}",
+                "function_schema": FUNCTION_SCHEMA,
+                "llm_response": None
+            }
         except Exception as e:
+            logger.error(f"Function Calling 未知错误: {e}")
             intent, confidence = self._rule_based_intent(text)
             slots = self.slot_extractor.extract(text)
             return {
@@ -638,20 +806,20 @@ class OpenAIClassifier:
     def _parse_json_response(self, response: str) -> Dict:
         """解析 LLM 返回的 JSON"""
         try:
-            # 尝试直接解析
             return json.loads(response)
-        except:
-            pass
+        except json.JSONDecodeError as e:
+            logger.debug(f"直接 JSON 解析失败: {e}")
 
         # 尝试提取 JSON 块
         json_match = re.search(r'\{[^{}]*\}', response, re.DOTALL)
         if json_match:
             try:
                 return json.loads(json_match.group())
-            except:
-                pass
+            except json.JSONDecodeError as e:
+                logger.debug(f"提取 JSON 块解析失败: {e}")
 
         # 解析失败
+        logger.warning(f"无法解析 JSON，原始响应: {response[:200]}")
         return {
             "intent": "UNKNOWN",
             "confidence": 0.5,
@@ -756,28 +924,171 @@ class Session:
 
 
 class SessionManager:
-    """会话管理器"""
+    """会话管理器（线程安全，支持数据库持久化）"""
 
-    def __init__(self):
-        self.sessions: Dict[str, Session] = {}
+    def __init__(self, use_db: bool = True):
+        """初始化会话管理器
+
+        Args:
+            use_db: 是否使用数据库持久化，默认 True
+        """
+        self.sessions: Dict[str, Session] = {}  # 内存缓存
         self.session_timeout = 1800  # 30分钟超时
+        self._lock = threading.Lock()  # 线程锁
+        self.use_db = use_db
+
+        if use_db:
+            try:
+                self._db = Database()
+                self._session_repo = SessionRepository(self._db)
+                self._message_repo = MessageRepository(self._db)
+                logger.info("会话管理器已启用数据库持久化")
+            except Exception as e:
+                logger.warning(f"数据库初始化失败，使用纯内存模式: {e}")
+                self.use_db = False
 
     def create_session(self) -> Session:
-        session_id = str(uuid.uuid4())[:8]
-        session = Session(session_id=session_id)
-        self.sessions[session_id] = session
-        return session
+        """创建新会话"""
+        with self._lock:
+            session_id = str(uuid.uuid4())[:8]
+            session = Session(session_id=session_id)
+            self.sessions[session_id] = session
+
+            # 持久化到数据库
+            if self.use_db:
+                try:
+                    self._session_repo.create(session_id)
+                except Exception as e:
+                    logger.error(f"会话持久化失败: {e}")
+
+            logger.debug(f"创建会话: {session_id}")
+            return session
 
     def get_session(self, session_id: str) -> Optional[Session]:
-        session = self.sessions.get(session_id)
-        if session and (time.time() - session.created_at) > self.session_timeout:
-            del self.sessions[session_id]
+        """获取会话"""
+        with self._lock:
+            # 先从内存缓存获取
+            session = self.sessions.get(session_id)
+
+            if session:
+                # 检查是否过期
+                if (time.time() - session.created_at) > self.session_timeout:
+                    self._delete_session_internal(session_id)
+                    return None
+                return session
+
+            # 内存中没有，尝试从数据库恢复
+            if self.use_db:
+                try:
+                    db_session = self._session_repo.get(session_id)
+                    if db_session:
+                        # 检查是否过期
+                        if (time.time() - db_session.updated_at) > self.session_timeout:
+                            self._session_repo.delete(session_id)
+                            return None
+
+                        # 恢复到内存
+                        session = Session(
+                            session_id=db_session.session_id,
+                            state=ConversationState(db_session.state),
+                            created_at=db_session.created_at
+                        )
+
+                        # 恢复消息历史
+                        messages = self._message_repo.get_by_session(session_id)
+                        for msg in messages:
+                            session.history.append({
+                                "role": msg.role,
+                                "content": msg.content,
+                                "intent_info": {
+                                    "intent": msg.intent,
+                                    "confidence": msg.confidence,
+                                    "slots": msg.slots
+                                } if msg.intent else None,
+                                "timestamp": msg.timestamp
+                            })
+
+                        self.sessions[session_id] = session
+                        return session
+                except Exception as e:
+                    logger.error(f"从数据库恢复会话失败: {e}")
+
             return None
-        return session
+
+    def update_session(self, session: Session):
+        """更新会话（持久化）"""
+        with self._lock:
+            self.sessions[session.session_id] = session
+
+            if self.use_db:
+                try:
+                    db_session = self._session_repo.get(session.session_id)
+                    if db_session:
+                        db_session.state = session.state.value
+                        db_session.current_order_id = session.current_order.order_id if session.current_order else None
+                        self._session_repo.update(db_session)
+                except Exception as e:
+                    logger.error(f"更新会话失败: {e}")
+
+    def add_message(self, session_id: str, role: str, content: str,
+                   intent: str = None, confidence: float = None, slots: Dict = None):
+        """添加消息并持久化"""
+        if self.use_db:
+            try:
+                message = MessageModel(
+                    session_id=session_id,
+                    role=role,
+                    content=content,
+                    intent=intent,
+                    confidence=confidence,
+                    slots=slots
+                )
+                self._message_repo.add(message)
+            except Exception as e:
+                logger.error(f"消息持久化失败: {e}")
 
     def delete_session(self, session_id: str):
+        """删除会话"""
+        with self._lock:
+            self._delete_session_internal(session_id)
+
+    def _delete_session_internal(self, session_id: str):
+        """内部删除会话（不加锁）"""
         if session_id in self.sessions:
             del self.sessions[session_id]
+
+        if self.use_db:
+            try:
+                self._session_repo.delete(session_id)
+            except Exception as e:
+                logger.error(f"删除会话失败: {e}")
+
+        logger.debug(f"删除会话: {session_id}")
+
+    def cleanup_expired(self) -> int:
+        """清理过期会话"""
+        with self._lock:
+            # 清理内存中的过期会话
+            expired = []
+            for session_id, session in self.sessions.items():
+                if (time.time() - session.created_at) > self.session_timeout:
+                    expired.append(session_id)
+
+            for session_id in expired:
+                del self.sessions[session_id]
+
+            # 清理数据库中的过期会话
+            db_cleaned = 0
+            if self.use_db:
+                try:
+                    db_cleaned = self._session_repo.cleanup_expired(self.session_timeout)
+                except Exception as e:
+                    logger.error(f"清理过期会话失败: {e}")
+
+            total = len(expired) + db_cleaned
+            if total > 0:
+                logger.info(f"清理了 {total} 个过期会话")
+            return total
 
 
 # ==================== 对话助手 ====================
@@ -1189,6 +1500,45 @@ app = FastAPI(
     description="基于大语言模型的咖啡店智能点单意图识别可视化 Demo - 支持多轮对话 (LangGraph 架构)",
     version="3.0.0"
 )
+
+
+# ==================== 异常处理器 ====================
+
+@app.exception_handler(APIError)
+async def api_error_handler(request: Request, exc: APIError):
+    """处理自定义 API 异常"""
+    logger.error(f"API 错误: {exc.message}")
+    return JSONResponse(
+        status_code=exc.status_code or 500,
+        content=exc.to_dict()
+    )
+
+
+@app.exception_handler(SessionNotFoundError)
+async def session_not_found_handler(request: Request, exc: SessionNotFoundError):
+    """处理会话不存在异常"""
+    return JSONResponse(
+        status_code=404,
+        content={
+            "error": "SessionNotFound",
+            "message": exc.message,
+            "details": exc.details
+        }
+    )
+
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    """处理未捕获的异常"""
+    logger.exception(f"未处理的异常: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "InternalServerError",
+            "message": "服务器内部错误，请稍后重试"
+        }
+    )
+
 
 # 全局实例
 classifier = OpenAIClassifier()
