@@ -18,37 +18,37 @@
 
 ```mermaid
 graph TD
-    User[用户输入] --> API[FastAPI 网关]
-    API --> Monitor[监控中间件]
-    Monitor --> Workflow[LangGraph 工作流]
-    
-    subgraph "Core Workflow (OrderingWorkflow)"
-        Workflow --> IntentNode[意图识别节点]
-        IntentNode --> Router{智能路由}
-        
-        Router -->|新订单| OrderNew[创建订单节点]
-        Router -->|修改| OrderModify[修改订单节点]
-        Router -->|查询| OrderQuery[查询/技能节点]
-        Router -->|其他| OtherHandlers[其他业务节点]
+    User[User Input] --> API[FastAPI Gateway]
+    API --> Monitor[Monitoring Middleware]
+    Monitor --> Workflow[LangGraph Workflow]
+
+    subgraph CoreWorkflow[Core Workflow]
+        Workflow --> IntentNode[Intent Recognition]
+        IntentNode --> Router{Smart Router}
+
+        Router -->|New Order| OrderNew[Create Order]
+        Router -->|Modify| OrderModify[Modify Order]
+        Router -->|Query| OrderQuery[Query/Skill]
+        Router -->|Other| OtherHandlers[Other Handlers]
     end
-    
-    subgraph "NLU & Logic Layer"
-        IntentNode --> LLM[OpenAI / LLM]
-        OrderNew --> Rules[规则引擎 (RulesEngine)]
+
+    subgraph NLULayer[NLU & Logic Layer]
+        IntentNode --> LLM[OpenAI LLM]
+        OrderNew --> Rules[RulesEngine]
         OrderModify --> Rules
-        OrderQuery --> Skills[技能执行器 (SkillExecutor)]
+        OrderQuery --> Skills[SkillExecutor]
     end
-    
-    subgraph "Configuration & Data"
-        Rules --> SlotConfig[Slots Schema (YAML)]
-        Skills --> SkillConfig[Skills Schema (YAML)]
-        Workflow --> DB[(SQLite / VectorDB)]
+
+    subgraph DataLayer[Configuration & Data]
+        Rules --> SlotConfig[Slots Schema YAML]
+        Skills --> SkillConfig[Skills Schema YAML]
+        Workflow --> DB[(SQLite VectorDB)]
     end
-    
-    Rules --校验/修正--> OrderNew
-    Skills --执行结果--> OrderQuery
-    
-    Workflow --> Response[生成响应]
+
+    Rules -->|Validate| OrderNew
+    Skills -->|Execute| OrderQuery
+
+    Workflow --> Response[Generate Response]
 ```
 
 ## 🚀 快速开始
