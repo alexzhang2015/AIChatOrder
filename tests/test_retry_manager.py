@@ -10,14 +10,14 @@ from unittest.mock import Mock, patch
 import sys
 sys.path.insert(0, '/Users/sawzhang/code/AIChatOrder')
 
-from retry_manager import (
+from infrastructure.retry_manager import (
     RetryManager,
     ExponentialBackoffPolicy,
     FixedIntervalPolicy,
     LinearBackoffPolicy,
     get_retry_manager
 )
-from exceptions import RetryableError, FatalError, RateLimitError
+from infrastructure.exceptions import RetryableError, FatalError, RateLimitError
 
 
 class TestExponentialBackoffPolicy:

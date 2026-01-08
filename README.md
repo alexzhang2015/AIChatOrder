@@ -102,7 +102,9 @@ AIChatOrder/
 │       └── intents.yaml     # 意图定义
 ├── infrastructure/          # 基础设施层
 │   ├── cache.py             # 缓存管理 (LRU, TTL)
+│   ├── container.py         # 依赖注入容器
 │   ├── database.py          # 数据库模型与操作
+│   ├── exceptions.py        # 统一异常定义
 │   ├── health.py            # 健康检查端点
 │   ├── monitoring.py        # 监控、日志和指标收集
 │   ├── resilience.py        # 弹性机制 (熔断、降级)
@@ -110,23 +112,26 @@ AIChatOrder/
 ├── models/                  # 数据模型层
 │   ├── intent.py            # 意图相关模型
 │   ├── order.py             # 订单相关模型
-│   └── session.py           # 会话相关模型
+│   ├── session.py           # 会话相关模型
+│   └── slot_schema.py       # 槽位模式定义
 ├── nlp/                     # NLP 处理模块
 │   ├── extractor.py         # 槽位提取器
+│   ├── intent_registry.py   # 意图注册中心
 │   ├── prompts.py           # LLM 提示词模板
-│   └── retriever.py         # RAG 检索器
+│   ├── retriever.py         # RAG 检索器
+│   └── vector_store.py      # 向量数据库封装
 ├── services/                # 业务服务层
 │   ├── classifier.py        # 意图分类服务
 │   ├── ordering_assistant.py # 点单助手服务
-│   └── session_manager.py   # 会话管理服务
+│   ├── rules_engine.py      # 规则引擎 (模糊匹配、约束验证)
+│   ├── session_manager.py   # 会话管理服务
+│   └── skills.py            # 技能执行系统
 ├── workflow/                # 工作流层
 │   └── ordering.py          # LangGraph 工作流定义 (核心逻辑)
 ├── tests/                   # 测试目录
 │   ├── test_phase1.py       # Phase 1 功能验收测试
 │   ├── test_optimization.py # 性能优化测试
 │   └── test_*.py            # 其他单元测试
-├── rules_engine.py          # 规则引擎 (模糊匹配、约束验证)
-├── skills.py                # 技能执行系统
 ├── Dockerfile               # Docker 构建文件
 ├── requirements.txt         # pip 依赖文件
 └── pyproject.toml           # 项目配置 (uv)

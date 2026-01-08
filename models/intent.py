@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Dict
 
-from intent_registry import get_intent_registry
+from nlp.intent_registry import get_intent_registry
 
 
 class Intent(str, Enum):

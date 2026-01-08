@@ -10,13 +10,13 @@ import logging
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 
-from exceptions import VectorStoreError, VectorStoreInitError, EmbeddingError
+from infrastructure.exceptions import VectorStoreError, VectorStoreInitError, EmbeddingError
 from infrastructure.cache import get_vector_cache, VectorCache
 
 logger = logging.getLogger(__name__)
 
 # 默认持久化目录
-DEFAULT_CHROMA_PATH = Path(__file__).parent / "chroma_data"
+DEFAULT_CHROMA_PATH = Path(__file__).parent.parent / "chroma_data"
 
 # Chroma 可用性检查
 CHROMA_AVAILABLE = False

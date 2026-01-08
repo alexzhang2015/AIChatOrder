@@ -14,7 +14,7 @@ from datetime import datetime
 from contextlib import contextmanager
 from pathlib import Path
 
-from exceptions import (
+from infrastructure.exceptions import (
     DatabaseError,
     DatabaseConnectionError,
     DatabaseQueryError,

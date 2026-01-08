@@ -12,7 +12,7 @@ from typing import Callable, TypeVar, Any, Optional, Type, Tuple
 from functools import wraps
 from dataclasses import dataclass
 
-from exceptions import (
+from infrastructure.exceptions import (
     APIError, RetryableError, FatalError,
     RateLimitError, NetworkError, ServiceError
 )

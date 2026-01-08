@@ -603,14 +603,14 @@ def load_v2_config() -> Dict:
     """加载 v2 配置"""
     global _config
     if _config is None:
-        config_path = Path(__file__).parent / "config" / "schema" / "slots_v2.yaml"
+        config_path = Path(__file__).parent.parent / "config" / "schema" / "slots_v2.yaml"
         if config_path.exists():
             with open(config_path, 'r', encoding='utf-8') as f:
                 _config = yaml.safe_load(f)
             print(f"✅ Rules Engine 配置已加载: v{_config.get('version', '2.0.0')}")
         else:
             # 回退到 v1 配置
-            config_path = Path(__file__).parent / "config" / "schema" / "slots.yaml"
+            config_path = Path(__file__).parent.parent / "config" / "schema" / "slots.yaml"
             with open(config_path, 'r', encoding='utf-8') as f:
                 _config = yaml.safe_load(f)
             print(f"⚠️ 使用 v1 配置，部分功能不可用")

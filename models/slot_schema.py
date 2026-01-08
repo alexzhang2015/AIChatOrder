@@ -629,7 +629,7 @@ def get_schema_registry() -> SlotSchemaRegistry:
     if _global_registry is None:
         _global_registry = SlotSchemaRegistry()
         # 尝试加载默认配置
-        default_path = Path(__file__).parent / "config" / "schema" / "slots.yaml"
+        default_path = Path(__file__).parent.parent / "config" / "schema" / "slots.yaml"
         if default_path.exists():
             _global_registry.load_from_yaml(str(default_path))
             print(f"✅ Schema配置已加载: {_global_registry}")

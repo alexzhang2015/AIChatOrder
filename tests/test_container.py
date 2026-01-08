@@ -7,7 +7,7 @@ import pytest
 import sys
 sys.path.insert(0, '/Users/sawzhang/code/AIChatOrder')
 
-from container import (
+from infrastructure.container import (
     Container, Scope,
     get_container, reset_container, configure_container
 )

@@ -25,7 +25,7 @@ from models.intent import get_intent_descriptions, INTENT_DESCRIPTIONS
 from infrastructure.cache import get_api_cache, get_session_cache
 from infrastructure.health import get_health_checker, HealthStatus
 from infrastructure.monitoring import MonitoringMiddleware, get_metrics_collector
-from intent_registry import get_intent_registry
+from nlp.intent_registry import get_intent_registry
 
 # 导入 API 模块
 from app.api.schemas import ClassifyRequest, CompareRequest, ChatRequest, ResetRequest, VALID_METHODS

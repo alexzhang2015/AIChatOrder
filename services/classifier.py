@@ -5,10 +5,10 @@ import logging
 import re
 from typing import Dict, List, Optional, Any
 
-from exceptions import FatalError, RetryableError, classify_openai_error
-from vector_store import create_retriever, is_chroma_available
+from infrastructure.exceptions import FatalError, RetryableError, classify_openai_error
+from nlp.vector_store import create_retriever, is_chroma_available
 from infrastructure.cache import get_api_cache
-from intent_registry import get_intent_registry
+from nlp.intent_registry import get_intent_registry
 from infrastructure.retry_manager import create_openai_retry_manager
 from infrastructure.resilience import get_circuit_breaker, CircuitOpenError
 from config import get_openai_settings

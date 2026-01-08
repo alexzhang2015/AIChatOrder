@@ -39,13 +39,13 @@ from infrastructure.database import (
 logger = logging.getLogger(__name__)
 
 # 导入配置化槽位模块
-from slot_schema import get_schema_registry, SlotSchemaRegistry
+from models.slot_schema import get_schema_registry, SlotSchemaRegistry
 
 # 导入技能执行层
-from skills import get_skill_registry, SkillExecutor, SkillRegistry, SkillResult
+from services.skills import get_skill_registry, SkillExecutor, SkillRegistry, SkillResult
 
 # Phase 1: 导入规则引擎
-from rules_engine import (
+from services.rules_engine import (
     get_rules_engine, get_fuzzy_matcher, get_enhanced_normalizer,
     CustomizationRulesEngine, FuzzyExpressionMatcher, EnhancedSlotNormalizer
 )
