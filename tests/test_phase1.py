@@ -10,7 +10,10 @@ Phase 1 功能测试脚本
 """
 
 import sys
-sys.path.insert(0, '/Users/alexzhang/code/intent_demo/demo')
+import os
+
+# 将项目根目录添加到 sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from workflow import OrderingWorkflow
 
@@ -167,7 +170,7 @@ def test_interactive():
                 break
             if user_input.lower() == 'new':
                 session_id = None
-                print("--- 新会话开始 ---")
+                print("---" + "新会话开始" + "---")
                 continue
 
             result = workflow.process_message(session_id, user_input)

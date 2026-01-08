@@ -24,15 +24,14 @@ import operator
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 
-# 导入现有模块的核心组件
-from main import (
-    OpenAIClassifier,
-    INTENT_DESCRIPTIONS, TRAINING_EXAMPLES,
-    SlotExtractor
-)
+# 导入重构后的模块
+from services.classifier import OpenAIClassifier
+from models.intent import INTENT_DESCRIPTIONS
+from data.training import TRAINING_EXAMPLES
+from nlp.extractor import SlotExtractor
 
 # 导入数据库模块
-from database import (
+from infrastructure.database import (
     Database, SessionRepository, OrderRepository, MessageRepository,
     SessionModel, OrderModel, OrderItemModel, MessageModel
 )
@@ -52,7 +51,7 @@ from rules_engine import (
 )
 
 # 导入优化模块
-from monitoring import (
+from infrastructure.monitoring import (
     get_structured_logger, get_metrics_collector,
     monitor_performance
 )

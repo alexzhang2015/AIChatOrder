@@ -1072,7 +1072,7 @@ def get_skill_registry() -> SkillRegistry:
     if _global_registry is None:
         _global_registry = SkillRegistry()
         # 尝试加载默认配置
-        default_path = Path(__file__).parent / "schema" / "skills.yaml"
+        default_path = Path(__file__).parent / "config" / "schema" / "skills.yaml"
         if default_path.exists():
             _global_registry.load_from_yaml(str(default_path))
             print(f"✅ Skills配置已加载: {_global_registry}")

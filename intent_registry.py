@@ -16,7 +16,7 @@ import yaml
 logger = logging.getLogger(__name__)
 
 # 默认配置路径
-DEFAULT_CONFIG_PATH = Path(__file__).parent / "schema" / "intents.yaml"
+DEFAULT_CONFIG_PATH = Path(__file__).parent / "config" / "schema" / "intents.yaml"
 
 
 @dataclass

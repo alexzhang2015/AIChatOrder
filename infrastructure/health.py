@@ -161,7 +161,7 @@ class HealthChecker:
 
 async def check_database() -> Dict[str, Any]:
     """检查数据库连接"""
-    from database import Database
+    from infrastructure.database import Database
 
     db = Database()
     start = time.time()
@@ -210,7 +210,7 @@ async def check_openai() -> Dict[str, Any]:
 
 def check_cache() -> Dict[str, Any]:
     """检查缓存状态"""
-    from cache import get_api_cache, get_session_cache
+    from infrastructure.cache import get_api_cache, get_session_cache
 
     api_cache = get_api_cache()
     session_cache = get_session_cache()

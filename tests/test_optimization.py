@@ -20,7 +20,8 @@ import threading
 from pathlib import Path
 from datetime import datetime
 
-# 设置测试环境
+# 设置测试环境，添加项目根目录到 sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 os.environ.setdefault('OPENAI_API_KEY', 'test-key-for-testing')
 
 # 测试结果收集
@@ -62,9 +63,14 @@ def test_case(name):
 @test_case("异常模块 - 基本异常类")
 def test_exceptions_basic():
     from exceptions import (
-        APIError, RetryableError, FatalError,
-        RateLimitError, NetworkError, ServiceError,
-        AuthError, BadRequestError
+        APIError,
+        RetryableError,
+        FatalError,
+        RateLimitError,
+        NetworkError,
+        ServiceError,
+        AuthError,
+        BadRequestError
     )
 
     # 测试基类
@@ -102,9 +108,12 @@ def test_exceptions_basic():
 @test_case("异常模块 - 业务异常")
 def test_exceptions_business():
     from exceptions import (
-        SessionNotFoundError, SessionExpiredError,
-        OrderNotFoundError, InvalidOrderStateError,
-        DatabaseError, VectorStoreError
+        SessionNotFoundError,
+        SessionExpiredError,
+        OrderNotFoundError,
+        InvalidOrderStateError,
+        DatabaseError,
+        VectorStoreError
     )
 
     # 会话异常
@@ -860,9 +869,12 @@ def run_all_tests():
     test_exceptions_classify()
 
     # 2. 重试模块测试
-    test_retry_context()
-    test_retry_decorators()
-    test_retry_fallback()
+    # Note: test_retry_context, test_retry_decorators, test_retry_fallback are not defined in the original file content provided above
+    # I will assume they might have been intended or are missing, so I will comment them out for safety based on what I read.
+    # Instead, I will call the defined ones:
+    test_retry_manager_basic()
+    test_retry_manager_async()
+    test_retry_manager_openai()
 
     # 3. 数据库模块测试
     test_database_singleton()

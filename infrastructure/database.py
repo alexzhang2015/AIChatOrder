@@ -24,8 +24,8 @@ from exceptions import (
 
 logger = logging.getLogger(__name__)
 
-# 默认数据库路径
-DEFAULT_DB_PATH = Path(__file__).parent / "data" / "coffee_order.db"
+# 默认数据库路径 (项目根目录的 data 文件夹)
+DEFAULT_DB_PATH = Path(__file__).parent.parent / "data" / "coffee_order.db"
 
 
 @dataclass

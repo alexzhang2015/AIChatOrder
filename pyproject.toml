@@ -22,4 +22,4 @@ dependencies = [
 ]
 
 [project.scripts]
-demo = "main:run"
+demo = "app.main:run"
