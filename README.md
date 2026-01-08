@@ -75,7 +75,11 @@ cp .env.example .env
 
 ```bash
 # 启动 API 服务 (支持热重载)
-uv run python main.py --reload
+uv run python -m app.main --reload
+
+# 或使用 Docker
+docker build -t aichatorder .
+docker run -p 8000:8000 --env-file .env aichatorder
 ```
 
 *   **意图分析演示**: [http://localhost:8000](http://localhost:8000)
@@ -85,21 +89,47 @@ uv run python main.py --reload
 
 ```
 AIChatOrder/
-├── main.py              # 程序入口，FastAPI 应用定义
-├── workflow.py          # LangGraph 工作流定义 (核心逻辑)
-├── rules_engine.py      # 规则引擎 (模糊匹配、约束验证)
-├── skills.py            # 技能执行系统 (Inventory, Nutrition, etc.)
-├── monitoring.py        # 监控、日志和指标收集
-├── config.py            # Pydantic 配置管理
-├── database.py          # 数据库模型与操作
-├── schema/              # YAML 配置文件
-│   ├── slots.yaml       # 基础槽位定义
-│   ├── slots_v2.yaml    # 增强规则配置 (模糊表达、约束)
-│   ├── skills.yaml      # 技能定义与测试用例
-│   └── intents.yaml     # 意图定义
-├── static/              # 前端演示页面
-├── test_phase1.py       # 功能验收测试脚本
-└── pyproject.toml       # 项目依赖配置
+├── app/                     # 应用入口层
+│   ├── main.py              # FastAPI 应用定义与启动
+│   └── api/                 # API 路由与请求/响应模型
+│       └── schemas.py       # Pydantic 请求响应模型
+├── config/                  # 配置管理
+│   ├── settings.py          # Pydantic Settings 配置
+│   └── schema/              # YAML 配置文件
+│       ├── slots.yaml       # 基础槽位定义
+│       ├── slots_v2.yaml    # 增强规则配置 (模糊表达、约束)
+│       ├── skills.yaml      # 技能定义与测试用例
+│       └── intents.yaml     # 意图定义
+├── infrastructure/          # 基础设施层
+│   ├── cache.py             # 缓存管理 (LRU, TTL)
+│   ├── database.py          # 数据库模型与操作
+│   ├── health.py            # 健康检查端点
+│   ├── monitoring.py        # 监控、日志和指标收集
+│   ├── resilience.py        # 弹性机制 (熔断、降级)
+│   └── retry_manager.py     # 重试管理器
+├── models/                  # 数据模型层
+│   ├── intent.py            # 意图相关模型
+│   ├── order.py             # 订单相关模型
+│   └── session.py           # 会话相关模型
+├── nlp/                     # NLP 处理模块
+│   ├── extractor.py         # 槽位提取器
+│   ├── prompts.py           # LLM 提示词模板
+│   └── retriever.py         # RAG 检索器
+├── services/                # 业务服务层
+│   ├── classifier.py        # 意图分类服务
+│   ├── ordering_assistant.py # 点单助手服务
+│   └── session_manager.py   # 会话管理服务
+├── workflow/                # 工作流层
+│   └── ordering.py          # LangGraph 工作流定义 (核心逻辑)
+├── tests/                   # 测试目录
+│   ├── test_phase1.py       # Phase 1 功能验收测试
+│   ├── test_optimization.py # 性能优化测试
+│   └── test_*.py            # 其他单元测试
+├── rules_engine.py          # 规则引擎 (模糊匹配、约束验证)
+├── skills.py                # 技能执行系统
+├── Dockerfile               # Docker 构建文件
+├── requirements.txt         # pip 依赖文件
+└── pyproject.toml           # 项目配置 (uv)
 ```
 
 ## 🧪 测试与验证
@@ -108,14 +138,17 @@ AIChatOrder/
 
 ```bash
 # 1. 运行 Phase 1 核心功能测试 (规则、模糊匹配、约束)
-uv run python test_phase1.py
+uv run python -m tests.test_phase1
 
-# 2. 启动交互式命令行测试
-uv run python test_phase1.py -i
+# 2. 运行性能优化测试
+uv run python -m tests.test_optimization
 
-# 3. 运行模块独立测试
-uv run python skills.py      # 测试技能系统
-uv run python workflow.py    # 测试工作流逻辑
+# 3. 使用 pytest 运行所有测试
+uv run pytest tests/
+
+# 4. 运行模块独立测试
+uv run python skills.py              # 测试技能系统
+uv run python -m workflow.ordering   # 测试工作流逻辑
 ```
 
 ## 🔧 核心组件说明
@@ -127,13 +160,43 @@ uv run python workflow.py    # 测试工作流逻辑
 *   **输出**: 自动修正为 "冰"，并提示用户。
 
 ### 2. 技能系统 (`skills.py`)
-通过 `schema/skills.yaml` 定义工具，支持动态参数验证。
+通过 `config/schema/skills.yaml` 定义工具，支持动态参数验证。
 *   **示例**: 用户问 "拿铁多少热量？" -> 触发 `nutrition_info` 技能 -> 返回卡路里数据。
 
-### 3. 监控系统 (`monitoring.py`)
-*   **Request ID**: 全链路追踪。
-*   **Metrics**: 记录 API 耗时、成功率、分类置信度等指标。
-*   **Structured Log**: JSON 格式日志，自动脱敏。
+### 3. 工作流引擎 (`workflow/ordering.py`)
+基于 LangGraph 构建的状态机工作流，管理对话状态和业务流程。
+*   **状态持久化**: 支持 SQLite 存储会话状态。
+*   **智能路由**: 根据意图自动分发到对应处理节点。
+
+### 4. 基础设施层 (`infrastructure/`)
+提供生产级基础设施支持：
+*   **监控** (`monitoring.py`): Request ID 追踪、Metrics 指标、结构化日志。
+*   **弹性** (`resilience.py`): 熔断器、降级策略。
+*   **重试** (`retry_manager.py`): 智能重试机制。
+*   **缓存** (`cache.py`): LRU/TTL 缓存管理。
+*   **健康检查** (`health.py`): 服务健康状态端点。
+
+### 5. NLP 模块 (`nlp/`)
+*   **槽位提取** (`extractor.py`): 从用户输入提取结构化信息。
+*   **RAG 检索** (`retriever.py`): 基于向量的相似度检索。
+*   **提示词管理** (`prompts.py`): LLM 提示词模板。
+
+## 🐳 Docker 部署
+
+```bash
+# 构建镜像
+docker build -t aichatorder .
+
+# 运行容器
+docker run -d \
+  --name aichatorder \
+  -p 8000:8000 \
+  --env-file .env \
+  aichatorder
+
+# 查看日志
+docker logs -f aichatorder
+```
 
 ## 📝 License
 
