@@ -18,7 +18,12 @@ logger = logging.getLogger(__name__)
 
 class OpenAISettings(BaseSettings):
     """OpenAI 相关配置"""
-    model_config = SettingsConfigDict(env_prefix="OPENAI_")
+    model_config = SettingsConfigDict(
+        env_prefix="OPENAI_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
     api_key: Optional[str] = Field(default=None, description="OpenAI API Key")
     base_url: Optional[str] = Field(default=None, description="OpenAI API Base URL")

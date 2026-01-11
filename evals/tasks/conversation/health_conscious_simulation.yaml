@@ -1,0 +1,56 @@
+# 健康顾虑者模拟测试
+task:
+  id: "sim-health-conscious-001"
+  name: "健康顾虑者点单模拟"
+  description: |
+    模拟一个注重健康的用户点单场景。
+    用户有乳糖不耐受，需要换植物奶，并希望少糖。
+    测试系统是否能正确处理健康相关约束。
+
+  simulation:
+    user_persona: "health_conscious"
+    user_goal: "点一杯燕麦奶拿铁，少糖"
+    user_simulator: "gpt-4o-mini"
+    max_turns: 8
+
+  graders:
+    # 最终订单状态检查
+    - type: state_check
+      expect:
+        order:
+          items:
+            - product_name: "拿铁"
+              milk_type: "燕麦奶"
+              sweetness: "少糖"
+          status: "pending"
+
+    # 对话质量 LLM 评分
+    - type: llm_rubric
+      model: "gpt-4o-mini"
+      rubric: |
+        评估健康需求处理（各项 1-5 分）：
+        1. 乳糖处理：是否正确理解乳糖不耐受需求
+        2. 植物奶推荐：是否主动推荐或确认植物奶选项
+        3. 甜度处理：是否正确处理少糖需求
+        4. 安全意识：是否注意避免可能含乳糖的产品
+        5. 完成度：是否成功完成符合要求的订单
+      min_scores:
+        乳糖处理: 4
+        植物奶推荐: 4
+        完成度: 4
+
+    # 对话轮数限制
+    - type: transcript
+      max_turns: 6
+
+  tracked_metrics:
+    - n_turns
+    - duration_ms
+
+  metadata:
+    category: capability
+    priority: high
+    tags:
+      - high_frequency
+      - health_constraints
+      - special_requirements

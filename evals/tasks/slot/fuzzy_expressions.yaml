@@ -1,0 +1,70 @@
+# 模糊表达匹配评估任务
+task:
+  id: "fuzzy-expr-001"
+  name: "模糊表达理解"
+  description: "验证 FuzzyExpressionMatcher 对口语化表达的理解能力"
+
+  test_cases:
+    # 甜度模糊表达
+    - input: "不要那么甜"
+      metadata:
+        expected_slot: "sweetness"
+        expected_value: "半糖"
+        min_confidence: 0.8
+
+    - input: "没那么甜"
+      metadata:
+        expected_slot: "sweetness"
+        expected_value: "半糖"
+        min_confidence: 0.8
+
+    - input: "甜一点"
+      metadata:
+        expected_slot: "sweetness"
+        expected_value: "多糖"
+        min_confidence: 0.75
+
+    - input: "健康一点的"
+      metadata:
+        expected_slot: "sweetness"
+        expected_value: "无糖"
+        min_confidence: 0.7
+
+    # 浓度模糊表达
+    - input: "浓一点"
+      metadata:
+        expected_action: "add_extra_shot"
+        min_confidence: 0.8
+
+    - input: "加浓"
+      metadata:
+        expected_action: "add_extra_shot"
+        min_confidence: 0.85
+
+    # 特殊表达 - 续命水
+    - input: "续命水"
+      metadata:
+        expected_mappings:
+          product_name: "美式咖啡"
+        min_confidence: 0.8
+
+    # 温度模糊表达
+    - input: "常温的"
+      metadata:
+        expected_slot: "temperature"
+        expected_value: "温"
+        min_confidence: 0.7
+
+    - input: "不要太烫"
+      metadata:
+        expected_slot: "temperature"
+        expected_value: "温"
+        min_confidence: 0.7
+
+  graders:
+    - type: fuzzy_match
+      min_match_accuracy: 0.80
+
+  metadata:
+    category: regression
+    priority: high

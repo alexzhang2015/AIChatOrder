@@ -1,0 +1,46 @@
+allocation_strategy: user_hash
+created_at: '2026-01-11T16:35:23.152340'
+description: 对比不同分类方法的效果
+end_date: null
+guardrail_metrics: []
+hypothesis: few_shot 方法将提高 5% 准确率
+id: exp_69293153
+max_runtime_days: 30
+metadata: {}
+min_runtime_days: 7
+min_sample_per_variant: 100
+name: 分类方法对比测试
+owner: ''
+primary_metrics:
+- description: ''
+  higher_is_better: true
+  is_guardrail: false
+  is_primary: true
+  metric_type: ratio
+  minimum_detectable_effect: 0.05
+  name: intent_accuracy
+secondary_metrics: []
+start_date: '2026-01-11T16:35:23.152364'
+status: running
+stratification: []
+tags: []
+target_sample_per_variant: 1000
+traffic_percentage: 1.0
+updated_at: '2026-01-11T16:35:23.152364'
+variants:
+- config:
+    method: zero_shot
+    model: gpt-3.5-turbo
+  description: ''
+  id: control
+  is_control: true
+  name: 对照组
+  weight: 0.5
+- config:
+    method: few_shot
+    model: gpt-4o-mini
+  description: ''
+  id: treatment
+  is_control: false
+  name: 实验组
+  weight: 0.5

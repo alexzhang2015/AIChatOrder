@@ -1,0 +1,105 @@
+# 延迟性能基准测试
+# Latency Performance Benchmark
+
+task:
+  id: "perf-latency-001"
+  name: "延迟性能基准测试"
+  description: |
+    测试系统响应延迟是否满足 SLA 要求：
+    - P50 < 500ms
+    - P95 < 1000ms
+    - P99 < 2000ms
+
+  test_cases:
+    # 简单意图 - 应该快速响应
+    - input: "来杯美式"
+      expected_intent: "ORDER_NEW"
+      metadata:
+        complexity: "simple"
+        expected_latency: "fast"
+
+    - input: "热的"
+      expected_intent: "CUSTOMIZE"
+      metadata:
+        complexity: "simple"
+
+    - input: "大杯"
+      expected_intent: "CUSTOMIZE"
+      metadata:
+        complexity: "simple"
+
+    # 中等复杂度
+    - input: "来杯大杯冰拿铁，少糖"
+      expected_intent: "ORDER_NEW"
+      metadata:
+        complexity: "medium"
+
+    - input: "有什么推荐的吗"
+      expected_intent: "RECOMMEND"
+      metadata:
+        complexity: "medium"
+
+    - input: "把刚才的改成热的"
+      expected_intent: "ORDER_MODIFY"
+      metadata:
+        complexity: "medium"
+
+    # 复杂意图 - 允许稍长延迟
+    - input: "我乳糖不耐受，想喝点不太甜的，有什么推荐"
+      expected_intent: "RECOMMEND"
+      metadata:
+        complexity: "complex"
+        expected_latency: "normal"
+
+    - input: "来两杯大杯冰燕麦拿铁，一杯半糖一杯无糖，都加浓缩"
+      expected_intent: "ORDER_NEW"
+      metadata:
+        complexity: "complex"
+
+    - input: "把第一杯改成热的，第二杯换成豆奶"
+      expected_intent: "ORDER_MODIFY"
+      metadata:
+        complexity: "complex"
+
+    # 边界场景
+    - input: "今天天气不错"
+      expected_intent: "CHITCHAT"
+      metadata:
+        complexity: "simple"
+
+    - input: "你们最便宜的是什么"
+      expected_intent: "RECOMMEND"
+      metadata:
+        complexity: "medium"
+
+    - input: "星冰乐可以做热的吗"
+      expected_intent: "PRODUCT_INFO"
+      metadata:
+        complexity: "medium"
+
+  graders:
+    # 延迟性能评分
+    - type: latency
+      p50_target: 500
+      p95_target: 1000
+      p99_target: 2000
+      critical: 3000
+      weight: 1.0
+
+    # 意图准确率基线
+    - type: intent_accuracy
+      min_accuracy: 0.85
+      weight: 0.5
+      required: false
+
+  tracked_metrics:
+    - total_predictions
+    - avg_confidence
+
+  metadata:
+    category: capability
+    priority: high
+    tags:
+      - performance
+      - latency
+      - benchmark

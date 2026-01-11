@@ -1,0 +1,46 @@
+# 咖啡小白模拟测试
+task:
+  id: "sim-coffee-novice-001"
+  name: "咖啡小白点单模拟"
+  description: |
+    模拟一个不太懂咖啡的新手用户点单场景。
+    测试系统是否能提供良好的引导和推荐。
+
+  simulation:
+    user_persona: "coffee_novice"
+    user_goal: "点一杯不太苦、适合入门的咖啡"
+    user_simulator: "gpt-4o-mini"
+    max_turns: 10
+
+  graders:
+    # 对话质量 LLM 评分
+    - type: llm_rubric
+      model: "gpt-4o-mini"
+      rubric: |
+        评估引导质量（各项 1-5 分）：
+        1. 推荐合理性：推荐的咖啡是否适合新手（如拿铁）
+        2. 解释清晰：是否用简单语言解释咖啡特点
+        3. 耐心程度：是否耐心回答用户问题，不催促
+        4. 引导自然：推荐是否自然，不强推
+        5. 最终满意度：用户最终是否成功下单
+      min_scores:
+        推荐合理性: 4
+        解释清晰: 3
+        耐心程度: 4
+        最终满意度: 4
+
+    # 对话轮数限制 - 新手用户允许更多轮数
+    - type: transcript
+      max_turns: 8
+
+  tracked_metrics:
+    - n_turns
+    - duration_ms
+
+  metadata:
+    category: capability
+    priority: high
+    tags:
+      - high_frequency
+      - guidance
+      - recommendation

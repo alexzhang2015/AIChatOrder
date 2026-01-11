@@ -1,0 +1,117 @@
+# 槽位提取评估任务
+task:
+  id: "slot-extract-001"
+  name: "槽位提取准确性"
+  description: "验证从用户输入中提取产品、规格、定制选项等槽位的准确性"
+
+  test_cases:
+    # 完整订单
+    - input: "一杯大杯冰的燕麦拿铁，少糖"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "拿铁"
+        size: "大杯"
+        temperature: "冰"
+        milk_type: "燕麦奶"
+        sweetness: "少糖"
+        quantity: 1
+
+    - input: "两杯中杯热美式，不加糖"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "美式咖啡"
+        size: "中杯"
+        temperature: "热"
+        sweetness: "无糖"
+        quantity: 2
+
+    - input: "来个澳白加浓"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "馥芮白"
+        extras:
+          - "加浓"
+
+    # 部分槽位
+    - input: "一杯拿铁"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "拿铁"
+        quantity: 1
+
+    - input: "大杯的美式"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "美式咖啡"
+        size: "大杯"
+
+    - input: "冰的星冰乐"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "星冰乐"
+        temperature: "冰"
+
+    # 规格变体
+    - input: "小杯热拿铁"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "拿铁"
+        size: "小杯"
+        temperature: "热"
+
+    - input: "超大杯冰美式"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "美式咖啡"
+        size: "超大杯"
+        temperature: "冰"
+
+    # 甜度变体
+    - input: "半糖拿铁"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "拿铁"
+        sweetness: "半糖"
+
+    - input: "无糖的卡布奇诺"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "卡布奇诺"
+        sweetness: "无糖"
+
+    # 奶类变体
+    - input: "豆奶拿铁"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "拿铁"
+        milk_type: "豆奶"
+
+    - input: "燕麦奶的馥芮白"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "馥芮白"
+        milk_type: "燕麦奶"
+
+    # 复杂组合
+    - input: "大杯冰的燕麦拿铁，少糖，加一份浓缩"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product_name: "拿铁"
+        size: "大杯"
+        temperature: "冰"
+        milk_type: "燕麦奶"
+        sweetness: "少糖"
+        extras:
+          - "加浓"
+
+  graders:
+    - type: slot_f1
+      min_precision: 0.85
+      min_recall: 0.85
+
+  tracked_metrics:
+    - total_predictions
+
+  metadata:
+    category: regression
+    priority: high

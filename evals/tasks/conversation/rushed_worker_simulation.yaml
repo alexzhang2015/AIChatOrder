@@ -1,0 +1,53 @@
+# 赶时间上班族模拟测试
+task:
+  id: "sim-rushed-worker-001"
+  name: "赶时间上班族点单模拟"
+  description: |
+    模拟一个赶时间的上班族快速点咖啡的场景。
+    测试系统是否能高效处理简洁明了的用户请求。
+
+  simulation:
+    user_persona: "rushed_worker"
+    user_goal: "点一杯大杯冰美式，30秒内搞定"
+    user_simulator: "gpt-4o-mini"
+    max_turns: 6
+
+  graders:
+    # 最终订单状态检查
+    - type: state_check
+      expect:
+        order:
+          items:
+            - product_name: "美式咖啡"
+              size: "大杯"
+              temperature: "冰"
+          status: "pending"
+
+    # 对话质量 LLM 评分
+    - type: llm_rubric
+      model: "gpt-4o-mini"
+      rubric: |
+        评估对话效率（各项 1-5 分）：
+        1. 响应速度：是否快速理解用户意图，不反复确认
+        2. 简洁性：回复是否简洁，不啰嗦
+        3. 准确性：是否准确提取到大杯、冰、美式
+        4. 完成度：是否成功完成订单
+      min_scores:
+        响应速度: 4
+        简洁性: 4
+        完成度: 4
+
+    # 对话轮数限制 - 赶时间用户期望 4 轮内完成
+    - type: transcript
+      max_turns: 4
+
+  tracked_metrics:
+    - n_turns
+    - duration_ms
+
+  metadata:
+    category: capability
+    priority: high
+    tags:
+      - high_frequency
+      - efficiency

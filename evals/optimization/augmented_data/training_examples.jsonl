@@ -1,0 +1,181 @@
+{"text": "我要一杯没事咖啡", "intent": "ORDER_NEW", "slots": {"product_name": "美式咖啡"}, "source": "generated", "augmentation_type": "template", "original_text": "我要一杯{product}"}
+{"text": "奶茶味咖啡来一杯", "intent": "ORDER_NEW", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}来一杯"}
+{"text": "给我一杯冰沙", "intent": "ORDER_NEW", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "给我一杯{product}"}
+{"text": "来个焦糖玛奇朵", "intent": "ORDER_NEW", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "来个{product}"}
+{"text": "一杯大杯热星兵乐", "intent": "ORDER_NEW", "slots": {"product_name": "星冰乐", "size": "大杯", "temperature": "热"}, "source": "generated", "augmentation_type": "template", "original_text": "一杯{size}{temperature}{product}"}
+{"text": "星巴克冰沙来一杯", "intent": "ORDER_NEW", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}来一杯"}
+{"text": "冰饮来一杯", "intent": "ORDER_NEW", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}来一杯"}
+{"text": "中杯natie", "intent": "ORDER_NEW", "slots": {"product_name": "拿铁", "size": "中杯"}, "source": "generated", "augmentation_type": "template", "original_text": "{size}{product}"}
+{"text": "热摩卡咖啡", "intent": "ORDER_NEW", "slots": {"product_name": "摩卡", "temperature": "热"}, "source": "generated", "augmentation_type": "template", "original_text": "{temperature}{product}"}
+{"text": "来一杯星巴克冰沙", "intent": "ORDER_NEW", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "来一杯{product}"}
+{"text": "来个焦糖马奇朵呗", "intent": "ORDER_NEW", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "来个{product}呗"}
+{"text": "冰抹差拿铁", "intent": "ORDER_NEW", "slots": {"product_name": "抹茶拿铁", "temperature": "冰"}, "source": "generated", "augmentation_type": "template", "original_text": "{temperature}{product}"}
+{"text": "我要一杯入门咖啡", "intent": "ORDER_NEW", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "我要一杯{product}"}
+{"text": "点一杯kabu，少冰的", "intent": "ORDER_NEW", "slots": {"product_name": "卡布奇诺", "temperature": "少冰"}, "source": "generated", "augmentation_type": "template", "original_text": "点一杯{product}，{temperature}的"}
+{"text": "一杯大杯热芙芮白", "intent": "ORDER_NEW", "slots": {"product_name": "馥芮白", "size": "大杯", "temperature": "热"}, "source": "generated", "augmentation_type": "template", "original_text": "一杯{size}{temperature}{product}"}
+{"text": "要一个卡布", "intent": "ORDER_NEW", "slots": {"product_name": "卡布奇诺"}, "source": "generated", "augmentation_type": "template", "original_text": "要一个{product}"}
+{"text": "甜妹咖啡来一杯", "intent": "ORDER_NEW", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}来一杯"}
+{"text": "搞一个Flat White", "intent": "ORDER_NEW", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "template", "original_text": "搞一个{product}"}
+{"text": "要一个焦糖控", "intent": "ORDER_NEW", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "要一个{product}"}
+{"text": "搞一个抹茶", "intent": "ORDER_NEW", "slots": {"product_name": "抹茶拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "搞一个{product}"}
+{"text": "我要一杯星冰了", "intent": "ORDER_NEW", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "我要一杯{product}"}
+{"text": "点一杯焦糖玛奇朵，热的", "intent": "ORDER_NEW", "slots": {"product_name": "焦糖玛奇朵", "temperature": "热"}, "source": "generated", "augmentation_type": "template", "original_text": "点一杯{product}，{temperature}的"}
+{"text": "想要绿色续命", "intent": "ORDER_NEW", "slots": {"product_name": "抹茶拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "想要{product}"}
+{"text": "一杯拿帖", "intent": "ORDER_NEW", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "一杯{product}"}
+{"text": "中杯冰饮", "intent": "ORDER_NEW", "slots": {"product_name": "星冰乐", "size": "中杯"}, "source": "generated", "augmentation_type": "template", "original_text": "{size}{product}"}
+{"text": "整一杯卡布", "intent": "ORDER_NEW", "slots": {"product_name": "卡布奇诺"}, "source": "generated", "augmentation_type": "template", "original_text": "整一杯{product}"}
+{"text": "要一个拿贴", "intent": "ORDER_NEW", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "要一个{product}"}
+{"text": "我想喝卡布奇洛", "intent": "ORDER_NEW", "slots": {"product_name": "卡布奇诺"}, "source": "generated", "augmentation_type": "template", "original_text": "我想喝{product}"}
+{"text": "我要一杯奶泡咖啡", "intent": "ORDER_NEW", "slots": {"product_name": "卡布奇诺"}, "source": "generated", "augmentation_type": "template", "original_text": "我要一杯{product}"}
+{"text": "来一杯拿铁", "intent": "ORDER_NEW", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "来一杯{product}"}
+{"text": "多糖", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "多{modifier}"}
+{"text": "加一份浓缩", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "加一份浓缩"}
+{"text": "冰一点", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "{modifier}一点"}
+{"text": "少奶", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "少{modifier}"}
+{"text": "要半糖", "intent": "ORDER_MODIFY", "slots": {"sweetness": "半糖"}, "source": "generated", "augmentation_type": "template", "original_text": "要{sweetness}"}
+{"text": "不要冰", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "不要{extra}"}
+{"text": "改成超大杯温", "intent": "ORDER_MODIFY", "slots": {"size": "超大杯", "temperature": "温"}, "source": "generated", "augmentation_type": "template", "original_text": "改成{size}{temperature}"}
+{"text": "把甜度改成热", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "把{slot}改成{value}"}
+{"text": "改成去冰", "intent": "ORDER_MODIFY", "slots": {"temperature": "去冰"}, "source": "generated", "augmentation_type": "template", "original_text": "改成{temperature}"}
+{"text": "不要糖", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "不要{extra}"}
+{"text": "换豆奶", "intent": "ORDER_MODIFY", "slots": {"milk_type": "豆奶"}, "source": "generated", "augmentation_type": "template", "original_text": "换{milk_type}"}
+{"text": "多奶", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "多{modifier}"}
+{"text": "换全脂奶", "intent": "ORDER_MODIFY", "slots": {"milk_type": "全脂奶"}, "source": "generated", "augmentation_type": "template", "original_text": "换{milk_type}"}
+{"text": "少冰", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "少{modifier}"}
+{"text": "能换成奶咖吗", "intent": "ORDER_MODIFY", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "能换成{product}吗"}
+{"text": "奶一点", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "{modifier}一点"}
+{"text": "多冰", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "多{modifier}"}
+{"text": "能换成美事咖啡吗", "intent": "ORDER_MODIFY", "slots": {"product_name": "美式咖啡"}, "source": "generated", "augmentation_type": "template", "original_text": "能换成{product}吗"}
+{"text": "糖一点", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "{modifier}一点"}
+{"text": "把杯型改成少冰", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "把{slot}改成{value}"}
+{"text": "把杯型改成冰", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "把{slot}改成{value}"}
+{"text": "换成大杯", "intent": "ORDER_MODIFY", "slots": {"size": "大杯"}, "source": "generated", "augmentation_type": "template", "original_text": "换成{size}"}
+{"text": "换燕麦奶", "intent": "ORDER_MODIFY", "slots": {"milk_type": "燕麦奶"}, "source": "generated", "augmentation_type": "template", "original_text": "换{milk_type}"}
+{"text": "改成超大杯去冰", "intent": "ORDER_MODIFY", "slots": {"size": "超大杯", "temperature": "去冰"}, "source": "generated", "augmentation_type": "template", "original_text": "改成{size}{temperature}"}
+{"text": "改成少冰", "intent": "ORDER_MODIFY", "slots": {"temperature": "少冰"}, "source": "generated", "augmentation_type": "template", "original_text": "改成{temperature}"}
+{"text": "要三分糖", "intent": "ORDER_MODIFY", "slots": {"sweetness": "三分糖"}, "source": "generated", "augmentation_type": "template", "original_text": "要{sweetness}"}
+{"text": "要标准", "intent": "ORDER_MODIFY", "slots": {"sweetness": "标准"}, "source": "generated", "augmentation_type": "template", "original_text": "要{sweetness}"}
+{"text": "能换成末卡吗", "intent": "ORDER_MODIFY", "slots": {"product_name": "摩卡"}, "source": "generated", "augmentation_type": "template", "original_text": "能换成{product}吗"}
+{"text": "改成大杯温", "intent": "ORDER_MODIFY", "slots": {"size": "大杯", "temperature": "温"}, "source": "generated", "augmentation_type": "template", "original_text": "改成{size}{temperature}"}
+{"text": "换成超大杯", "intent": "ORDER_MODIFY", "slots": {"size": "超大杯"}, "source": "generated", "augmentation_type": "template", "original_text": "换成{size}"}
+{"text": "取消", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "取消"}
+{"text": "退掉", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "退掉"}
+{"text": "我不想要了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "我不想要了"}
+{"text": "不喝了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "不喝了"}
+{"text": "算了算了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "算了算了"}
+{"text": "先不喝了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "先不喝了"}
+{"text": "改天吧", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "改天吧"}
+{"text": "下次再说吧", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "下次再说吧"}
+{"text": "帮我取消一下", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "帮我取消一下"}
+{"text": "算了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "算了"}
+{"text": "取消订单", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "取消订单"}
+{"text": "还是不要了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "还是不要了"}
+{"text": "突然不想喝了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "突然不想喝了"}
+{"text": "不要了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "不要了"}
+{"text": "不点了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "不点了"}
+{"text": "什么好喝", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "什么好喝"}
+{"text": "有没有低卡的咖啡", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有没有{characteristic}的咖啡"}
+{"text": "哪个比较好喝", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "哪个比较好喝"}
+{"text": "想喝低卡的，推荐一个", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "想喝{characteristic}的，推荐一个"}
+{"text": "招牌是什么", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "招牌是什么"}
+{"text": "推荐一款提神的", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "推荐一款{characteristic}的"}
+{"text": "今日特饮是什么", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "今日特饮是什么"}
+{"text": "想喝健康的，推荐一个", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "想喝{characteristic}的，推荐一个"}
+{"text": "推荐一款香浓的", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "推荐一款{characteristic}的"}
+{"text": "有什么新品吗", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有什么新品吗"}
+{"text": "想喝香浓的，推荐一个", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "想喝{characteristic}的，推荐一个"}
+{"text": "有什么推荐的", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有什么推荐的"}
+{"text": "你们什么最好卖", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "你们什么最好卖"}
+{"text": "有没有不太甜的咖啡", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有没有{characteristic}的咖啡"}
+{"text": "人气最高的是哪个", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "人气最高的是哪个"}
+{"text": "推荐一下", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "推荐一下"}
+{"text": "推荐一款健康的", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "推荐一款{characteristic}的"}
+{"text": "想喝提神的，推荐一个", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "想喝{characteristic}的，推荐一个"}
+{"text": "有没有香浓的咖啡", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有没有{characteristic}的咖啡"}
+{"text": "推荐一款清淡的", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "推荐一款{characteristic}的"}
+{"text": "有没有健康的咖啡", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有没有{characteristic}的咖啡"}
+{"text": "有没有提神的咖啡", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有没有{characteristic}的咖啡"}
+{"text": "想喝不太甜的，推荐一个", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "想喝{characteristic}的，推荐一个"}
+{"text": "想喝清淡的，推荐一个", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "想喝{characteristic}的，推荐一个"}
+{"text": "推荐一款低卡的", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "推荐一款{characteristic}的"}
+{"text": "有没有清淡的咖啡", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有没有{characteristic}的咖啡"}
+{"text": "推荐一款不太甜的", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "推荐一款{characteristic}的"}
+{"text": "flatwhite成分是什么", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}成分是什么"}
+{"text": "Mocha多少钱", "intent": "PRODUCT_INFO", "slots": {"product_name": "摩卡"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}多少钱"}
+{"text": "馥芮白价格是多少", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}价格是多少"}
+{"text": "拿贴怎么卖", "intent": "PRODUCT_INFO", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}怎么卖"}
+{"text": "星巴克冰沙价格是多少", "intent": "PRODUCT_INFO", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}价格是多少"}
+{"text": "肝帝必备多少钱", "intent": "PRODUCT_INFO", "slots": {"product_name": "美式咖啡"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}多少钱"}
+{"text": "黑咖啡多少钱", "intent": "PRODUCT_INFO", "slots": {"product_name": "美式咖啡"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}多少钱"}
+{"text": "提神神器有什么配料", "intent": "PRODUCT_INFO", "slots": {"product_name": "美式咖啡"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有什么配料"}
+{"text": "玛奇朵有什么配料", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有什么配料"}
+{"text": "末茶拿铁有多少卡路里", "intent": "PRODUCT_INFO", "slots": {"product_name": "抹茶拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有多少卡路里"}
+{"text": "网红咖啡怎么卖", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}怎么卖"}
+{"text": "这个多少钱", "intent": "PRODUCT_INFO", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "这个多少钱"}
+{"text": "Frappuccino多少钱", "intent": "PRODUCT_INFO", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}多少钱"}
+{"text": "Latte有多少卡路里", "intent": "PRODUCT_INFO", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有多少卡路里"}
+{"text": "dirty热量高吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}热量高吗"}
+{"text": "女生最爱成分是什么", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}成分是什么"}
+{"text": "女生最爱有什么配料", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有什么配料"}
+{"text": "冰冰凉多少钱", "intent": "PRODUCT_INFO", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}多少钱"}
+{"text": "拿铁咖啡怎么卖", "intent": "PRODUCT_INFO", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}怎么卖"}
+{"text": "甜味咖啡有多少卡路里", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有多少卡路里"}
+{"text": "星冰乐怎么卖", "intent": "PRODUCT_INFO", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}怎么卖"}
+{"text": "拿铁咖啡有多少卡路里", "intent": "PRODUCT_INFO", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有多少卡路里"}
+{"text": "冰沙有多大杯", "intent": "PRODUCT_INFO", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有多大杯"}
+{"text": "澳白多少钱", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}多少钱"}
+{"text": "热摩卡怎么卖", "intent": "PRODUCT_INFO", "slots": {"product_name": "摩卡"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}怎么卖"}
+{"text": "玛奇朵成分是什么", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}成分是什么"}
+{"text": "肥宅咖啡有什么配料", "intent": "PRODUCT_INFO", "slots": {"product_name": "摩卡"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有什么配料"}
+{"text": "jiaotangmaqiduo价格是多少", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}价格是多少"}
+{"text": "焦糖玛琪朵有多少卡路里", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}有多少卡路里"}
+{"text": "芙芮白成分是什么", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "template", "original_text": "{product}成分是什么"}
+{"text": "你好", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "你好"}
+{"text": "你是机器人吗", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "你是机器人吗"}
+{"text": "嗨", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "嗨"}
+{"text": "好的", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "好的"}
+{"text": "今天天气真好", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "今天天气真好"}
+{"text": "再见", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "再见"}
+{"text": "嗯嗯", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "嗯嗯"}
+{"text": "OK", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "OK"}
+{"text": "谢谢", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "谢谢"}
+{"text": "拜拜", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "拜拜"}
+{"text": "支付宝可以吗", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "支付宝可以吗"}
+{"text": "买单", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "买单"}
+{"text": "怎么支付", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "怎么支付"}
+{"text": "我要付款", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "我要付款"}
+{"text": "结账", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "结账"}
+{"text": "多少钱", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "多少钱"}
+{"text": "可以微信吗", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "可以微信吗"}
+{"text": "可以用积分吗", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "可以用积分吗"}
+{"text": "有优惠吗", "intent": "PAYMENT", "slots": {}, "source": "generated", "augmentation_type": "template", "original_text": "有优惠吗"}
+{"text": "有什么推荐的咖啡吗", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "询问推荐，非下单"}
+{"text": "推荐的那个给我来一杯", "intent": "ORDER_NEW", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "基于推荐下单"}
+{"text": "什么比较好喝啊", "intent": "RECOMMEND", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "询问而非下单"}
+{"text": "好喝的来一杯", "intent": "ORDER_NEW", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "模糊但有下单意图"}
+{"text": "换一杯拿铁", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "替换当前订单"}
+{"text": "再来一杯拿铁", "intent": "ORDER_NEW", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "追加新订单"}
+{"text": "还要一杯", "intent": "ORDER_NEW", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "追加"}
+{"text": "这个不要了换一个", "intent": "ORDER_MODIFY", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "替换"}
+{"text": "算了吧", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "隐式取消"}
+{"text": "还是算了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "隐式取消"}
+{"text": "不点了不点了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "重复强调"}
+{"text": "突然不想喝了", "intent": "ORDER_CANCEL", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "间接取消"}
+{"text": "等会儿再说", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "延迟，非取消"}
+{"text": "就这样", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "确认"}
+{"text": "可以", "intent": "CHITCHAT", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "确认"}
+{"text": "这个怎么样", "intent": "PRODUCT_INFO", "slots": {}, "source": "generated", "augmentation_type": "edge_case", "original_text": "询问产品"}
+{"text": "来个卡布基诺试试", "intent": "ORDER_NEW", "slots": {"product_name": "卡布奇诺"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "有星兵乐吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "星冰乐"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "卡布基诺还有吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "卡布奇诺"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "dirty还有吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "有卡布吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "卡布奇诺"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "入门咖啡怎么样", "intent": "PRODUCT_INFO", "slots": {"product_name": "拿铁"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "Caramel Macchiato还有吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "没事咖啡怎么样", "intent": "PRODUCT_INFO", "slots": {"product_name": "美式咖啡"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "有甜味咖啡吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "meishi还有吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "美式咖啡"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "有复瑞白吗", "intent": "PRODUCT_INFO", "slots": {"product_name": "馥芮白"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "来个末卡试试", "intent": "ORDER_NEW", "slots": {"product_name": "摩卡"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "来个抹差拿铁试试", "intent": "ORDER_NEW", "slots": {"product_name": "抹茶拿铁"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}
+{"text": "甜味咖啡怎么样", "intent": "PRODUCT_INFO", "slots": {"product_name": "焦糖玛奇朵"}, "source": "generated", "augmentation_type": "edge_case", "original_text": ""}

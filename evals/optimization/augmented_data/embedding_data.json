@@ -1,0 +1,3011 @@
+[
+  {
+    "id": "product_967c1863",
+    "text": "美式咖啡",
+    "metadata": {
+      "type": "product",
+      "product_name": "美式咖啡",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_4dd484bc",
+    "text": "命续是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "命续"
+    }
+  },
+  {
+    "id": "alias_5b292619",
+    "text": "美事咖啡是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "美事咖啡"
+    }
+  },
+  {
+    "id": "alias_21e96a59",
+    "text": "续命水是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "续命水"
+    }
+  },
+  {
+    "id": "alias_cf7eaf92",
+    "text": "黑色血液是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "黑色血液"
+    }
+  },
+  {
+    "id": "alias_7ef3378f",
+    "text": "meishi是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "meishi"
+    }
+  },
+  {
+    "id": "alias_3927d488",
+    "text": "肝帝必备是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "肝帝必备"
+    }
+  },
+  {
+    "id": "alias_7eaf3831",
+    "text": "冰美式是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "冰美式"
+    }
+  },
+  {
+    "id": "alias_092ca70f",
+    "text": "苦咖啡是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "苦咖啡"
+    }
+  },
+  {
+    "id": "alias_c9b398df",
+    "text": "Americano是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "Americano"
+    }
+  },
+  {
+    "id": "alias_5358e58b",
+    "text": "续命咖啡是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "续命咖啡"
+    }
+  },
+  {
+    "id": "alias_62d4b778",
+    "text": "americano是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "americano"
+    }
+  },
+  {
+    "id": "alias_a3eb0e95",
+    "text": "打工人标配是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "打工人标配"
+    }
+  },
+  {
+    "id": "alias_1aeb1d41",
+    "text": "美式是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "美式"
+    }
+  },
+  {
+    "id": "alias_6283f76c",
+    "text": "热美式是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "热美式"
+    }
+  },
+  {
+    "id": "alias_2c398c83",
+    "text": "续命液是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "续命液"
+    }
+  },
+  {
+    "id": "alias_670f2f3a",
+    "text": "提神神器是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "提神神器"
+    }
+  },
+  {
+    "id": "alias_2f4995eb",
+    "text": "清咖是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "清咖"
+    }
+  },
+  {
+    "id": "alias_a549b398",
+    "text": "黑咖啡是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "黑咖啡"
+    }
+  },
+  {
+    "id": "alias_547e3f43",
+    "text": "没事咖啡是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "没事咖啡"
+    }
+  },
+  {
+    "id": "alias_1084d306",
+    "text": "美事是美式咖啡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "美事"
+    }
+  },
+  {
+    "id": "product_c752774c",
+    "text": "拿铁",
+    "metadata": {
+      "type": "product",
+      "product_name": "拿铁",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_d793658e",
+    "text": "奶咖是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "奶咖"
+    }
+  },
+  {
+    "id": "alias_cf2cf66e",
+    "text": "那铁是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "那铁"
+    }
+  },
+  {
+    "id": "alias_ee52ee93",
+    "text": "拿帖是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "拿帖"
+    }
+  },
+  {
+    "id": "alias_47472fc9",
+    "text": "牛奶咖啡是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "牛奶咖啡"
+    }
+  },
+  {
+    "id": "alias_0b6eed49",
+    "text": "Latte是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "Latte"
+    }
+  },
+  {
+    "id": "alias_394e7648",
+    "text": "咖啡拿铁是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "咖啡拿铁"
+    }
+  },
+  {
+    "id": "alias_c18c8131",
+    "text": "latte是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "latte"
+    }
+  },
+  {
+    "id": "alias_7d12a1fd",
+    "text": "拿贴是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "拿贴"
+    }
+  },
+  {
+    "id": "alias_e8f5aaef",
+    "text": "丝滑咖啡是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "丝滑咖啡"
+    }
+  },
+  {
+    "id": "alias_456a49d0",
+    "text": "拿铁咖啡是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "拿铁咖啡"
+    }
+  },
+  {
+    "id": "alias_2bfc8841",
+    "text": "热拿铁是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "热拿铁"
+    }
+  },
+  {
+    "id": "alias_13dc0897",
+    "text": "入门咖啡是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "入门咖啡"
+    }
+  },
+  {
+    "id": "alias_d2aafa09",
+    "text": "奶茶味咖啡是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "奶茶味咖啡"
+    }
+  },
+  {
+    "id": "alias_aa62501f",
+    "text": "natie是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "natie"
+    }
+  },
+  {
+    "id": "alias_d62262b5",
+    "text": "冰拿铁是拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "冰拿铁"
+    }
+  },
+  {
+    "id": "product_1c83d88e",
+    "text": "卡布奇诺",
+    "metadata": {
+      "type": "product",
+      "product_name": "卡布奇诺",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_e1ffe2ab",
+    "text": "卡布奇洛是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "卡布奇洛"
+    }
+  },
+  {
+    "id": "alias_0a237622",
+    "text": "卡布基诺是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "卡布基诺"
+    }
+  },
+  {
+    "id": "alias_ac194bd9",
+    "text": "kabu是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "kabu"
+    }
+  },
+  {
+    "id": "alias_3239ae98",
+    "text": "Cappuccino是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "Cappuccino"
+    }
+  },
+  {
+    "id": "alias_884201c8",
+    "text": "cappuccino是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "cappuccino"
+    }
+  },
+  {
+    "id": "alias_81aab676",
+    "text": "卡不奇诺是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "卡不奇诺"
+    }
+  },
+  {
+    "id": "alias_13254654",
+    "text": "意式经典是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "意式经典"
+    }
+  },
+  {
+    "id": "alias_216d5162",
+    "text": "卡布其诺是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "卡布其诺"
+    }
+  },
+  {
+    "id": "alias_8b92e28a",
+    "text": "卡布是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "卡布"
+    }
+  },
+  {
+    "id": "alias_adf43f40",
+    "text": "奶泡咖啡是卡布奇诺",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "奶泡咖啡"
+    }
+  },
+  {
+    "id": "product_4c882459",
+    "text": "摩卡",
+    "metadata": {
+      "type": "product",
+      "product_name": "摩卡",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_6c8e23e0",
+    "text": "磨卡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "磨卡"
+    }
+  },
+  {
+    "id": "alias_8df56d63",
+    "text": "moka是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "moka"
+    }
+  },
+  {
+    "id": "alias_22b45f0a",
+    "text": "冰摩卡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "冰摩卡"
+    }
+  },
+  {
+    "id": "alias_802150d5",
+    "text": "巧克力咖啡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "巧克力咖啡"
+    }
+  },
+  {
+    "id": "alias_ee437585",
+    "text": "末卡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "末卡"
+    }
+  },
+  {
+    "id": "alias_4f95d473",
+    "text": "甜党首选是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "甜党首选"
+    }
+  },
+  {
+    "id": "alias_59c6f0e9",
+    "text": "肥宅咖啡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "肥宅咖啡"
+    }
+  },
+  {
+    "id": "alias_eac7953c",
+    "text": "摩卡咖啡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "摩卡咖啡"
+    }
+  },
+  {
+    "id": "alias_664d1026",
+    "text": "热摩卡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "热摩卡"
+    }
+  },
+  {
+    "id": "alias_ecbb1fea",
+    "text": "甜咖啡是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "甜咖啡"
+    }
+  },
+  {
+    "id": "alias_6d309d76",
+    "text": "Mocha是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "Mocha"
+    }
+  },
+  {
+    "id": "alias_db2180ef",
+    "text": "mocha是摩卡",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "mocha"
+    }
+  },
+  {
+    "id": "product_a241d027",
+    "text": "星冰乐",
+    "metadata": {
+      "type": "product",
+      "product_name": "星冰乐",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_6cb201c2",
+    "text": "肥宅快乐水是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "肥宅快乐水"
+    }
+  },
+  {
+    "id": "alias_422af641",
+    "text": "快乐肥宅水是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "快乐肥宅水"
+    }
+  },
+  {
+    "id": "alias_30f32fa8",
+    "text": "冰冰凉是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "冰冰凉"
+    }
+  },
+  {
+    "id": "alias_d391f874",
+    "text": "星兵乐是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "星兵乐"
+    }
+  },
+  {
+    "id": "alias_54c54e26",
+    "text": "Frappuccino是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "Frappuccino"
+    }
+  },
+  {
+    "id": "alias_46acbc62",
+    "text": "星冰了是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "星冰了"
+    }
+  },
+  {
+    "id": "alias_ebdb7c42",
+    "text": "frappuccino是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "frappuccino"
+    }
+  },
+  {
+    "id": "alias_d95e9626",
+    "text": "xingbingle是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "xingbingle"
+    }
+  },
+  {
+    "id": "alias_5d6a639d",
+    "text": "冰饮是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "冰饮"
+    }
+  },
+  {
+    "id": "alias_79bf8a96",
+    "text": "星巴克冰沙是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "星巴克冰沙"
+    }
+  },
+  {
+    "id": "alias_00703e00",
+    "text": "冰沙是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "冰沙"
+    }
+  },
+  {
+    "id": "alias_6aade2d5",
+    "text": "夏日续命是星冰乐",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "夏日续命"
+    }
+  },
+  {
+    "id": "product_475dba1c",
+    "text": "馥芮白",
+    "metadata": {
+      "type": "product",
+      "product_name": "馥芮白",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_5b5df5a8",
+    "text": "澳洲白咖啡是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "澳洲白咖啡"
+    }
+  },
+  {
+    "id": "alias_29deb83a",
+    "text": "小白咖啡是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "小白咖啡"
+    }
+  },
+  {
+    "id": "alias_e3a6d8c3",
+    "text": "馥瑞白是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "馥瑞白"
+    }
+  },
+  {
+    "id": "alias_8a8249c8",
+    "text": "网红咖啡是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "网红咖啡"
+    }
+  },
+  {
+    "id": "alias_25b33665",
+    "text": "脏咖啡是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "脏咖啡"
+    }
+  },
+  {
+    "id": "alias_cde577af",
+    "text": "furuibai是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "furuibai"
+    }
+  },
+  {
+    "id": "alias_97cbe39f",
+    "text": "复瑞白是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "复瑞白"
+    }
+  },
+  {
+    "id": "alias_d9b5ac8c",
+    "text": "芙芮白是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "芙芮白"
+    }
+  },
+  {
+    "id": "alias_debcc600",
+    "text": "澳瑞白是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "澳瑞白"
+    }
+  },
+  {
+    "id": "alias_b1ebdd80",
+    "text": "flatwhite是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "flatwhite"
+    }
+  },
+  {
+    "id": "alias_a4eda3b1",
+    "text": "Flat White是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "Flat White"
+    }
+  },
+  {
+    "id": "alias_bab619e8",
+    "text": "澳白是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "澳白"
+    }
+  },
+  {
+    "id": "alias_32478ef7",
+    "text": "dirty是馥芮白",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "dirty"
+    }
+  },
+  {
+    "id": "product_96630d24",
+    "text": "抹茶拿铁",
+    "metadata": {
+      "type": "product",
+      "product_name": "抹茶拿铁",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_33a3f5cd",
+    "text": "末茶拿铁是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "末茶拿铁"
+    }
+  },
+  {
+    "id": "alias_cfe40796",
+    "text": "绿色拿铁是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "绿色拿铁"
+    }
+  },
+  {
+    "id": "alias_d105c71f",
+    "text": "绿茶拿铁是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "绿茶拿铁"
+    }
+  },
+  {
+    "id": "alias_fcb657b1",
+    "text": "Matcha Latte是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "Matcha Latte"
+    }
+  },
+  {
+    "id": "alias_59e30e64",
+    "text": "日式抹茶是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "日式抹茶"
+    }
+  },
+  {
+    "id": "alias_f6fd42c7",
+    "text": "抹茶控必点是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "抹茶控必点"
+    }
+  },
+  {
+    "id": "alias_53126349",
+    "text": "抹茶是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "抹茶"
+    }
+  },
+  {
+    "id": "alias_848e69ce",
+    "text": "matchalatte是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "matchalatte"
+    }
+  },
+  {
+    "id": "alias_bc5abe95",
+    "text": "抹差拿铁是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "抹差拿铁"
+    }
+  },
+  {
+    "id": "alias_db2180ef",
+    "text": "mocha是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "mocha"
+    }
+  },
+  {
+    "id": "alias_a98c0794",
+    "text": "绿色续命是抹茶拿铁",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "抹茶拿铁",
+      "alias": "绿色续命"
+    }
+  },
+  {
+    "id": "product_42c4f240",
+    "text": "焦糖玛奇朵",
+    "metadata": {
+      "type": "product",
+      "product_name": "焦糖玛奇朵",
+      "is_canonical": true
+    }
+  },
+  {
+    "id": "alias_919c3884",
+    "text": "macchiato是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "macchiato"
+    }
+  },
+  {
+    "id": "alias_520f4f5d",
+    "text": "焦糖玛琪朵是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "焦糖玛琪朵"
+    }
+  },
+  {
+    "id": "alias_1f55b1b0",
+    "text": "焦糖控是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "焦糖控"
+    }
+  },
+  {
+    "id": "alias_2f86da97",
+    "text": "玛奇朵是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "玛奇朵"
+    }
+  },
+  {
+    "id": "alias_e1bfce9c",
+    "text": "焦糖咖啡是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "焦糖咖啡"
+    }
+  },
+  {
+    "id": "alias_143b1622",
+    "text": "女生最爱是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "女生最爱"
+    }
+  },
+  {
+    "id": "alias_459b54a6",
+    "text": "焦糖马奇朵是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "焦糖马奇朵"
+    }
+  },
+  {
+    "id": "alias_8976d870",
+    "text": "甜味咖啡是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "甜味咖啡"
+    }
+  },
+  {
+    "id": "alias_7f45b4e1",
+    "text": "甜妹咖啡是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "甜妹咖啡"
+    }
+  },
+  {
+    "id": "alias_92cfa477",
+    "text": "jiaotangmaqiduo是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "jiaotangmaqiduo"
+    }
+  },
+  {
+    "id": "alias_173440d4",
+    "text": "Caramel Macchiato是焦糖玛奇朵",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "焦糖玛奇朵",
+      "alias": "Caramel Macchiato"
+    }
+  },
+  {
+    "id": "intent_e73e5399",
+    "text": "我要一杯没事咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_56063c43",
+    "text": "奶茶味咖啡来一杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_40e784fd",
+    "text": "给我一杯冰沙",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_873841fe",
+    "text": "来个焦糖玛奇朵",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_cfcf87b8",
+    "text": "一杯大杯热星兵乐",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐",
+        "size": "大杯",
+        "temperature": "热"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_0db2ac18",
+    "text": "星巴克冰沙来一杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_66de7e9c",
+    "text": "冰饮来一杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a555f6e7",
+    "text": "中杯natie",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁",
+        "size": "中杯"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6290c371",
+    "text": "热摩卡咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "摩卡",
+        "temperature": "热"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_c951c232",
+    "text": "来一杯星巴克冰沙",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_4f7e7876",
+    "text": "来个焦糖马奇朵呗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7b3a72be",
+    "text": "冰抹差拿铁",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "抹茶拿铁",
+        "temperature": "冰"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_17c1c99b",
+    "text": "我要一杯入门咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_c4167710",
+    "text": "点一杯kabu，少冰的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺",
+        "temperature": "少冰"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_ee34bb3d",
+    "text": "一杯大杯热芙芮白",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "馥芮白",
+        "size": "大杯",
+        "temperature": "热"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_ed4326bc",
+    "text": "要一个卡布",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_1305b2a1",
+    "text": "甜妹咖啡来一杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_15ba52f1",
+    "text": "搞一个Flat White",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d33a1b2d",
+    "text": "要一个焦糖控",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_71f022a3",
+    "text": "搞一个抹茶",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "抹茶拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a5d5af77",
+    "text": "我要一杯星冰了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d1846ba4",
+    "text": "点一杯焦糖玛奇朵，热的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "焦糖玛奇朵",
+        "temperature": "热"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5214c9e0",
+    "text": "想要绿色续命",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "抹茶拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_c997e2fd",
+    "text": "一杯拿帖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a324437e",
+    "text": "中杯冰饮",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐",
+        "size": "中杯"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_52dae267",
+    "text": "整一杯卡布",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d5cbce3e",
+    "text": "要一个拿贴",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_13f1bc83",
+    "text": "我想喝卡布奇洛",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_f8b57cdf",
+    "text": "我要一杯奶泡咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e2970cbd",
+    "text": "来一杯拿铁",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_40a9b9af",
+    "text": "多糖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_55e94a30",
+    "text": "加一份浓缩",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_36bac2e1",
+    "text": "冰一点",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_3741ec90",
+    "text": "少奶",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7163d6d3",
+    "text": "要半糖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "sweetness": "半糖"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7b235d76",
+    "text": "不要冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_264c96fd",
+    "text": "改成超大杯温",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "size": "超大杯",
+        "temperature": "温"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_0e7e793e",
+    "text": "把甜度改成热",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6c3b9913",
+    "text": "改成去冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "temperature": "去冰"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_08dfd4f2",
+    "text": "不要糖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6f63c01e",
+    "text": "换豆奶",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "milk_type": "豆奶"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_ce907eab",
+    "text": "多奶",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_460f5de1",
+    "text": "换全脂奶",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "milk_type": "全脂奶"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d8a56361",
+    "text": "少冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a1cb89ed",
+    "text": "能换成奶咖吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_4592af81",
+    "text": "奶一点",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5b1d3f10",
+    "text": "多冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_79a42e62",
+    "text": "能换成美事咖啡吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_485ae567",
+    "text": "糖一点",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6040c9de",
+    "text": "把杯型改成少冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d51c8537",
+    "text": "把杯型改成冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_8b909c62",
+    "text": "换成大杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "size": "大杯"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_022dcc57",
+    "text": "换燕麦奶",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "milk_type": "燕麦奶"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_649bd7f9",
+    "text": "改成超大杯去冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "size": "超大杯",
+        "temperature": "去冰"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_2097b717",
+    "text": "改成少冰",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "temperature": "少冰"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_58ec87d9",
+    "text": "要三分糖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "sweetness": "三分糖"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_c1df5f3d",
+    "text": "要标准",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "sweetness": "标准"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_11c14c2b",
+    "text": "能换成末卡吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "product_name": "摩卡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_ae016f22",
+    "text": "改成大杯温",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "size": "大杯",
+        "temperature": "温"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a2ff8107",
+    "text": "换成超大杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "size": "超大杯"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_625fb26b",
+    "text": "取消",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_91441306",
+    "text": "退掉",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_cc4a02f7",
+    "text": "我不想要了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_4672656b",
+    "text": "不喝了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6a80fa13",
+    "text": "算了算了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5dda8ffd",
+    "text": "先不喝了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6beb9b49",
+    "text": "改天吧",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_c34abbeb",
+    "text": "下次再说吧",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_da22bd6a",
+    "text": "帮我取消一下",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7271d083",
+    "text": "算了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_b21b5ec9",
+    "text": "取消订单",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_697836e1",
+    "text": "还是不要了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5767b520",
+    "text": "突然不想喝了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6d21850b",
+    "text": "不要了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_edaf36b6",
+    "text": "不点了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_49974cd7",
+    "text": "什么好喝",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e66fd5c0",
+    "text": "有没有低卡的咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e929d1a3",
+    "text": "哪个比较好喝",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_b8b0edc4",
+    "text": "想喝低卡的，推荐一个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_200fb75c",
+    "text": "招牌是什么",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_2266cd91",
+    "text": "推荐一款提神的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_82f2e6f0",
+    "text": "今日特饮是什么",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_9973b4ab",
+    "text": "想喝健康的，推荐一个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_dbd23271",
+    "text": "推荐一款香浓的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_df3ca545",
+    "text": "有什么新品吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_f2d00b86",
+    "text": "想喝香浓的，推荐一个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_da17ed8b",
+    "text": "有什么推荐的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e0993474",
+    "text": "你们什么最好卖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_1649b051",
+    "text": "有没有不太甜的咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_9d3acabb",
+    "text": "人气最高的是哪个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_688e4be5",
+    "text": "推荐一下",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_93aeb4e6",
+    "text": "推荐一款健康的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_329af1ff",
+    "text": "想喝提神的，推荐一个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_9e381973",
+    "text": "有没有香浓的咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_3c67cb80",
+    "text": "推荐一款清淡的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_61a44bf0",
+    "text": "有没有健康的咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_62e975a2",
+    "text": "有没有提神的咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7b121ae0",
+    "text": "想喝不太甜的，推荐一个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a68831c3",
+    "text": "想喝清淡的，推荐一个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_1b1f2fc4",
+    "text": "推荐一款低卡的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_30fb19ca",
+    "text": "有没有清淡的咖啡",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_04249c1f",
+    "text": "推荐一款不太甜的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_68cc28f7",
+    "text": "flatwhite成分是什么",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_eba8b8ef",
+    "text": "Mocha多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "摩卡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_83b992bf",
+    "text": "馥芮白价格是多少",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d69d5f8f",
+    "text": "拿贴怎么卖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_28cd8672",
+    "text": "星巴克冰沙价格是多少",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_1e6d5d5b",
+    "text": "肝帝必备多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_b121bbed",
+    "text": "黑咖啡多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_de5e8202",
+    "text": "提神神器有什么配料",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_8269eaf5",
+    "text": "玛奇朵有什么配料",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_af142459",
+    "text": "末茶拿铁有多少卡路里",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "抹茶拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_8d3d185d",
+    "text": "网红咖啡怎么卖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_03c153c0",
+    "text": "这个多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_29a4b294",
+    "text": "Frappuccino多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5c8b31dc",
+    "text": "Latte有多少卡路里",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_771b907c",
+    "text": "dirty热量高吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_fdacdbf2",
+    "text": "女生最爱成分是什么",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_ec374bfa",
+    "text": "女生最爱有什么配料",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_3a2365a7",
+    "text": "冰冰凉多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7aaa35db",
+    "text": "拿铁咖啡怎么卖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_b724bfe6",
+    "text": "甜味咖啡有多少卡路里",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_4f089e73",
+    "text": "星冰乐怎么卖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_2ab9e11d",
+    "text": "拿铁咖啡有多少卡路里",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d5fee6be",
+    "text": "冰沙有多大杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_8e650d17",
+    "text": "澳白多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_b3f198b0",
+    "text": "热摩卡怎么卖",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "摩卡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_55dde0a6",
+    "text": "玛奇朵成分是什么",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_4a3b508a",
+    "text": "肥宅咖啡有什么配料",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "摩卡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_b524c9c0",
+    "text": "jiaotangmaqiduo价格是多少",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_2383b2bd",
+    "text": "焦糖玛琪朵有多少卡路里",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_f75332e7",
+    "text": "芙芮白成分是什么",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7eca689f",
+    "text": "你好",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6f8e926b",
+    "text": "你是机器人吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_dd52cad3",
+    "text": "嗨",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_375ec885",
+    "text": "好的",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5f4152cd",
+    "text": "今天天气真好",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_8e5c0a1e",
+    "text": "再见",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_c6711816",
+    "text": "嗯嗯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e0aa021e",
+    "text": "OK",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a34490b5",
+    "text": "谢谢",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_15034b71",
+    "text": "拜拜",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_db5c74ae",
+    "text": "支付宝可以吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_554003c7",
+    "text": "买单",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_7336c99a",
+    "text": "怎么支付",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_213a5556",
+    "text": "我要付款",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_d58c3138",
+    "text": "结账",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_57af3610",
+    "text": "多少钱",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_ba9dfefa",
+    "text": "可以微信吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e304e7b3",
+    "text": "可以用积分吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_96a16142",
+    "text": "有优惠吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e8108d03",
+    "text": "有什么推荐的咖啡吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_8eec0c79",
+    "text": "推荐的那个给我来一杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_e26c2d55",
+    "text": "什么比较好喝啊",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_b732432d",
+    "text": "好喝的来一杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_34836b76",
+    "text": "换一杯拿铁",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_3dcea168",
+    "text": "再来一杯拿铁",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_65e84fe3",
+    "text": "还要一杯",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_09212967",
+    "text": "这个不要了换一个",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_75fd5a68",
+    "text": "算了吧",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_58d2b5de",
+    "text": "还是算了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_6d0bf023",
+    "text": "不点了不点了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5767b520",
+    "text": "突然不想喝了",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_db1d5754",
+    "text": "等会儿再说",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_82942b45",
+    "text": "就这样",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_eaa9c5c2",
+    "text": "可以",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_a937b3e8",
+    "text": "这个怎么样",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {},
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_fa5c1b57",
+    "text": "来个卡布基诺试试",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_625d07d9",
+    "text": "有星兵乐吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "星冰乐"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_cc8217c9",
+    "text": "卡布基诺还有吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "卡布奇诺"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_739e762e",
+    "text": "dirty还有吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_4508f65b",
+    "text": "有卡布吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "卡布奇诺"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_0760b7e3",
+    "text": "入门咖啡怎么样",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_53b6ce2d",
+    "text": "Caramel Macchiato还有吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_f15bc5df",
+    "text": "没事咖啡怎么样",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_5caa6949",
+    "text": "有甜味咖啡吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_3d1e805e",
+    "text": "meishi还有吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_edd1684f",
+    "text": "有复瑞白吗",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "馥芮白"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_cc31f9d9",
+    "text": "来个末卡试试",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "摩卡"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_cc5123ca",
+    "text": "来个抹差拿铁试试",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "抹茶拿铁"
+      },
+      "source": "generated"
+    }
+  },
+  {
+    "id": "intent_41e7c9d4",
+    "text": "甜味咖啡怎么样",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "焦糖玛奇朵"
+      },
+      "source": "generated"
+    }
+  }
+]

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评估报告: all</title>
+    
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-600: #4B5563;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--gray-800);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .header .badge {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2rem;
+            font-weight: 600;
+        }
+
+        /* Summary Cards */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            background: var(--gray-50);
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .card .label {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .card.success .value { color: var(--success); }
+        .card.danger .value { color: var(--danger); }
+        .card.warning .value { color: var(--warning); }
+
+        /* Progress Ring */
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .progress-ring .bg {
+            stroke: var(--gray-200);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--success);
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-ring .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Category Stats */
+        .category-section {
+            padding: 2rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .category-card {
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-name {
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .category-stats {
+            text-align: right;
+        }
+
+        .category-rate {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .category-count {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        /* Task List */
+        .tasks-section {
+            padding: 2rem;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .task-item {
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .task-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .task-header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: var(--gray-50);
+        }
+
+        .task-header:hover {
+            background: var(--gray-100);
+        }
+
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .task-status {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .task-status.pass {
+            background: #D1FAE5;
+            color: var(--success);
+        }
+
+        .task-status.fail {
+            background: #FEE2E2;
+            color: var(--danger);
+        }
+
+        .task-name {
+            font-weight: 500;
+        }
+
+        .task-id {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .task-metrics {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .task-details {
+            display: none;
+            padding: 1.5rem;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .task-item.expanded .task-details {
+            display: block;
+        }
+
+        .task-item.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .expand-icon {
+            transition: transform 0.2s;
+            color: var(--gray-600);
+        }
+
+        /* Trial Details */
+        .trials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trial-card {
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .trial-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .trial-number {
+            font-weight: 500;
+        }
+
+        .trial-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .trial-status.pass {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .trial-status.fail {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .grader-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .grader-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 0.25rem;
+        }
+
+        .grader-name {
+            color: var(--gray-600);
+        }
+
+        .grader-score {
+            font-weight: 500;
+        }
+
+        /* Failures Section */
+        .failures-section {
+            margin-top: 1rem;
+        }
+
+        .failures-title {
+            font-weight: 500;
+            color: var(--danger);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .failure-item {
+            background: #FEF2F2;
+            border-left: 3px solid var(--danger);
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 0.25rem 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .failure-type {
+            font-weight: 500;
+            color: var(--danger);
+        }
+
+        .failure-detail {
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 1.5rem 2rem;
+            background: var(--gray-50);
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .card .value {
+                font-size: 1.75rem;
+            }
+
+            .task-metrics {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="header">
+            <h1>🧪 AI 点单系统评估报告</h1>
+            <p class="subtitle">套件: all | 生成时间: 2026-01-11 12:55:27</p>
+            <span class="badge">❌ 失败</span>
+        </div>
+        
+        <div class="summary">
+            <div class="card">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                    <circle class="bg" cx="60" cy="60" r="52"/>
+                    <circle class="progress" cx="60" cy="60" r="52"
+                            data-percent="0"
+                            style="stroke: #EF4444"/>
+                    <text x="60" y="65" text-anchor="middle" class="value">0%</text>
+                </svg>
+                <div class="label">总体通过率</div>
+            </div>
+            <div class="card success">
+                <div class="value">0</div>
+                <div class="label">通过任务</div>
+            </div>
+            <div class="card danger">
+                <div class="value">0</div>
+                <div class="label">失败任务</div>
+            </div>
+            <div class="card">
+                <div class="value">0</div>
+                <div class="label">总任务数</div>
+            </div>
+            <div class="card warning">
+                <div class="value">0.0s</div>
+                <div class="label">总耗时</div>
+            </div>
+        </div>
+        
+        
+        <div class="tasks-section">
+            <h2 class="section-title">📋 任务详情</h2>
+            <div class="task-list">
+                
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>基于 <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank">Anthropic AI Agent Evals</a> 方法论</p>
+            <p>开始时间: 2026-01-11T12:55:27.027941 | 完成时间: 2026-01-11T12:55:27.027952</p>
+        </div>
+    </div>
+    
+    <script>
+        // 展开/折叠任务详情
+        document.querySelectorAll('.task-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                item.classList.toggle('expanded');
+            });
+        });
+
+        // 进度环动画
+        document.querySelectorAll('.progress-ring .progress').forEach(circle => {
+            const percent = parseFloat(circle.dataset.percent);
+            const circumference = 2 * Math.PI * 52;
+            const offset = circumference - (percent / 100) * circumference;
+            circle.style.strokeDasharray = circumference;
+            circle.style.strokeDashoffset = offset;
+        });
+    </script>
+</body>
+</html>

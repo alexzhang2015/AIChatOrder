@@ -1,0 +1,43 @@
+# 隐式取消者模拟测试
+task:
+  id: "sim-implicit-canceler-001"
+  name: "隐式取消订单模拟"
+  description: |
+    模拟一个不直接说"取消"而用隐晦方式表达不想要的用户。
+    测试系统是否能识别隐式取消意图。
+
+  simulation:
+    user_persona: "implicit_canceler"
+    user_goal: "表达取消订单的意愿，但不直接说取消"
+    user_simulator: "gpt-4o-mini"
+    max_turns: 6
+
+  graders:
+    # 行为检查 - 期望系统识别取消意图
+    - type: behavior_check
+      model: "gpt-4o-mini"
+      rubric: |
+        评估隐式取消处理（各项 1-5 分）：
+        1. 意图识别：是否识别到用户不想继续的意图
+        2. 处理得当：是否礼貌确认用户想取消
+        3. 挽留自然：如果尝试挽留，是否自然不强求
+        4. 最终处理：是否正确完成取消流程
+      min_scores:
+        意图识别: 4
+        处理得当: 4
+
+    # 对话轮数限制
+    - type: transcript
+      max_turns: 4
+
+  tracked_metrics:
+    - n_turns
+    - duration_ms
+
+  metadata:
+    category: edge_case
+    priority: high
+    tags:
+      - boundary
+      - cancel
+      - implicit_intent

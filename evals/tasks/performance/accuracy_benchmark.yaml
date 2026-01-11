@@ -1,0 +1,117 @@
+# 准确率行业基准对比测试
+# Accuracy Industry Benchmark Comparison
+
+task:
+  id: "perf-accuracy-001"
+  name: "准确率行业基准对比"
+  description: |
+    将系统准确率与行业基准进行对比：
+    - 意图识别准确率 vs 行业平均 (92%)
+    - 槽位提取 F1 vs 行业平均 (88%)
+    - 任务完成率 vs 行业平均 (83%)
+
+  test_cases:
+    # =========================================================================
+    # 核心点单场景
+    # =========================================================================
+    - input: "来杯美式"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product: "美式咖啡"
+
+    - input: "要一杯大杯冰拿铁"
+      expected_intent: "ORDER_NEW"
+      expected_slots:
+        product: "拿铁"
+        size: "大杯"
+        temperature: "冰"
+
+    - input: "热的，少糖"
+      expected_intent: "CUSTOMIZE"
+      expected_slots:
+        temperature: "热"
+        sweetness: "少糖"
+
+    - input: "换成燕麦奶"
+      expected_intent: "ORDER_MODIFY"
+      expected_slots:
+        milk_type: "燕麦奶"
+
+    - input: "不要了，取消订单"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "我点的什么来着"
+      expected_intent: "ORDER_QUERY"
+
+    # =========================================================================
+    # 推荐场景
+    # =========================================================================
+    - input: "有什么好喝的推荐"
+      expected_intent: "RECOMMEND"
+
+    - input: "想喝点甜的"
+      expected_intent: "RECOMMEND"
+
+    - input: "不太苦的有什么"
+      expected_intent: "RECOMMEND"
+
+    # =========================================================================
+    # 产品信息
+    # =========================================================================
+    - input: "拿铁多少钱"
+      expected_intent: "PRODUCT_INFO"
+
+    - input: "星冰乐有哪些口味"
+      expected_intent: "PRODUCT_INFO"
+
+    - input: "卡布奇诺和拿铁有什么区别"
+      expected_intent: "PRODUCT_INFO"
+
+    # =========================================================================
+    # 闲聊/其他
+    # =========================================================================
+    - input: "你好"
+      expected_intent: "CHITCHAT"
+
+    - input: "谢谢"
+      expected_intent: "CHITCHAT"
+
+    - input: "今天人真多"
+      expected_intent: "CHITCHAT"
+
+  graders:
+    # 意图准确率基准对比
+    - type: benchmark
+      metric: "intent_accuracy"
+      benchmark_source: "industry"
+      weight: 1.0
+
+    # 槽位提取基准对比
+    - type: benchmark
+      metric: "slot_f1"
+      benchmark_source: "industry"
+      weight: 1.0
+
+    # 常规意图准确率评分
+    - type: intent_accuracy
+      min_accuracy: 0.90
+      weight: 0.5
+
+    # 槽位 F1 评分
+    - type: slot_f1
+      min_precision: 0.85
+      min_recall: 0.85
+      weight: 0.5
+
+  tracked_metrics:
+    - total_predictions
+    - avg_confidence
+
+  metadata:
+    category: capability
+    priority: high
+    tags:
+      - performance
+      - accuracy
+      - benchmark
+      - industry_comparison

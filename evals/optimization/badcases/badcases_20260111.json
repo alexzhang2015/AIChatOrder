@@ -1,0 +1,61 @@
+[
+  {
+    "id": "9fe719e0",
+    "timestamp": "2026-01-11T20:02:04.496998",
+    "source": "manual",
+    "user_input": "我要一杯热的星冰乐",
+    "conversation_history": [],
+    "context": {},
+    "actual_intent": "ORDER_NEW",
+    "actual_confidence": 0.0,
+    "actual_slots": {},
+    "actual_response": "",
+    "expected_intent": "ORDER_NEW",
+    "expected_slots": {},
+    "expected_response": "",
+    "category": "intent_confusion",
+    "root_cause": "",
+    "severity": "critical",
+    "tags": [],
+    "fix_strategy": "",
+    "fix_status": "fixed",
+    "fix_description": "",
+    "fixed_in_version": "",
+    "fixed_by": "",
+    "fixed_at": "2026-01-11T20:02:26.237590",
+    "verified_at": "",
+    "verification_result": ""
+  },
+  {
+    "id": "173dbc28",
+    "timestamp": "2026-01-11T20:09:24.478178",
+    "source": "session_replay",
+    "user_input": "少糖",
+    "conversation_history": [],
+    "context": {
+      "session_id": "f64470ed",
+      "notes": "用户在订单修改场景说\"少糖\"，系统误识别为 UNKNOWN"
+    },
+    "actual_intent": "UNKNOWN",
+    "actual_confidence": 0.0,
+    "actual_slots": {
+      "sweetness": "少糖"
+    },
+    "actual_response": "",
+    "expected_intent": "ORDER_MODIFY",
+    "expected_slots": {},
+    "expected_response": "",
+    "category": "intent_confusion",
+    "root_cause": "用户在订单修改场景说\"少糖\"，系统误识别为 UNKNOWN",
+    "severity": "major",
+    "tags": [],
+    "fix_strategy": "",
+    "fix_status": "analyzing",
+    "fix_description": "",
+    "fixed_in_version": "",
+    "fixed_by": "",
+    "fixed_at": "",
+    "verified_at": "",
+    "verification_result": ""
+  }
+]

@@ -1,0 +1,687 @@
+{
+  "documents": [
+    "美式咖啡。浓缩咖啡加水，简单纯粹的咖啡风味",
+    "美式就是美式咖啡",
+    "Americano就是美式咖啡",
+    "冰美式就是美式咖啡",
+    "热美式就是美式咖啡",
+    "续命水就是美式咖啡",
+    "续命咖啡就是美式咖啡",
+    "黑咖啡就是美式咖啡",
+    "拿铁。经典意式浓缩咖啡与蒸奶的完美结合，口感丝滑",
+    "Latte就是拿铁",
+    "拿铁咖啡就是拿铁",
+    "冰拿铁就是拿铁",
+    "热拿铁就是拿铁",
+    "奶咖就是拿铁",
+    "卡布奇诺。浓缩咖啡、蒸奶和奶泡的经典意式组合",
+    "Cappuccino就是卡布奇诺",
+    "卡布就是卡布奇诺",
+    "摩卡。浓缩咖啡、巧克力和蒸奶的完美融合",
+    "Mocha就是摩卡",
+    "摩卡咖啡就是摩卡",
+    "巧克力咖啡就是摩卡",
+    "星冰乐。冰爽混合饮品，清凉解暑",
+    "Frappuccino就是星冰乐",
+    "冰沙就是星冰乐",
+    "肥宅快乐水就是星冰乐",
+    "馥芮白。澳洲风格，浓缩咖啡与丝滑奶泡",
+    "Flat White就是馥芮白",
+    "澳白就是馥芮白",
+    "澳瑞白就是馥芮白",
+    "dirty就是馥芮白",
+    "我要一杯拿铁",
+    "来杯美式咖啡",
+    "给我一杯大杯冰星冰乐",
+    "两杯卡布奇诺",
+    "来个续命水",
+    "换成大杯",
+    "改成冰的",
+    "换燕麦奶",
+    "加一份浓缩",
+    "少糖",
+    "取消订单",
+    "不要了",
+    "算了",
+    "不点了",
+    "有什么推荐的",
+    "什么好喝",
+    "推荐一下",
+    "拿铁多少钱",
+    "美式有多少卡路里",
+    "你好",
+    "谢谢",
+    "好的",
+    "结账",
+    "买单",
+    "有什么推荐的咖啡吗",
+    "算了还是不喝了",
+    "换一杯拿铁",
+    "再来一杯"
+  ],
+  "metadatas": [
+    {
+      "type": "product",
+      "product_name": "美式咖啡",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.776413"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "美式",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.777373"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "Americano",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.777728"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "冰美式",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.778051"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "热美式",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.778378"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "续命水",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.778710"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "续命咖啡",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.779040"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "黑咖啡",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.779376"
+    },
+    {
+      "type": "product",
+      "product_name": "拿铁",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.780136"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "Latte",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.780541"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "拿铁咖啡",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.780936"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "冰拿铁",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.781337"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "热拿铁",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.781756"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "奶咖",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.782177"
+    },
+    {
+      "type": "product",
+      "product_name": "卡布奇诺",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.784912"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "Cappuccino",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.785403"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "卡布",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.785892"
+    },
+    {
+      "type": "product",
+      "product_name": "摩卡",
+      "category": "mocha_based",
+      "features": {},
+      "is_canonical": true,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.786392"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "Mocha",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.786912"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "摩卡咖啡",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.787367"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "巧克力咖啡",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.787849"
+    },
+    {
+      "type": "product",
+      "product_name": "星冰乐",
+      "category": "blended",
+      "features": {},
+      "is_canonical": true,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.788373"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "Frappuccino",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.788987"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "冰沙",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.789548"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "肥宅快乐水",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.790098"
+    },
+    {
+      "type": "product",
+      "product_name": "馥芮白",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.790656"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "Flat White",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.791231"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "澳白",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.792024"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "澳瑞白",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.792876"
+    },
+    {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "dirty",
+      "is_canonical": false,
+      "layer": "product",
+      "created_at": "2026-01-11T18:02:32.793705"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.794413"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.794614"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐",
+        "size": "大杯",
+        "temperature": "冰"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.794772"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺",
+        "quantity": 2
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.794947"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.795133"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "size": "大杯"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.796800"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "temperature": "冰"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.797053"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "milk_type": "燕麦奶"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.797308"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "extras": [
+          "浓缩shot"
+        ]
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.797584"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "sweetness": "少糖"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.797886"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.798211"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.798545"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.798902"
+    },
+    {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.799276"
+    },
+    {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.799667"
+    },
+    {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.800077"
+    },
+    {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.800500"
+    },
+    {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.800938"
+    },
+    {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.801400"
+    },
+    {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.801887"
+    },
+    {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.802449"
+    },
+    {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.803077"
+    },
+    {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.803576"
+    },
+    {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": "",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.804075"
+    },
+    {
+      "type": "intent_boundary",
+      "intent": "RECOMMEND",
+      "wrong_intents": [
+        "ORDER_NEW"
+      ],
+      "explanation": "询问推荐，不是直接下单",
+      "is_edge_case": true,
+      "priority": "high",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.804595"
+    },
+    {
+      "type": "intent_boundary",
+      "intent": "ORDER_CANCEL",
+      "wrong_intents": [
+        "CHITCHAT"
+      ],
+      "explanation": "隐式取消表达",
+      "is_edge_case": true,
+      "priority": "high",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.805163"
+    },
+    {
+      "type": "intent_boundary",
+      "intent": "ORDER_MODIFY",
+      "wrong_intents": [
+        "ORDER_NEW"
+      ],
+      "explanation": "替换当前订单，不是新订单",
+      "is_edge_case": true,
+      "priority": "high",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.805749"
+    },
+    {
+      "type": "intent_boundary",
+      "intent": "ORDER_NEW",
+      "wrong_intents": [
+        "ORDER_MODIFY"
+      ],
+      "explanation": "追加新订单",
+      "is_edge_case": true,
+      "priority": "high",
+      "layer": "intent",
+      "created_at": "2026-01-11T18:02:32.806359"
+    }
+  ],
+  "ids": [
+    "77d6ce9d085c",
+    "2dde9e110750",
+    "500122ff6770",
+    "d5bda2c45192",
+    "3de2d3c6425d",
+    "816c3d876220",
+    "e566808594aa",
+    "e33eed7d0f63",
+    "9d533e3dab1f",
+    "c8cf7cbccfad",
+    "ebabc89bb4e9",
+    "f27e63887c5d",
+    "f21a723735d6",
+    "9a71690ea8d4",
+    "add8ffd33fe7",
+    "1c39249ee98c",
+    "5c58a2b1f28e",
+    "df99fd5f91b9",
+    "d9a587ff296b",
+    "a1c7240d762a",
+    "9328c26120f9",
+    "03b341ef349f",
+    "5c72a2b9fa1e",
+    "7f9d2fffc96c",
+    "c0fa9f7f7ad3",
+    "6eba1fa79f1a",
+    "5390ddbb7e6c",
+    "334515e288ae",
+    "a35f5608c761",
+    "0fe5968c799c",
+    "6e75943223e9",
+    "7f4d313ef7de",
+    "6cb97e1cc067",
+    "d419cc109cdc",
+    "7a1b81b3e84a",
+    "ea60306f223a",
+    "ad40397e9639",
+    "5ca53f4555e7",
+    "e2102359bd0a",
+    "decbd5e02949",
+    "4db71bb8bd2c",
+    "5a7370ceacbd",
+    "3b40a053a84c",
+    "1be35cb664b0",
+    "6cc60f8b4213",
+    "bab8ca4ee097",
+    "0fec769d743b",
+    "8047c8f9e235",
+    "a386491e945b",
+    "be3c49877eb0",
+    "2f2193ef5453",
+    "fc76f6766ae5",
+    "4c6565867b8e",
+    "3aec5a3d50e5",
+    "1f94c693fbcd",
+    "48dbe86c8375",
+    "bbb9741fa17d",
+    "7a94c8658b52"
+  ]
+}

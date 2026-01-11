@@ -1,0 +1,56 @@
+# 网络用语达人模拟测试
+task:
+  id: "sim-slang-user-001"
+  name: "网络用语达人点单模拟"
+  description: |
+    模拟一个使用网络流行语点单的年轻用户。
+    用户会使用"续命水"等俚语表达。
+    测试系统是否能理解非标准表达。
+
+  simulation:
+    user_persona: "slang_user"
+    user_goal: "点一杯美式咖啡（用'续命水'表达）"
+    user_simulator: "gpt-4o-mini"
+    max_turns: 8
+
+  graders:
+    # 最终订单状态检查
+    - type: state_check
+      expect:
+        order:
+          items:
+            - product_name: "美式咖啡"
+          status: "pending"
+
+    # 模糊表达匹配
+    - type: fuzzy_match
+      min_match_accuracy: 0.8
+
+    # 对话质量 LLM 评分
+    - type: llm_rubric
+      model: "gpt-4o-mini"
+      rubric: |
+        评估俚语理解能力（各项 1-5 分）：
+        1. 俚语理解：是否能理解"续命水"等表达
+        2. 自然互动：回复是否自然，不死板
+        3. 纠错能力：如果不理解，是否能礼貌询问
+        4. 完成度：最终是否成功完成订单
+      min_scores:
+        俚语理解: 4
+        完成度: 4
+
+    # 对话轮数限制
+    - type: transcript
+      max_turns: 5
+
+  tracked_metrics:
+    - n_turns
+    - duration_ms
+
+  metadata:
+    category: capability
+    priority: high
+    tags:
+      - high_frequency
+      - slang
+      - fuzzy_expression

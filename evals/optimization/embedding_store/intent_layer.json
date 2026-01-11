@@ -1,0 +1,431 @@
+[
+  {
+    "id": "6e75943223e9",
+    "text": "我要一杯拿铁",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.794413"
+  },
+  {
+    "id": "7f4d313ef7de",
+    "text": "来杯美式咖啡",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.794614"
+  },
+  {
+    "id": "6cb97e1cc067",
+    "text": "给我一杯大杯冰星冰乐",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "星冰乐",
+        "size": "大杯",
+        "temperature": "冰"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.794772"
+  },
+  {
+    "id": "d419cc109cdc",
+    "text": "两杯卡布奇诺",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "卡布奇诺",
+        "quantity": 2
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.794947"
+  },
+  {
+    "id": "7a1b81b3e84a",
+    "text": "来个续命水",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_NEW",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.795133"
+  },
+  {
+    "id": "ea60306f223a",
+    "text": "换成大杯",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "size": "大杯"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.796800"
+  },
+  {
+    "id": "ad40397e9639",
+    "text": "改成冰的",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "temperature": "冰"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.797053"
+  },
+  {
+    "id": "5ca53f4555e7",
+    "text": "换燕麦奶",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "milk_type": "燕麦奶"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.797308"
+  },
+  {
+    "id": "e2102359bd0a",
+    "text": "加一份浓缩",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "extras": [
+          "浓缩shot"
+        ]
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.797584"
+  },
+  {
+    "id": "decbd5e02949",
+    "text": "少糖",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_MODIFY",
+      "slots": {
+        "sweetness": "少糖"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.797886"
+  },
+  {
+    "id": "4db71bb8bd2c",
+    "text": "取消订单",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.798211"
+  },
+  {
+    "id": "5a7370ceacbd",
+    "text": "不要了",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.798545"
+  },
+  {
+    "id": "3b40a053a84c",
+    "text": "算了",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.798902"
+  },
+  {
+    "id": "1be35cb664b0",
+    "text": "不点了",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "ORDER_CANCEL",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.799276"
+  },
+  {
+    "id": "6cc60f8b4213",
+    "text": "有什么推荐的",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.799667"
+  },
+  {
+    "id": "bab8ca4ee097",
+    "text": "什么好喝",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.800077"
+  },
+  {
+    "id": "0fec769d743b",
+    "text": "推荐一下",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "RECOMMEND",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.800500"
+  },
+  {
+    "id": "8047c8f9e235",
+    "text": "拿铁多少钱",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "拿铁"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.800938"
+  },
+  {
+    "id": "a386491e945b",
+    "text": "美式有多少卡路里",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PRODUCT_INFO",
+      "slots": {
+        "product_name": "美式咖啡"
+      },
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.801400"
+  },
+  {
+    "id": "be3c49877eb0",
+    "text": "你好",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.801887"
+  },
+  {
+    "id": "2f2193ef5453",
+    "text": "谢谢",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.802449"
+  },
+  {
+    "id": "fc76f6766ae5",
+    "text": "好的",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "CHITCHAT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.803077"
+  },
+  {
+    "id": "4c6565867b8e",
+    "text": "结账",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.803576"
+  },
+  {
+    "id": "3aec5a3d50e5",
+    "text": "买单",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_example",
+      "intent": "PAYMENT",
+      "slots": {},
+      "confidence": 1.0,
+      "is_edge_case": false,
+      "note": ""
+    },
+    "created_at": "2026-01-11T18:02:32.804075"
+  },
+  {
+    "id": "1f94c693fbcd",
+    "text": "有什么推荐的咖啡吗",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_boundary",
+      "intent": "RECOMMEND",
+      "wrong_intents": [
+        "ORDER_NEW"
+      ],
+      "explanation": "询问推荐，不是直接下单",
+      "is_edge_case": true,
+      "priority": "high"
+    },
+    "created_at": "2026-01-11T18:02:32.804595"
+  },
+  {
+    "id": "48dbe86c8375",
+    "text": "算了还是不喝了",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_boundary",
+      "intent": "ORDER_CANCEL",
+      "wrong_intents": [
+        "CHITCHAT"
+      ],
+      "explanation": "隐式取消表达",
+      "is_edge_case": true,
+      "priority": "high"
+    },
+    "created_at": "2026-01-11T18:02:32.805163"
+  },
+  {
+    "id": "bbb9741fa17d",
+    "text": "换一杯拿铁",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_boundary",
+      "intent": "ORDER_MODIFY",
+      "wrong_intents": [
+        "ORDER_NEW"
+      ],
+      "explanation": "替换当前订单，不是新订单",
+      "is_edge_case": true,
+      "priority": "high"
+    },
+    "created_at": "2026-01-11T18:02:32.805749"
+  },
+  {
+    "id": "7a94c8658b52",
+    "text": "再来一杯",
+    "layer": "intent",
+    "metadata": {
+      "type": "intent_boundary",
+      "intent": "ORDER_NEW",
+      "wrong_intents": [
+        "ORDER_MODIFY"
+      ],
+      "explanation": "追加新订单",
+      "is_edge_case": true,
+      "priority": "high"
+    },
+    "created_at": "2026-01-11T18:02:32.806359"
+  }
+]

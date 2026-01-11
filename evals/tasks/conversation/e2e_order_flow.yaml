@@ -1,0 +1,57 @@
+# 端到端点单流程评估任务
+task:
+  id: "e2e-order-001"
+  name: "完整点单流程"
+  description: "验证从用户发起到订单完成的完整对话流程"
+
+  simulation:
+    user_persona: |
+      我是一个赶时间的上班族，想快速点一杯咖啡。
+      我乳糖不耐受，需要换植物奶。
+      我喜欢不太甜的咖啡。
+
+    user_goal: |
+      最终下单：中杯燕麦拿铁，少糖
+
+    user_simulator: "gpt-4o-mini"
+    max_turns: 10
+
+  graders:
+    # 最终订单状态检查
+    - type: state_check
+      expect:
+        order:
+          items:
+            - product_name: "拿铁"
+              size: "中杯"
+              milk_type: "燕麦奶"
+              sweetness: "少糖"
+          status: "pending"
+
+    # 对话质量 LLM 评分
+    - type: llm_rubric
+      model: "gpt-4o-mini"
+      rubric: |
+        评估对话质量（各项 1-5 分）：
+        1. 意图理解：是否准确捕捉用户需求变化
+        2. 引导自然：推荐是否自然、不强推
+        3. 乳糖处理：是否主动询问或确认植物奶
+        4. 确认清晰：下单前是否清晰复述订单
+        5. 效率：是否高效完成，避免冗余轮次
+      min_scores:
+        意图理解: 4
+        乳糖处理: 4
+        确认清晰: 4
+
+    # 对话轮数限制
+    - type: transcript
+      max_turns: 6
+
+  tracked_metrics:
+    - n_turns
+    - total_tokens
+    - time_to_complete
+
+  metadata:
+    category: capability
+    priority: high

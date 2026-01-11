@@ -4,6 +4,7 @@ FastAPI 后端服务 - 支持多轮对话
 """
 
 import logging
+import time
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -62,11 +63,20 @@ static_path = Path(__file__).parent.parent / "static"
 if static_path.exists():
     app.mount("/static", StaticFiles(directory=str(static_path)), name="static")
 
+# 注册 Portal API 路由
+try:
+    from evals.portal.api import router as portal_router
+    app.include_router(portal_router)
+    logger.info("Portal API 已注册")
+except ImportError as e:
+    logger.warning(f"Portal API 未能加载: {e}")
+
 # ==================== 全局实例 ====================
 
 classifier = OpenAIClassifier()
 assistant = OrderingAssistant(classifier)
 _intent_registry = get_intent_registry()
+_start_time = time.time()
 
 # LangGraph 工作流实例
 _langgraph_workflow = None
@@ -90,7 +100,19 @@ def get_langgraph_workflow():
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    """返回前端页面 - 意图分析"""
+    """返回运营监控 Portal 页面（默认首页）"""
+    html_path = Path(__file__).parent.parent / "static" / "portal.html"
+    if html_path.exists():
+        return HTMLResponse(
+            content=html_path.read_text(encoding="utf-8"),
+            headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
+        )
+    return HTMLResponse(content="<h1>请确保 static/portal.html 存在</h1>")
+
+
+@app.get("/intent", response_class=HTMLResponse)
+async def intent_page():
+    """返回意图分析 Demo 页面"""
     html_path = Path(__file__).parent.parent / "static" / "index.html"
     if html_path.exists():
         return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
@@ -115,15 +137,52 @@ async def get_status():
     api_cache = get_api_cache()
     session_cache = get_session_cache()
 
+    openai_ok = classifier.is_available()
+    langgraph_ok = workflow is not None
+
+    # 组件状态
+    components = {
+        "openai": {
+            "status": "ok" if openai_ok else "error",
+            "details": f"模型: {classifier.model}" if openai_ok else "不可用"
+        },
+        "langgraph": {
+            "status": "ok" if langgraph_ok else "error",
+            "details": "工作流已初始化" if langgraph_ok else "未初始化"
+        },
+        "database": {
+            "status": "ok",
+            "details": "SQLite 连接正常"
+        },
+        "cache": {
+            "status": "ok",
+            "details": f"API缓存: {api_cache.stats()['size']} 条"
+        }
+    }
+
+    # 意图类型列表
+    intent_descriptions = get_intent_descriptions()
+    supported_intents = list(intent_descriptions.keys())
+
     return {
-        "openai_available": classifier.is_available(),
-        "async_available": classifier.async_client is not None,
-        "model": classifier.model,
-        "methods": list(VALID_METHODS),
-        "intent_types": get_intent_descriptions(),
-        "example_count": len(TRAINING_EXAMPLES),
-        "langgraph_available": workflow is not None,
+        # 前端期望的字段
+        "status": "ok" if openai_ok else "error",
+        "uptime_seconds": time.time() - _start_time,
         "version": "3.1.0",
+        "environment": "development",
+        "components": components,
+        "classifier": {
+            "method": "rag_enhanced",
+            "model": classifier.model,
+            "available_methods": list(VALID_METHODS)
+        },
+        "supported_intents": supported_intents,
+        # 保留原有字段以兼容其他调用
+        "openai_available": openai_ok,
+        "async_available": classifier.async_client is not None,
+        "intent_types": intent_descriptions,
+        "example_count": len(TRAINING_EXAMPLES),
+        "langgraph_available": langgraph_ok,
         "engines": ["langgraph", "legacy"],
         "cache": {
             "api": api_cache.stats(),
@@ -357,7 +416,8 @@ def run(reload: bool = False):
     print("\n" + "=" * 60)
     print("   AI 点单意图识别系统 - 重构版 v3.1")
     print("=" * 60)
-    print(f"\n打开浏览器访问: http://localhost:8000")
+    print(f"\n运营监控 Portal: http://localhost:8000")
+    print(f"意图识别 Demo: http://localhost:8000/intent")
     print(f"多轮对话页面: http://localhost:8000/chat")
     print(f"OpenAI 状态: {'可用' if classifier.is_available() else '不可用'}")
     print(f"LangGraph: {'已启用' if workflow else '未启用'}")

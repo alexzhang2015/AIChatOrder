@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 点单 Agent 业务看板</title>
+    <style>
+        :root {
+            --primary-color: #1976D2;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+            --secondary-color: #607D8B;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #1565C0);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header-info {
+            text-align: right;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Health Score */
+        .health-score {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: 8px;
+        }
+
+        .health-score .score {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .health-score .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .grid-full { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+        @media (max-width: 1200px) {
+            .grid-5 { grid-template-columns: repeat(3, 1fr); }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .grid-5, .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* Card */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Metric Card */
+        .metric-card {
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .metric-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .metric-card .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .metric-card .trend {
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .metric-card .trend.up { background: #e8f5e9; color: #2e7d32; }
+        .metric-card .trend.down { background: #ffebee; color: #c62828; }
+        .metric-card .trend.stable { background: #fff3e0; color: #ef6c00; }
+
+        .metric-card .status {
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        /* Colors */
+        .text-primary { color: var(--primary-color); }
+        .text-success { color: var(--success-color); }
+        .text-warning { color: var(--warning-color); }
+        .text-danger { color: var(--danger-color); }
+        .text-info { color: var(--info-color); }
+        .text-secondary { color: var(--secondary-color); }
+
+        .bg-primary { background-color: var(--primary-color); color: white; }
+        .bg-success { background-color: var(--success-color); color: white; }
+        .bg-warning { background-color: var(--warning-color); color: white; }
+        .bg-danger { background-color: var(--danger-color); color: white; }
+
+        /* Alert List */
+        .alert-item {
+            padding: 12px 16px;
+            border-left: 4px solid;
+            margin-bottom: 12px;
+            background: #fafafa;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .alert-item.critical { border-color: var(--danger-color); background: #fff5f5; }
+        .alert-item.warning { border-color: var(--warning-color); background: #fff8e1; }
+
+        .alert-item .title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .alert-item .action {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Action List */
+        .action-item {
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .action-item .priority {
+            width: 60px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .action-item .priority.high { background: #ffebee; color: #c62828; }
+        .action-item .priority.medium { background: #fff3e0; color: #ef6c00; }
+        .action-item .priority.low { background: #e8f5e9; color: #2e7d32; }
+
+        .action-item .content { flex: 1; }
+        .action-item .metric { font-weight: 600; margin-bottom: 4px; }
+        .action-item .suggestion { color: var(--text-secondary); font-size: 14px; }
+        .action-item .impact { font-size: 13px; color: var(--primary-color); margin-top: 4px; }
+
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: #fafafa;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .table tr:hover {
+            background: #fafafa;
+        }
+
+        /* Chart Placeholder */
+        .chart-placeholder {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fafafa, #f0f0f0);
+            border-radius: 8px;
+            color: var(--text-secondary);
+        }
+
+        /* Pie Chart */
+        .pie-chart-container {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .pie-legend {
+            flex: 1;
+        }
+
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .pie-legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .pie-legend-label {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .pie-legend-value {
+            font-weight: 600;
+        }
+
+        /* Summary Footer */
+        .summary-footer {
+            background: linear-gradient(135deg, #f5f7fa, #e8eaed);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 24px;
+        }
+
+        .summary-footer .title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-item .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .summary-item .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>AI 点单 Agent 业务看板</h1>
+                <p style="margin-top: 8px; opacity: 0.9;">实时监控 Agent 业务表现</p>
+            </div>
+            <div class="health-score">
+                <div>
+                    <div class="score" id="health-score">--</div>
+                    <div class="label">健康度评分</div>
+                </div>
+                <div id="health-emoji" style="font-size: 48px;">⚪</div>
+            </div>
+            <div class="header-info">
+                <div>更新时间: <span id="update-time">--</span></div>
+                <div style="margin-top: 4px;">
+                    趋势: <span id="trend-summary">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-5" id="metric-cards">
+            <!-- Dynamic content -->
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-2" style="margin-top: 20px;">
+            <!-- Trend Chart -->
+            <div class="card">
+                <div class="card-header">指标趋势（近 14 天）</div>
+                <div class="card-body">
+                    <div class="chart-placeholder">
+                        📈 趋势图表（需集成 Chart.js）
+                    </div>
+                </div>
+            </div>
+
+            <!-- Failure Distribution -->
+            <div class="card">
+                <div class="card-header">失败原因分布</div>
+                <div class="card-body">
+                    <div class="pie-chart-container">
+                        <div class="chart-placeholder" style="width: 200px; height: 200px; border-radius: 50%;">
+                            🥧
+                        </div>
+                        <div class="pie-legend" id="failure-legend">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts and Actions Row -->
+        <div class="grid grid-2" style="margin-top: 20px;">
+            <!-- Alerts -->
+            <div class="card">
+                <div class="card-header">
+                    <span>告警提醒</span>
+                    <span id="alert-count" class="text-danger">0</span>
+                </div>
+                <div class="card-body" id="alert-list">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card">
+                <div class="card-header">改进建议</div>
+                <div class="card-body" id="action-list">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Impact Table -->
+        <div class="card" style="margin-top: 20px;">
+            <div class="card-header">业务影响预估</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>指标</th>
+                            <th>当前值</th>
+                            <th>目标值</th>
+                            <th>月影响</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody id="impact-table">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Summary Footer -->
+        <div class="summary-footer">
+            <div class="title">📊 业务影响汇总</div>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="value" id="total-gmv">--</div>
+                    <div class="label">预估月 GMV 影响</div>
+                </div>
+                <div class="summary-item">
+                    <div class="value" id="total-cost">--</div>
+                    <div class="label">预估月成本节省</div>
+                </div>
+                <div class="summary-item">
+                    <div class="value" id="total-value">--</div>
+                    <div class="label">预估月总价值</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>AI 点单 Agent 评估系统 | 数据仅供参考，实际影响以业务数据为准</p>
+        </div>
+    </div>
+
+    <script>
+        // API endpoint
+        const API_BASE = '/api/portal/business';
+
+        // Fetch dashboard data
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_BASE}/dashboard`);
+                const data = await response.json();
+                renderDashboard(data);
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+                // Use mock data for demo
+                renderDashboard(getMockData());
+            }
+        }
+
+        // Render dashboard
+        function renderDashboard(data) {
+            // Update header
+            document.getElementById('health-score').textContent = data.summary.health_score;
+            document.getElementById('health-emoji').textContent = data.summary.health_emoji;
+            document.getElementById('update-time').textContent = data.summary.last_updated;
+            document.getElementById('trend-summary').textContent =
+                `↑${data.summary.metrics_improving} ↓${data.summary.metrics_declining} →${data.summary.metrics_stable}`;
+
+            // Render metric cards
+            const cardsWidget = data.widgets.find(w => w.type === 'metric_card');
+            if (cardsWidget) {
+                renderMetricCards(cardsWidget.data.cards);
+            }
+
+            // Render failure distribution
+            const failureWidget = data.widgets.find(w => w.type === 'pie_chart');
+            if (failureWidget) {
+                renderFailureLegend(failureWidget.data.items);
+            }
+
+            // Render alerts
+            const alertWidget = data.widgets.find(w => w.type === 'alert_list');
+            if (alertWidget) {
+                renderAlerts(alertWidget.data.alerts);
+            }
+
+            // Render actions
+            const actionWidget = data.widgets.find(w => w.type === 'action_list');
+            if (actionWidget) {
+                renderActions(actionWidget.data.actions);
+            }
+
+            // Render impact table
+            const impactWidget = data.widgets.find(w => w.type === 'table');
+            if (impactWidget) {
+                renderImpactTable(impactWidget.data);
+            }
+        }
+
+        // Render metric cards
+        function renderMetricCards(cards) {
+            const container = document.getElementById('metric-cards');
+            container.innerHTML = cards.map(card => `
+                <div class="card metric-card">
+                    <div class="label">${card.name}</div>
+                    <div class="value text-${card.color}">${card.value}</div>
+                    <div class="trend ${getTrendClass(card.trend)}">${card.trend}</div>
+                    <div class="status">${card.status_emoji} 目标: ${card.target}</div>
+                </div>
+            `).join('');
+        }
+
+        // Render failure legend
+        function renderFailureLegend(items) {
+            const container = document.getElementById('failure-legend');
+            container.innerHTML = items.map(item => `
+                <div class="pie-legend-item">
+                    <div class="pie-legend-color" style="background: ${item.color}"></div>
+                    <div class="pie-legend-label">${item.name}</div>
+                    <div class="pie-legend-value">${item.value}%</div>
+                </div>
+            `).join('');
+        }
+
+        // Render alerts
+        function renderAlerts(alerts) {
+            const container = document.getElementById('alert-list');
+            document.getElementById('alert-count').textContent = alerts.length;
+
+            if (alerts.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">✅ 暂无告警</p>';
+                return;
+            }
+
+            container.innerHTML = alerts.map(alert => `
+                <div class="alert-item ${alert.level}">
+                    <div class="title">${alert.metric}</div>
+                    <div class="action">${alert.message}</div>
+                </div>
+            `).join('');
+        }
+
+        // Render actions
+        function renderActions(actions) {
+            const container = document.getElementById('action-list');
+
+            if (actions.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">✅ 暂无待办建议</p>';
+                return;
+            }
+
+            container.innerHTML = actions.map(action => `
+                <div class="action-item">
+                    <div class="priority ${action.priority}">${action.priority === 'high' ? '高' : '中'}</div>
+                    <div class="content">
+                        <div class="metric">${action.metric}</div>
+                        <div class="suggestion">${action.suggestion}</div>
+                        <div class="impact">${action.expected_impact}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render impact table
+        function renderImpactTable(data) {
+            const tbody = document.getElementById('impact-table');
+            tbody.innerHTML = data.rows.map(row => `
+                <tr>
+                    <td>${row.metric}</td>
+                    <td>${row.current}</td>
+                    <td>${row.target}</td>
+                    <td class="text-primary" style="font-weight: 600">${row.monthly_impact}</td>
+                    <td style="color: var(--text-secondary)">${row.description}</td>
+                </tr>
+            `).join('');
+
+            // Update summary
+            document.getElementById('total-gmv').textContent = data.summary.total_gmv_impact;
+            document.getElementById('total-cost').textContent = data.summary.total_cost_saved;
+            document.getElementById('total-value').textContent = data.summary.total_value;
+        }
+
+        // Helper functions
+        function getTrendClass(trend) {
+            if (trend.includes('↑')) return 'up';
+            if (trend.includes('↓')) return 'down';
+            return 'stable';
+        }
+
+        // Mock data for demo
+        function getMockData() {
+            return {
+                summary: {
+                    health_score: 78.5,
+                    health_emoji: '🟢',
+                    health_text: '良好',
+                    metrics_improving: 3,
+                    metrics_declining: 1,
+                    metrics_stable: 1,
+                    last_updated: new Date().toLocaleString('zh-CN')
+                },
+                widgets: [
+                    {
+                        type: 'metric_card',
+                        data: {
+                            cards: [
+                                { name: '订单理解准确率', value: '92.0%', trend: '↑ +3.0%', status_emoji: '🟢', target: '95%', color: 'success' },
+                                { name: '订单详情准确率', value: '88.0%', trend: '↑ +3.0%', status_emoji: '🟡', target: '92%', color: 'info' },
+                                { name: '点单成功率', value: '83.0%', trend: '↑ +3.0%', status_emoji: '🟡', target: '85%', color: 'primary' },
+                                { name: '人工介入率', value: '12.0%', trend: '↓ -3.0%', status_emoji: '🟡', target: '10%', color: 'warning' },
+                                { name: '平均点单轮数', value: '4.5', trend: '↓ -0.7', status_emoji: '🟡', target: '4.0', color: 'secondary' }
+                            ]
+                        }
+                    },
+                    {
+                        type: 'pie_chart',
+                        data: {
+                            items: [
+                                { name: '理解错用户意图', value: 35, color: '#f44336' },
+                                { name: '订单详情搞错', value: 25, color: '#ff9800' },
+                                { name: '听不懂口语表达', value: 20, color: '#2196f3' },
+                                { name: '商品规则搞错', value: 12, color: '#9c27b0' },
+                                { name: '用户主动放弃', value: 8, color: '#607d8b' }
+                            ]
+                        }
+                    },
+                    {
+                        type: 'alert_list',
+                        data: {
+                            alerts: [
+                                { level: 'warning', metric: '订单详情准确率', message: '当前 88.0%，低于目标 92%' },
+                                { level: 'warning', metric: '人工介入率', message: '当前 12.0%，高于目标 10%' }
+                            ]
+                        }
+                    },
+                    {
+                        type: 'action_list',
+                        data: {
+                            actions: [
+                                { priority: 'high', metric: '订单详情准确率', suggestion: '强化槽位提取规则，检查产品名和属性的识别', expected_impact: '预计每月减少 600 单详情错误' },
+                                { priority: 'medium', metric: '人工介入率', suggestion: '优化对话引导策略，减少用户迷惑导致的转人工', expected_impact: '预计每月节省人工成本 ¥3,000' }
+                            ]
+                        }
+                    },
+                    {
+                        type: 'table',
+                        data: {
+                            rows: [
+                                { metric: '订单理解准确率', current: '92.0%', target: '95.0%', monthly_impact: '¥36,000', description: '提升后预计增加 GMV' },
+                                { metric: '订单详情准确率', current: '88.0%', target: '92.0%', monthly_impact: '¥24,000', description: '减少订单修改率' },
+                                { metric: '人工介入率', current: '12.0%', target: '10.0%', monthly_impact: '¥3,000', description: '节省人工处理成本' }
+                            ],
+                            summary: {
+                                total_gmv_impact: '¥60,000',
+                                total_cost_saved: '¥3,000',
+                                total_value: '¥63,000'
+                            }
+                        }
+                    }
+                ]
+            };
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>

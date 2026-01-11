@@ -1,0 +1,12 @@
+{
+  "suite_name": "all",
+  "tasks_total": 0,
+  "tasks_passed": 0,
+  "tasks_failed": 0,
+  "overall_pass_rate": 0,
+  "results": [],
+  "by_category": {},
+  "started_at": "2026-01-11T12:55:27.027941",
+  "completed_at": "2026-01-11T12:55:27.027952",
+  "total_duration_ms": 0.011
+}

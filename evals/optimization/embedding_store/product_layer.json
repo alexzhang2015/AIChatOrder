@@ -1,0 +1,368 @@
+[
+  {
+    "id": "77d6ce9d085c",
+    "text": "美式咖啡。浓缩咖啡加水，简单纯粹的咖啡风味",
+    "layer": "product",
+    "metadata": {
+      "type": "product",
+      "product_name": "美式咖啡",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true
+    },
+    "created_at": "2026-01-11T18:02:32.776413"
+  },
+  {
+    "id": "2dde9e110750",
+    "text": "美式就是美式咖啡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "美式",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.777373"
+  },
+  {
+    "id": "500122ff6770",
+    "text": "Americano就是美式咖啡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "Americano",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.777728"
+  },
+  {
+    "id": "d5bda2c45192",
+    "text": "冰美式就是美式咖啡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "冰美式",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.778051"
+  },
+  {
+    "id": "3de2d3c6425d",
+    "text": "热美式就是美式咖啡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "热美式",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.778378"
+  },
+  {
+    "id": "816c3d876220",
+    "text": "续命水就是美式咖啡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "续命水",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.778710"
+  },
+  {
+    "id": "e566808594aa",
+    "text": "续命咖啡就是美式咖啡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "续命咖啡",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.779040"
+  },
+  {
+    "id": "e33eed7d0f63",
+    "text": "黑咖啡就是美式咖啡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "美式咖啡",
+      "alias": "黑咖啡",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.779376"
+  },
+  {
+    "id": "9d533e3dab1f",
+    "text": "拿铁。经典意式浓缩咖啡与蒸奶的完美结合，口感丝滑",
+    "layer": "product",
+    "metadata": {
+      "type": "product",
+      "product_name": "拿铁",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true
+    },
+    "created_at": "2026-01-11T18:02:32.780136"
+  },
+  {
+    "id": "c8cf7cbccfad",
+    "text": "Latte就是拿铁",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "Latte",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.780541"
+  },
+  {
+    "id": "ebabc89bb4e9",
+    "text": "拿铁咖啡就是拿铁",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "拿铁咖啡",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.780936"
+  },
+  {
+    "id": "f27e63887c5d",
+    "text": "冰拿铁就是拿铁",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "冰拿铁",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.781337"
+  },
+  {
+    "id": "f21a723735d6",
+    "text": "热拿铁就是拿铁",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "热拿铁",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.781756"
+  },
+  {
+    "id": "9a71690ea8d4",
+    "text": "奶咖就是拿铁",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "拿铁",
+      "alias": "奶咖",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.782177"
+  },
+  {
+    "id": "add8ffd33fe7",
+    "text": "卡布奇诺。浓缩咖啡、蒸奶和奶泡的经典意式组合",
+    "layer": "product",
+    "metadata": {
+      "type": "product",
+      "product_name": "卡布奇诺",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true
+    },
+    "created_at": "2026-01-11T18:02:32.784912"
+  },
+  {
+    "id": "1c39249ee98c",
+    "text": "Cappuccino就是卡布奇诺",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "Cappuccino",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.785403"
+  },
+  {
+    "id": "5c58a2b1f28e",
+    "text": "卡布就是卡布奇诺",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "卡布奇诺",
+      "alias": "卡布",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.785892"
+  },
+  {
+    "id": "df99fd5f91b9",
+    "text": "摩卡。浓缩咖啡、巧克力和蒸奶的完美融合",
+    "layer": "product",
+    "metadata": {
+      "type": "product",
+      "product_name": "摩卡",
+      "category": "mocha_based",
+      "features": {},
+      "is_canonical": true
+    },
+    "created_at": "2026-01-11T18:02:32.786392"
+  },
+  {
+    "id": "d9a587ff296b",
+    "text": "Mocha就是摩卡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "Mocha",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.786912"
+  },
+  {
+    "id": "a1c7240d762a",
+    "text": "摩卡咖啡就是摩卡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "摩卡咖啡",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.787367"
+  },
+  {
+    "id": "9328c26120f9",
+    "text": "巧克力咖啡就是摩卡",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "摩卡",
+      "alias": "巧克力咖啡",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.787849"
+  },
+  {
+    "id": "03b341ef349f",
+    "text": "星冰乐。冰爽混合饮品，清凉解暑",
+    "layer": "product",
+    "metadata": {
+      "type": "product",
+      "product_name": "星冰乐",
+      "category": "blended",
+      "features": {},
+      "is_canonical": true
+    },
+    "created_at": "2026-01-11T18:02:32.788373"
+  },
+  {
+    "id": "5c72a2b9fa1e",
+    "text": "Frappuccino就是星冰乐",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "Frappuccino",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.788987"
+  },
+  {
+    "id": "7f9d2fffc96c",
+    "text": "冰沙就是星冰乐",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "冰沙",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.789548"
+  },
+  {
+    "id": "c0fa9f7f7ad3",
+    "text": "肥宅快乐水就是星冰乐",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "星冰乐",
+      "alias": "肥宅快乐水",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.790098"
+  },
+  {
+    "id": "6eba1fa79f1a",
+    "text": "馥芮白。澳洲风格，浓缩咖啡与丝滑奶泡",
+    "layer": "product",
+    "metadata": {
+      "type": "product",
+      "product_name": "馥芮白",
+      "category": "espresso_based",
+      "features": {},
+      "is_canonical": true
+    },
+    "created_at": "2026-01-11T18:02:32.790656"
+  },
+  {
+    "id": "5390ddbb7e6c",
+    "text": "Flat White就是馥芮白",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "Flat White",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.791231"
+  },
+  {
+    "id": "334515e288ae",
+    "text": "澳白就是馥芮白",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "澳白",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.792024"
+  },
+  {
+    "id": "a35f5608c761",
+    "text": "澳瑞白就是馥芮白",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "澳瑞白",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.792876"
+  },
+  {
+    "id": "0fe5968c799c",
+    "text": "dirty就是馥芮白",
+    "layer": "product",
+    "metadata": {
+      "type": "product_alias",
+      "product_name": "馥芮白",
+      "alias": "dirty",
+      "is_canonical": false
+    },
+    "created_at": "2026-01-11T18:02:32.793705"
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "round_id": "round_001",
+    "version": "1.0.0",
+    "started_at": "2026-01-11T20:57:20.418474",
+    "completed_at": null,
+    "baseline_metrics": {
+      "intent_accuracy": 0.85,
+      "slot_f1": 0.8
+    },
+    "result_metrics": {},
+    "actions": [],
+    "badcases_before": 0,
+    "badcases_after": 0,
+    "badcases_fixed": 0,
+    "badcases_new": 0,
+    "notes": ""
+  },
+  {
+    "round_id": "round_002",
+    "version": "v1.1.0",
+    "started_at": "2026-01-11T20:59:30.957729",
+    "completed_at": null,
+    "baseline_metrics": {
+      "intent_accuracy": 0.85,
+      "slot_f1": 0.8
+    },
+    "result_metrics": {},
+    "actions": [],
+    "badcases_before": 0,
+    "badcases_after": 0,
+    "badcases_fixed": 0,
+    "badcases_new": 0,
+    "notes": ""
+  }
+]

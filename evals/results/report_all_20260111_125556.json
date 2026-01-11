@@ -1,0 +1,2858 @@
+{
+  "suite_name": "all",
+  "tasks_total": 5,
+  "tasks_passed": 3,
+  "tasks_failed": 2,
+  "overall_pass_rate": 0.6,
+  "results": [
+    {
+      "task_id": "constraint-001",
+      "task_name": "产品约束验证",
+      "category": "regression",
+      "trials": [
+        {
+          "task_id": "constraint-001",
+          "trial_number": 0,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": {
+                  "product_name": "星冰乐",
+                  "temperature": "热"
+                },
+                "valid": false,
+                "adjusted_slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰"
+                },
+                "warnings": [
+                  "星冰乐只能做冰的"
+                ],
+                "auto_corrections": [
+                  {
+                    "slot": "temperature",
+                    "from": "热",
+                    "to": "冰",
+                    "message": "星冰乐只能做冰的，已自动调整为冰的"
+                  }
+                ]
+              },
+              {
+                "input": {
+                  "product_name": "冷萃咖啡",
+                  "temperature": "热"
+                },
+                "valid": false,
+                "adjusted_slots": {
+                  "product_name": "冷萃咖啡",
+                  "temperature": "冰"
+                },
+                "warnings": [
+                  "冷萃咖啡只能做冰的"
+                ],
+                "auto_corrections": [
+                  {
+                    "slot": "temperature",
+                    "from": "热",
+                    "to": "冰",
+                    "message": "冷萃咖啡只能做冰的，已自动调整为冰的"
+                  }
+                ]
+              },
+              {
+                "input": {
+                  "product_name": "拿铁",
+                  "temperature": "热",
+                  "sweetness": "半糖"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "拿铁",
+                  "temperature": "热",
+                  "sweetness": "半糖"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "美式咖啡",
+                  "temperature": "冰",
+                  "size": "大杯"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "美式咖啡",
+                  "temperature": "冰",
+                  "size": "大杯"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰",
+                  "size": "中杯"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰",
+                  "size": "中杯"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "卡布奇诺",
+                  "temperature": "热"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "卡布奇诺",
+                  "temperature": "热"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              }
+            ]
+          },
+          "grader_results": {
+            "constraint_validation": {
+              "grader_type": "constraint_validation",
+              "passed": true,
+              "score": 1.0,
+              "details": {
+                "accuracy": 1.0,
+                "correct": 6,
+                "total": 6,
+                "require_correct_auto_fix": true
+              },
+              "failures": []
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.228749",
+          "duration_ms": 0.02574920654296875
+        },
+        {
+          "task_id": "constraint-001",
+          "trial_number": 1,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": {
+                  "product_name": "星冰乐",
+                  "temperature": "热"
+                },
+                "valid": false,
+                "adjusted_slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰"
+                },
+                "warnings": [
+                  "星冰乐只能做冰的"
+                ],
+                "auto_corrections": [
+                  {
+                    "slot": "temperature",
+                    "from": "热",
+                    "to": "冰",
+                    "message": "星冰乐只能做冰的，已自动调整为冰的"
+                  }
+                ]
+              },
+              {
+                "input": {
+                  "product_name": "冷萃咖啡",
+                  "temperature": "热"
+                },
+                "valid": false,
+                "adjusted_slots": {
+                  "product_name": "冷萃咖啡",
+                  "temperature": "冰"
+                },
+                "warnings": [
+                  "冷萃咖啡只能做冰的"
+                ],
+                "auto_corrections": [
+                  {
+                    "slot": "temperature",
+                    "from": "热",
+                    "to": "冰",
+                    "message": "冷萃咖啡只能做冰的，已自动调整为冰的"
+                  }
+                ]
+              },
+              {
+                "input": {
+                  "product_name": "拿铁",
+                  "temperature": "热",
+                  "sweetness": "半糖"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "拿铁",
+                  "temperature": "热",
+                  "sweetness": "半糖"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "美式咖啡",
+                  "temperature": "冰",
+                  "size": "大杯"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "美式咖啡",
+                  "temperature": "冰",
+                  "size": "大杯"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰",
+                  "size": "中杯"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰",
+                  "size": "中杯"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "卡布奇诺",
+                  "temperature": "热"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "卡布奇诺",
+                  "temperature": "热"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              }
+            ]
+          },
+          "grader_results": {
+            "constraint_validation": {
+              "grader_type": "constraint_validation",
+              "passed": true,
+              "score": 1.0,
+              "details": {
+                "accuracy": 1.0,
+                "correct": 6,
+                "total": 6,
+                "require_correct_auto_fix": true
+              },
+              "failures": []
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.228770",
+          "duration_ms": 0.013113021850585938
+        },
+        {
+          "task_id": "constraint-001",
+          "trial_number": 2,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": {
+                  "product_name": "星冰乐",
+                  "temperature": "热"
+                },
+                "valid": false,
+                "adjusted_slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰"
+                },
+                "warnings": [
+                  "星冰乐只能做冰的"
+                ],
+                "auto_corrections": [
+                  {
+                    "slot": "temperature",
+                    "from": "热",
+                    "to": "冰",
+                    "message": "星冰乐只能做冰的，已自动调整为冰的"
+                  }
+                ]
+              },
+              {
+                "input": {
+                  "product_name": "冷萃咖啡",
+                  "temperature": "热"
+                },
+                "valid": false,
+                "adjusted_slots": {
+                  "product_name": "冷萃咖啡",
+                  "temperature": "冰"
+                },
+                "warnings": [
+                  "冷萃咖啡只能做冰的"
+                ],
+                "auto_corrections": [
+                  {
+                    "slot": "temperature",
+                    "from": "热",
+                    "to": "冰",
+                    "message": "冷萃咖啡只能做冰的，已自动调整为冰的"
+                  }
+                ]
+              },
+              {
+                "input": {
+                  "product_name": "拿铁",
+                  "temperature": "热",
+                  "sweetness": "半糖"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "拿铁",
+                  "temperature": "热",
+                  "sweetness": "半糖"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "美式咖啡",
+                  "temperature": "冰",
+                  "size": "大杯"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "美式咖啡",
+                  "temperature": "冰",
+                  "size": "大杯"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰",
+                  "size": "中杯"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰",
+                  "size": "中杯"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              },
+              {
+                "input": {
+                  "product_name": "卡布奇诺",
+                  "temperature": "热"
+                },
+                "valid": true,
+                "adjusted_slots": {
+                  "product_name": "卡布奇诺",
+                  "temperature": "热"
+                },
+                "warnings": [],
+                "auto_corrections": []
+              }
+            ]
+          },
+          "grader_results": {
+            "constraint_validation": {
+              "grader_type": "constraint_validation",
+              "passed": true,
+              "score": 1.0,
+              "details": {
+                "accuracy": 1.0,
+                "correct": 6,
+                "total": 6,
+                "require_correct_auto_fix": true
+              },
+              "failures": []
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.228783",
+          "duration_ms": 0.009059906005859375
+        }
+      ],
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_all": 1.0,
+      "aggregate_metrics": {},
+      "started_at": "2026-01-11T12:55:56.228790",
+      "completed_at": "2026-01-11T12:55:56.228787"
+    },
+    {
+      "task_id": "intent-basic-001",
+      "task_name": "基础点单意图分类",
+      "category": "regression",
+      "trials": [
+        {
+          "task_id": "intent-basic-001",
+          "trial_number": 0,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "来一杯拿铁",
+                "intent": "ORDER_NEW",
+                "confidence": 0.869320828155016,
+                "slots": {
+                  "product_name": "拿铁",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "我想点杯美式咖啡",
+                "intent": "ORDER_NEW",
+                "confidence": 0.9458745604193616,
+                "slots": {
+                  "product_name": "美式咖啡"
+                }
+              },
+              {
+                "input": "给我一杯大杯冰的星冰乐",
+                "intent": "ORDER_NEW",
+                "confidence": 0.9069900930446764,
+                "slots": {
+                  "product_name": "星冰乐",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "要一杯热的焦糖玛奇朵",
+                "intent": "ORDER_NEW",
+                "confidence": 0.925695414049325,
+                "slots": {
+                  "product_name": "焦糖玛奇朵",
+                  "temperature": "热",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "来两杯中杯拿铁",
+                "intent": "ORDER_NEW",
+                "confidence": 0.870037809032731,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "中杯"
+                }
+              },
+              {
+                "input": "把刚才那杯改成热的",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9461348758274007,
+                "slots": {
+                  "temperature": "热"
+                }
+              },
+              {
+                "input": "换成燕麦奶",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9462388056977684,
+                "slots": {
+                  "milk_type": "燕麦奶"
+                }
+              },
+              {
+                "input": "我要少糖的",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.947947966473038,
+                "slots": {
+                  "sweetness": "少糖"
+                }
+              },
+              {
+                "input": "帮我加一份浓缩",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8802729609267066,
+                "slots": {}
+              },
+              {
+                "input": "不要了，取消订单",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9380886964797182,
+                "slots": {}
+              },
+              {
+                "input": "算了不点了",
+                "intent": "ORDER_CANCEL",
+                "confidence": 0.8570606060643512,
+                "slots": {}
+              },
+              {
+                "input": "我不想要了",
+                "intent": "ORDER_CANCEL",
+                "confidence": 0.8907823355459495,
+                "slots": {}
+              },
+              {
+                "input": "我的订单到哪了",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.8824057071930668,
+                "slots": {}
+              },
+              {
+                "input": "查一下我的订单",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.9248254946491985,
+                "slots": {}
+              },
+              {
+                "input": "订单状态是什么",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.8702432305432493,
+                "slots": {}
+              },
+              {
+                "input": "有什么推荐的吗",
+                "intent": "RECOMMEND",
+                "confidence": 0.8531584795616579,
+                "slots": {}
+              },
+              {
+                "input": "什么咖啡好喝",
+                "intent": "RECOMMEND",
+                "confidence": 0.9421408052576166,
+                "slots": {}
+              },
+              {
+                "input": "推荐一下",
+                "intent": "RECOMMEND",
+                "confidence": 0.9499214838186677,
+                "slots": {}
+              },
+              {
+                "input": "有什么新品吗",
+                "intent": "RECOMMEND",
+                "confidence": 0.9230895849986184,
+                "slots": {}
+              },
+              {
+                "input": "拿铁多少钱",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.864303326790298,
+                "slots": {
+                  "product_name": "拿铁"
+                }
+              },
+              {
+                "input": "美式咖啡有多少卡路里",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8787692554534968,
+                "slots": {
+                  "product_name": "美式咖啡"
+                }
+              },
+              {
+                "input": "这个有什么配料",
+                "intent": "PRODUCT_INFO",
+                "confidence": 0.9258093584283773,
+                "slots": {}
+              },
+              {
+                "input": "今天天气真好",
+                "intent": "CHITCHAT",
+                "confidence": 0.8599798187321633,
+                "slots": {}
+              },
+              {
+                "input": "你好啊",
+                "intent": "CHITCHAT",
+                "confidence": 0.9420521351485849,
+                "slots": {}
+              },
+              {
+                "input": "谢谢",
+                "intent": "CHITCHAT",
+                "confidence": 0.8781312535408097,
+                "slots": {}
+              }
+            ]
+          },
+          "grader_results": {
+            "intent_accuracy": {
+              "grader_type": "intent_accuracy",
+              "passed": false,
+              "score": 0.88,
+              "details": {
+                "accuracy": 0.88,
+                "correct": 22,
+                "total": 25,
+                "per_intent_accuracy": {
+                  "ORDER_NEW": 1.0,
+                  "ORDER_MODIFY": 1.0,
+                  "ORDER_CANCEL": 0.6666666666666666,
+                  "ORDER_QUERY": 1.0,
+                  "RECOMMEND": 1.0,
+                  "PRODUCT_INFO": 0.3333333333333333,
+                  "CHITCHAT": 1.0
+                },
+                "confusion_matrix": {
+                  "ORDER_NEW": {
+                    "ORDER_NEW": 5
+                  },
+                  "ORDER_MODIFY": {
+                    "ORDER_MODIFY": 4
+                  },
+                  "ORDER_CANCEL": {
+                    "ORDER_MODIFY": 1,
+                    "ORDER_CANCEL": 2
+                  },
+                  "ORDER_QUERY": {
+                    "ORDER_QUERY": 3
+                  },
+                  "RECOMMEND": {
+                    "RECOMMEND": 4
+                  },
+                  "PRODUCT_INFO": {
+                    "ORDER_MODIFY": 2,
+                    "PRODUCT_INFO": 1
+                  },
+                  "CHITCHAT": {
+                    "CHITCHAT": 3
+                  }
+                },
+                "thresholds": {
+                  "min_accuracy": 0.9,
+                  "per_intent_min": 0.85
+                }
+              },
+              "failures": [
+                {
+                  "type": "wrong_intent",
+                  "input": "不要了，取消订单",
+                  "expected_intent": "ORDER_CANCEL",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.9380886964797182
+                },
+                {
+                  "type": "wrong_intent",
+                  "input": "拿铁多少钱",
+                  "expected_intent": "PRODUCT_INFO",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.864303326790298
+                },
+                {
+                  "type": "wrong_intent",
+                  "input": "美式咖啡有多少卡路里",
+                  "expected_intent": "PRODUCT_INFO",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.8787692554534968
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": false,
+          "timestamp": "2026-01-11T12:55:56.229180",
+          "duration_ms": 0.3857612609863281
+        },
+        {
+          "task_id": "intent-basic-001",
+          "trial_number": 1,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "来一杯拿铁",
+                "intent": "ORDER_NEW",
+                "confidence": 0.8533680854997621,
+                "slots": {
+                  "product_name": "拿铁",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "我想点杯美式咖啡",
+                "intent": "ORDER_NEW",
+                "confidence": 0.8516445548366034,
+                "slots": {
+                  "product_name": "美式咖啡"
+                }
+              },
+              {
+                "input": "给我一杯大杯冰的星冰乐",
+                "intent": "ORDER_NEW",
+                "confidence": 0.8650280473917111,
+                "slots": {
+                  "product_name": "星冰乐",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "要一杯热的焦糖玛奇朵",
+                "intent": "ORDER_NEW",
+                "confidence": 0.940140526961897,
+                "slots": {
+                  "product_name": "焦糖玛奇朵",
+                  "temperature": "热",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "来两杯中杯拿铁",
+                "intent": "ORDER_NEW",
+                "confidence": 0.9469784993964131,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "中杯"
+                }
+              },
+              {
+                "input": "把刚才那杯改成热的",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8931965245550025,
+                "slots": {
+                  "temperature": "热"
+                }
+              },
+              {
+                "input": "换成燕麦奶",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8832245209591411,
+                "slots": {
+                  "milk_type": "燕麦奶"
+                }
+              },
+              {
+                "input": "我要少糖的",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8672826499145411,
+                "slots": {
+                  "sweetness": "少糖"
+                }
+              },
+              {
+                "input": "帮我加一份浓缩",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8867313535310927,
+                "slots": {}
+              },
+              {
+                "input": "不要了，取消订单",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8879875199098831,
+                "slots": {}
+              },
+              {
+                "input": "算了不点了",
+                "intent": "ORDER_CANCEL",
+                "confidence": 0.9326176041804615,
+                "slots": {}
+              },
+              {
+                "input": "我不想要了",
+                "intent": "ORDER_CANCEL",
+                "confidence": 0.879625356632184,
+                "slots": {}
+              },
+              {
+                "input": "我的订单到哪了",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.9424352676486791,
+                "slots": {}
+              },
+              {
+                "input": "查一下我的订单",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.9075778288406884,
+                "slots": {}
+              },
+              {
+                "input": "订单状态是什么",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.9171059262821482,
+                "slots": {}
+              },
+              {
+                "input": "有什么推荐的吗",
+                "intent": "RECOMMEND",
+                "confidence": 0.9188266576025208,
+                "slots": {}
+              },
+              {
+                "input": "什么咖啡好喝",
+                "intent": "RECOMMEND",
+                "confidence": 0.8851582684816025,
+                "slots": {}
+              },
+              {
+                "input": "推荐一下",
+                "intent": "RECOMMEND",
+                "confidence": 0.9367795915353165,
+                "slots": {}
+              },
+              {
+                "input": "有什么新品吗",
+                "intent": "RECOMMEND",
+                "confidence": 0.9337937646417906,
+                "slots": {}
+              },
+              {
+                "input": "拿铁多少钱",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8722041630955135,
+                "slots": {
+                  "product_name": "拿铁"
+                }
+              },
+              {
+                "input": "美式咖啡有多少卡路里",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8673191711429395,
+                "slots": {
+                  "product_name": "美式咖啡"
+                }
+              },
+              {
+                "input": "这个有什么配料",
+                "intent": "PRODUCT_INFO",
+                "confidence": 0.8849154390101484,
+                "slots": {}
+              },
+              {
+                "input": "今天天气真好",
+                "intent": "CHITCHAT",
+                "confidence": 0.8951234408189594,
+                "slots": {}
+              },
+              {
+                "input": "你好啊",
+                "intent": "CHITCHAT",
+                "confidence": 0.9096384852358366,
+                "slots": {}
+              },
+              {
+                "input": "谢谢",
+                "intent": "CHITCHAT",
+                "confidence": 0.9379854884557359,
+                "slots": {}
+              }
+            ]
+          },
+          "grader_results": {
+            "intent_accuracy": {
+              "grader_type": "intent_accuracy",
+              "passed": false,
+              "score": 0.88,
+              "details": {
+                "accuracy": 0.88,
+                "correct": 22,
+                "total": 25,
+                "per_intent_accuracy": {
+                  "ORDER_NEW": 1.0,
+                  "ORDER_MODIFY": 1.0,
+                  "ORDER_CANCEL": 0.6666666666666666,
+                  "ORDER_QUERY": 1.0,
+                  "RECOMMEND": 1.0,
+                  "PRODUCT_INFO": 0.3333333333333333,
+                  "CHITCHAT": 1.0
+                },
+                "confusion_matrix": {
+                  "ORDER_NEW": {
+                    "ORDER_NEW": 5
+                  },
+                  "ORDER_MODIFY": {
+                    "ORDER_MODIFY": 4
+                  },
+                  "ORDER_CANCEL": {
+                    "ORDER_MODIFY": 1,
+                    "ORDER_CANCEL": 2
+                  },
+                  "ORDER_QUERY": {
+                    "ORDER_QUERY": 3
+                  },
+                  "RECOMMEND": {
+                    "RECOMMEND": 4
+                  },
+                  "PRODUCT_INFO": {
+                    "ORDER_MODIFY": 2,
+                    "PRODUCT_INFO": 1
+                  },
+                  "CHITCHAT": {
+                    "CHITCHAT": 3
+                  }
+                },
+                "thresholds": {
+                  "min_accuracy": 0.9,
+                  "per_intent_min": 0.85
+                }
+              },
+              "failures": [
+                {
+                  "type": "wrong_intent",
+                  "input": "不要了，取消订单",
+                  "expected_intent": "ORDER_CANCEL",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.8879875199098831
+                },
+                {
+                  "type": "wrong_intent",
+                  "input": "拿铁多少钱",
+                  "expected_intent": "PRODUCT_INFO",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.8722041630955135
+                },
+                {
+                  "type": "wrong_intent",
+                  "input": "美式咖啡有多少卡路里",
+                  "expected_intent": "PRODUCT_INFO",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.8673191711429395
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": false,
+          "timestamp": "2026-01-11T12:55:56.229364",
+          "duration_ms": 0.18095970153808594
+        },
+        {
+          "task_id": "intent-basic-001",
+          "trial_number": 2,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "来一杯拿铁",
+                "intent": "ORDER_NEW",
+                "confidence": 0.9234045419379608,
+                "slots": {
+                  "product_name": "拿铁",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "我想点杯美式咖啡",
+                "intent": "ORDER_NEW",
+                "confidence": 0.9250719754836467,
+                "slots": {
+                  "product_name": "美式咖啡"
+                }
+              },
+              {
+                "input": "给我一杯大杯冰的星冰乐",
+                "intent": "ORDER_NEW",
+                "confidence": 0.9230649125614947,
+                "slots": {
+                  "product_name": "星冰乐",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "要一杯热的焦糖玛奇朵",
+                "intent": "ORDER_NEW",
+                "confidence": 0.894070868288327,
+                "slots": {
+                  "product_name": "焦糖玛奇朵",
+                  "temperature": "热",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "来两杯中杯拿铁",
+                "intent": "ORDER_NEW",
+                "confidence": 0.9229828347693582,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "中杯"
+                }
+              },
+              {
+                "input": "把刚才那杯改成热的",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9079556188818808,
+                "slots": {
+                  "temperature": "热"
+                }
+              },
+              {
+                "input": "换成燕麦奶",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9470313207646133,
+                "slots": {
+                  "milk_type": "燕麦奶"
+                }
+              },
+              {
+                "input": "我要少糖的",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8744354812910538,
+                "slots": {
+                  "sweetness": "少糖"
+                }
+              },
+              {
+                "input": "帮我加一份浓缩",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8560274486324195,
+                "slots": {}
+              },
+              {
+                "input": "不要了，取消订单",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9181322180054684,
+                "slots": {}
+              },
+              {
+                "input": "算了不点了",
+                "intent": "ORDER_CANCEL",
+                "confidence": 0.8638117158927103,
+                "slots": {}
+              },
+              {
+                "input": "我不想要了",
+                "intent": "ORDER_CANCEL",
+                "confidence": 0.9111647580111687,
+                "slots": {}
+              },
+              {
+                "input": "我的订单到哪了",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.8876445220239253,
+                "slots": {}
+              },
+              {
+                "input": "查一下我的订单",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.8960949388609343,
+                "slots": {}
+              },
+              {
+                "input": "订单状态是什么",
+                "intent": "ORDER_QUERY",
+                "confidence": 0.9380551722173984,
+                "slots": {}
+              },
+              {
+                "input": "有什么推荐的吗",
+                "intent": "RECOMMEND",
+                "confidence": 0.8844789398367595,
+                "slots": {}
+              },
+              {
+                "input": "什么咖啡好喝",
+                "intent": "RECOMMEND",
+                "confidence": 0.9017419554766732,
+                "slots": {}
+              },
+              {
+                "input": "推荐一下",
+                "intent": "RECOMMEND",
+                "confidence": 0.8611229820348393,
+                "slots": {}
+              },
+              {
+                "input": "有什么新品吗",
+                "intent": "RECOMMEND",
+                "confidence": 0.8772600212493299,
+                "slots": {}
+              },
+              {
+                "input": "拿铁多少钱",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9153663574938342,
+                "slots": {
+                  "product_name": "拿铁"
+                }
+              },
+              {
+                "input": "美式咖啡有多少卡路里",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9314309143821964,
+                "slots": {
+                  "product_name": "美式咖啡"
+                }
+              },
+              {
+                "input": "这个有什么配料",
+                "intent": "PRODUCT_INFO",
+                "confidence": 0.9157809575915108,
+                "slots": {}
+              },
+              {
+                "input": "今天天气真好",
+                "intent": "CHITCHAT",
+                "confidence": 0.8749969466977718,
+                "slots": {}
+              },
+              {
+                "input": "你好啊",
+                "intent": "CHITCHAT",
+                "confidence": 0.8622521800487498,
+                "slots": {}
+              },
+              {
+                "input": "谢谢",
+                "intent": "CHITCHAT",
+                "confidence": 0.9023860377791946,
+                "slots": {}
+              }
+            ]
+          },
+          "grader_results": {
+            "intent_accuracy": {
+              "grader_type": "intent_accuracy",
+              "passed": false,
+              "score": 0.88,
+              "details": {
+                "accuracy": 0.88,
+                "correct": 22,
+                "total": 25,
+                "per_intent_accuracy": {
+                  "ORDER_NEW": 1.0,
+                  "ORDER_MODIFY": 1.0,
+                  "ORDER_CANCEL": 0.6666666666666666,
+                  "ORDER_QUERY": 1.0,
+                  "RECOMMEND": 1.0,
+                  "PRODUCT_INFO": 0.3333333333333333,
+                  "CHITCHAT": 1.0
+                },
+                "confusion_matrix": {
+                  "ORDER_NEW": {
+                    "ORDER_NEW": 5
+                  },
+                  "ORDER_MODIFY": {
+                    "ORDER_MODIFY": 4
+                  },
+                  "ORDER_CANCEL": {
+                    "ORDER_MODIFY": 1,
+                    "ORDER_CANCEL": 2
+                  },
+                  "ORDER_QUERY": {
+                    "ORDER_QUERY": 3
+                  },
+                  "RECOMMEND": {
+                    "RECOMMEND": 4
+                  },
+                  "PRODUCT_INFO": {
+                    "ORDER_MODIFY": 2,
+                    "PRODUCT_INFO": 1
+                  },
+                  "CHITCHAT": {
+                    "CHITCHAT": 3
+                  }
+                },
+                "thresholds": {
+                  "min_accuracy": 0.9,
+                  "per_intent_min": 0.85
+                }
+              },
+              "failures": [
+                {
+                  "type": "wrong_intent",
+                  "input": "不要了，取消订单",
+                  "expected_intent": "ORDER_CANCEL",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.9181322180054684
+                },
+                {
+                  "type": "wrong_intent",
+                  "input": "拿铁多少钱",
+                  "expected_intent": "PRODUCT_INFO",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.9153663574938342
+                },
+                {
+                  "type": "wrong_intent",
+                  "input": "美式咖啡有多少卡路里",
+                  "expected_intent": "PRODUCT_INFO",
+                  "predicted_intent": "ORDER_MODIFY",
+                  "confidence": 0.9314309143821964
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": false,
+          "timestamp": "2026-01-11T12:55:56.229543",
+          "duration_ms": 0.17571449279785156
+        }
+      ],
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "pass_all": 0.0,
+      "aggregate_metrics": {},
+      "started_at": "2026-01-11T12:55:56.229548",
+      "completed_at": "2026-01-11T12:55:56.229546"
+    },
+    {
+      "task_id": "slot-extract-001",
+      "task_name": "槽位提取准确性",
+      "category": "regression",
+      "trials": [
+        {
+          "task_id": "slot-extract-001",
+          "trial_number": 0,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "一杯大杯冰的燕麦拿铁，少糖",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9333394065512459,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "sweetness": "少糖",
+                  "milk_type": "燕麦奶",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "两杯中杯热美式，不加糖",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8721567852368749,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "中杯",
+                  "temperature": "热",
+                  "sweetness": "无糖"
+                }
+              },
+              {
+                "input": "来个澳白加浓",
+                "intent": "ORDER_NEW",
+                "confidence": 0.8926109832027869,
+                "slots": {
+                  "product_name": "馥芮白",
+                  "quantity": 1,
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "一杯拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "大杯的美式",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "大杯"
+                }
+              },
+              {
+                "input": "冰的星冰乐",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰"
+                }
+              },
+              {
+                "input": "小杯热拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "小杯",
+                  "temperature": "热"
+                }
+              },
+              {
+                "input": "超大杯冰美式",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "超大杯",
+                  "temperature": "冰"
+                }
+              },
+              {
+                "input": "半糖拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "sweetness": "半糖"
+                }
+              },
+              {
+                "input": "无糖的卡布奇诺",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "卡布奇诺",
+                  "sweetness": "无糖"
+                }
+              },
+              {
+                "input": "豆奶拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "milk_type": "豆奶"
+                }
+              },
+              {
+                "input": "燕麦奶的馥芮白",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "馥芮白",
+                  "milk_type": "燕麦奶"
+                }
+              },
+              {
+                "input": "大杯冰的燕麦拿铁，少糖，加一份浓缩",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8815111566781836,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "sweetness": "少糖",
+                  "milk_type": "燕麦奶"
+                }
+              }
+            ]
+          },
+          "grader_results": {
+            "slot_f1": {
+              "grader_type": "slot_f1",
+              "passed": true,
+              "score": 0.9610389610389611,
+              "details": {
+                "precision": 0.9737,
+                "recall": 0.9487,
+                "f1": 0.961,
+                "true_positives": 37,
+                "false_positives": 1,
+                "false_negatives": 2,
+                "per_slot_metrics": {
+                  "product_name": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "sweetness": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "milk_type": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "temperature": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "quantity": {
+                    "precision": 0.6667,
+                    "recall": 0.6667,
+                    "f1": 0.6667
+                  },
+                  "size": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "extras": {
+                    "precision": 1.0,
+                    "recall": 0.5,
+                    "f1": 0.6667
+                  }
+                },
+                "thresholds": {
+                  "min_precision": 0.85,
+                  "min_recall": 0.85
+                }
+              },
+              "failures": [
+                {
+                  "type": "false_negative",
+                  "input": "两杯中杯热美式，不加糖",
+                  "slot": "quantity",
+                  "predicted": null,
+                  "expected": 2
+                },
+                {
+                  "type": "false_positive",
+                  "input": "来个澳白加浓",
+                  "slot": "quantity",
+                  "predicted": 1,
+                  "expected": null
+                },
+                {
+                  "type": "false_negative",
+                  "input": "大杯冰的燕麦拿铁，少糖，加一份浓缩",
+                  "slot": "extras",
+                  "predicted": null,
+                  "expected": [
+                    "加浓"
+                  ]
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.229699",
+          "duration_ms": 0.1468658447265625
+        },
+        {
+          "task_id": "slot-extract-001",
+          "trial_number": 1,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "一杯大杯冰的燕麦拿铁，少糖",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8638682715535524,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "sweetness": "少糖",
+                  "milk_type": "燕麦奶",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "两杯中杯热美式，不加糖",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9069732235172593,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "中杯",
+                  "temperature": "热",
+                  "sweetness": "无糖"
+                }
+              },
+              {
+                "input": "来个澳白加浓",
+                "intent": "ORDER_NEW",
+                "confidence": 0.8645692737655065,
+                "slots": {
+                  "product_name": "馥芮白",
+                  "quantity": 1,
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "一杯拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "大杯的美式",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "大杯"
+                }
+              },
+              {
+                "input": "冰的星冰乐",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰"
+                }
+              },
+              {
+                "input": "小杯热拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "小杯",
+                  "temperature": "热"
+                }
+              },
+              {
+                "input": "超大杯冰美式",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "超大杯",
+                  "temperature": "冰"
+                }
+              },
+              {
+                "input": "半糖拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "sweetness": "半糖"
+                }
+              },
+              {
+                "input": "无糖的卡布奇诺",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "卡布奇诺",
+                  "sweetness": "无糖"
+                }
+              },
+              {
+                "input": "豆奶拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "milk_type": "豆奶"
+                }
+              },
+              {
+                "input": "燕麦奶的馥芮白",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "馥芮白",
+                  "milk_type": "燕麦奶"
+                }
+              },
+              {
+                "input": "大杯冰的燕麦拿铁，少糖，加一份浓缩",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9037348000250891,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "sweetness": "少糖",
+                  "milk_type": "燕麦奶"
+                }
+              }
+            ]
+          },
+          "grader_results": {
+            "slot_f1": {
+              "grader_type": "slot_f1",
+              "passed": true,
+              "score": 0.9610389610389611,
+              "details": {
+                "precision": 0.9737,
+                "recall": 0.9487,
+                "f1": 0.961,
+                "true_positives": 37,
+                "false_positives": 1,
+                "false_negatives": 2,
+                "per_slot_metrics": {
+                  "product_name": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "sweetness": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "milk_type": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "temperature": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "quantity": {
+                    "precision": 0.6667,
+                    "recall": 0.6667,
+                    "f1": 0.6667
+                  },
+                  "size": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "extras": {
+                    "precision": 1.0,
+                    "recall": 0.5,
+                    "f1": 0.6667
+                  }
+                },
+                "thresholds": {
+                  "min_precision": 0.85,
+                  "min_recall": 0.85
+                }
+              },
+              "failures": [
+                {
+                  "type": "false_negative",
+                  "input": "两杯中杯热美式，不加糖",
+                  "slot": "quantity",
+                  "predicted": null,
+                  "expected": 2
+                },
+                {
+                  "type": "false_positive",
+                  "input": "来个澳白加浓",
+                  "slot": "quantity",
+                  "predicted": 1,
+                  "expected": null
+                },
+                {
+                  "type": "false_negative",
+                  "input": "大杯冰的燕麦拿铁，少糖，加一份浓缩",
+                  "slot": "extras",
+                  "predicted": null,
+                  "expected": [
+                    "加浓"
+                  ]
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.229832",
+          "duration_ms": 0.12993812561035156
+        },
+        {
+          "task_id": "slot-extract-001",
+          "trial_number": 2,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "一杯大杯冰的燕麦拿铁，少糖",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9288659587019533,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "sweetness": "少糖",
+                  "milk_type": "燕麦奶",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "两杯中杯热美式，不加糖",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8627160822730073,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "中杯",
+                  "temperature": "热",
+                  "sweetness": "无糖"
+                }
+              },
+              {
+                "input": "来个澳白加浓",
+                "intent": "ORDER_NEW",
+                "confidence": 0.8710436188467274,
+                "slots": {
+                  "product_name": "馥芮白",
+                  "quantity": 1,
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "一杯拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "quantity": 1
+                }
+              },
+              {
+                "input": "大杯的美式",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "大杯"
+                }
+              },
+              {
+                "input": "冰的星冰乐",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "星冰乐",
+                  "temperature": "冰"
+                }
+              },
+              {
+                "input": "小杯热拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "小杯",
+                  "temperature": "热"
+                }
+              },
+              {
+                "input": "超大杯冰美式",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "美式咖啡",
+                  "size": "超大杯",
+                  "temperature": "冰"
+                }
+              },
+              {
+                "input": "半糖拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "sweetness": "半糖"
+                }
+              },
+              {
+                "input": "无糖的卡布奇诺",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "卡布奇诺",
+                  "sweetness": "无糖"
+                }
+              },
+              {
+                "input": "豆奶拿铁",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "拿铁",
+                  "milk_type": "豆奶"
+                }
+              },
+              {
+                "input": "燕麦奶的馥芮白",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "product_name": "馥芮白",
+                  "milk_type": "燕麦奶"
+                }
+              },
+              {
+                "input": "大杯冰的燕麦拿铁，少糖，加一份浓缩",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.897781645114736,
+                "slots": {
+                  "product_name": "拿铁",
+                  "size": "大杯",
+                  "temperature": "冰",
+                  "sweetness": "少糖",
+                  "milk_type": "燕麦奶"
+                }
+              }
+            ]
+          },
+          "grader_results": {
+            "slot_f1": {
+              "grader_type": "slot_f1",
+              "passed": true,
+              "score": 0.9610389610389611,
+              "details": {
+                "precision": 0.9737,
+                "recall": 0.9487,
+                "f1": 0.961,
+                "true_positives": 37,
+                "false_positives": 1,
+                "false_negatives": 2,
+                "per_slot_metrics": {
+                  "product_name": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "sweetness": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "milk_type": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "temperature": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "quantity": {
+                    "precision": 0.6667,
+                    "recall": 0.6667,
+                    "f1": 0.6667
+                  },
+                  "size": {
+                    "precision": 1.0,
+                    "recall": 1.0,
+                    "f1": 1.0
+                  },
+                  "extras": {
+                    "precision": 1.0,
+                    "recall": 0.5,
+                    "f1": 0.6667
+                  }
+                },
+                "thresholds": {
+                  "min_precision": 0.85,
+                  "min_recall": 0.85
+                }
+              },
+              "failures": [
+                {
+                  "type": "false_negative",
+                  "input": "两杯中杯热美式，不加糖",
+                  "slot": "quantity",
+                  "predicted": null,
+                  "expected": 2
+                },
+                {
+                  "type": "false_positive",
+                  "input": "来个澳白加浓",
+                  "slot": "quantity",
+                  "predicted": 1,
+                  "expected": null
+                },
+                {
+                  "type": "false_negative",
+                  "input": "大杯冰的燕麦拿铁，少糖，加一份浓缩",
+                  "slot": "extras",
+                  "predicted": null,
+                  "expected": [
+                    "加浓"
+                  ]
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.229958",
+          "duration_ms": 0.12373924255371094
+        }
+      ],
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_all": 1.0,
+      "aggregate_metrics": {},
+      "started_at": "2026-01-11T12:55:56.229962",
+      "completed_at": "2026-01-11T12:55:56.229961"
+    },
+    {
+      "task_id": "fuzzy-expr-001",
+      "task_name": "模糊表达理解",
+      "category": "regression",
+      "trials": [
+        {
+          "task_id": "fuzzy-expr-001",
+          "trial_number": 0,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "不要那么甜",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8556059790923618,
+                "slots": {}
+              },
+              {
+                "input": "没那么甜",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "甜一点",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "健康一点的",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "浓一点",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "加浓",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.867521004327618,
+                "slots": {
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "续命水",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "常温的",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "temperature": "温"
+                }
+              },
+              {
+                "input": "不要太烫",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8657310918805866,
+                "slots": {}
+              }
+            ]
+          },
+          "grader_results": {
+            "fuzzy_match": {
+              "grader_type": "fuzzy_match",
+              "passed": false,
+              "score": 0.0,
+              "details": {
+                "accuracy": 0.0,
+                "correct": 0,
+                "total": 9,
+                "min_accuracy_required": 0.8
+              },
+              "failures": [
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "不要那么甜",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "半糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.8556059790923618,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "没那么甜",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "半糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "甜一点",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "多糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "健康一点的",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "无糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "浓一点",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": "add_extra_shot",
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "加浓",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": "add_extra_shot",
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.867521004327618,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "续命水",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": null,
+                    "mappings": {
+                      "product_name": "美式咖啡"
+                    }
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "常温的",
+                  "expected": {
+                    "slot": "temperature",
+                    "value": "温",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "不要太烫",
+                  "expected": {
+                    "slot": "temperature",
+                    "value": "温",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.8657310918805866,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": false,
+          "timestamp": "2026-01-11T12:55:56.230040",
+          "duration_ms": 0.07414817810058594
+        },
+        {
+          "task_id": "fuzzy-expr-001",
+          "trial_number": 1,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "不要那么甜",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8638310294787687,
+                "slots": {}
+              },
+              {
+                "input": "没那么甜",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "甜一点",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "健康一点的",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "浓一点",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "加浓",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9461785232211896,
+                "slots": {
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "续命水",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "常温的",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "temperature": "温"
+                }
+              },
+              {
+                "input": "不要太烫",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8830074501947583,
+                "slots": {}
+              }
+            ]
+          },
+          "grader_results": {
+            "fuzzy_match": {
+              "grader_type": "fuzzy_match",
+              "passed": false,
+              "score": 0.0,
+              "details": {
+                "accuracy": 0.0,
+                "correct": 0,
+                "total": 9,
+                "min_accuracy_required": 0.8
+              },
+              "failures": [
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "不要那么甜",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "半糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.8638310294787687,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "没那么甜",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "半糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "甜一点",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "多糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "健康一点的",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "无糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "浓一点",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": "add_extra_shot",
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "加浓",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": "add_extra_shot",
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.9461785232211896,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "续命水",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": null,
+                    "mappings": {
+                      "product_name": "美式咖啡"
+                    }
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "常温的",
+                  "expected": {
+                    "slot": "temperature",
+                    "value": "温",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "不要太烫",
+                  "expected": {
+                    "slot": "temperature",
+                    "value": "温",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.8830074501947583,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": false,
+          "timestamp": "2026-01-11T12:55:56.230110",
+          "duration_ms": 0.06771087646484375
+        },
+        {
+          "task_id": "fuzzy-expr-001",
+          "trial_number": 2,
+          "transcript": [],
+          "outcome": {
+            "predictions": [
+              {
+                "input": "不要那么甜",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.879830544106128,
+                "slots": {}
+              },
+              {
+                "input": "没那么甜",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "甜一点",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "健康一点的",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "浓一点",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "加浓",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.9234051460828558,
+                "slots": {
+                  "extras": [
+                    "加浓"
+                  ]
+                }
+              },
+              {
+                "input": "续命水",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {}
+              },
+              {
+                "input": "常温的",
+                "intent": "UNKNOWN",
+                "confidence": 0.5,
+                "slots": {
+                  "temperature": "温"
+                }
+              },
+              {
+                "input": "不要太烫",
+                "intent": "ORDER_MODIFY",
+                "confidence": 0.8642717480274134,
+                "slots": {}
+              }
+            ]
+          },
+          "grader_results": {
+            "fuzzy_match": {
+              "grader_type": "fuzzy_match",
+              "passed": false,
+              "score": 0.0,
+              "details": {
+                "accuracy": 0.0,
+                "correct": 0,
+                "total": 9,
+                "min_accuracy_required": 0.8
+              },
+              "failures": [
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "不要那么甜",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "半糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.879830544106128,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "没那么甜",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "半糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "甜一点",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "多糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "健康一点的",
+                  "expected": {
+                    "slot": "sweetness",
+                    "value": "无糖",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "浓一点",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": "add_extra_shot",
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "加浓",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": "add_extra_shot",
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.9234051460828558,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "续命水",
+                  "expected": {
+                    "slot": null,
+                    "value": null,
+                    "action": null,
+                    "mappings": {
+                      "product_name": "美式咖啡"
+                    }
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "常温的",
+                  "expected": {
+                    "slot": "temperature",
+                    "value": "温",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.5,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                },
+                {
+                  "type": "fuzzy_match_failure",
+                  "input": "不要太烫",
+                  "expected": {
+                    "slot": "temperature",
+                    "value": "温",
+                    "action": null,
+                    "mappings": null
+                  },
+                  "actual": {
+                    "matched": false,
+                    "slot": null,
+                    "value": null,
+                    "confidence": 0.8642717480274134,
+                    "action": null,
+                    "mappings": {}
+                  },
+                  "reasons": [
+                    "Expected match but got no match"
+                  ]
+                }
+              ]
+            }
+          },
+          "metrics": {},
+          "passed": false,
+          "timestamp": "2026-01-11T12:55:56.230182",
+          "duration_ms": 0.06914138793945312
+        }
+      ],
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "pass_all": 0.0,
+      "aggregate_metrics": {},
+      "started_at": "2026-01-11T12:55:56.230185",
+      "completed_at": "2026-01-11T12:55:56.230184"
+    },
+    {
+      "task_id": "e2e-order-001",
+      "task_name": "完整点单流程",
+      "category": "capability",
+      "trials": [
+        {
+          "task_id": "e2e-order-001",
+          "trial_number": 0,
+          "transcript": [],
+          "outcome": {
+            "predictions": []
+          },
+          "grader_results": {
+            "transcript": {
+              "grader_type": "transcript",
+              "passed": true,
+              "score": 1.0,
+              "details": {
+                "message": "No transcript to evaluate"
+              },
+              "failures": []
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.230192",
+          "duration_ms": 0.00286102294921875
+        },
+        {
+          "task_id": "e2e-order-001",
+          "trial_number": 1,
+          "transcript": [],
+          "outcome": {
+            "predictions": []
+          },
+          "grader_results": {
+            "transcript": {
+              "grader_type": "transcript",
+              "passed": true,
+              "score": 1.0,
+              "details": {
+                "message": "No transcript to evaluate"
+              },
+              "failures": []
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.230196",
+          "duration_ms": 0.0021457672119140625
+        },
+        {
+          "task_id": "e2e-order-001",
+          "trial_number": 2,
+          "transcript": [],
+          "outcome": {
+            "predictions": []
+          },
+          "grader_results": {
+            "transcript": {
+              "grader_type": "transcript",
+              "passed": true,
+              "score": 1.0,
+              "details": {
+                "message": "No transcript to evaluate"
+              },
+              "failures": []
+            }
+          },
+          "metrics": {},
+          "passed": true,
+          "timestamp": "2026-01-11T12:55:56.230199",
+          "duration_ms": 0.0021457672119140625
+        }
+      ],
+      "pass_at_1": 1.0,
+      "pass_at_k": 1.0,
+      "pass_all": 1.0,
+      "aggregate_metrics": {},
+      "started_at": "2026-01-11T12:55:56.230203",
+      "completed_at": "2026-01-11T12:55:56.230201"
+    }
+  ],
+  "by_category": {
+    "regression": {
+      "total": 4,
+      "passed": 2,
+      "pass_rate": 0.5
+    },
+    "capability": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    }
+  },
+  "started_at": "2026-01-11T12:55:56.228712",
+  "completed_at": "2026-01-11T12:55:56.230211",
+  "total_duration_ms": 1.4989999999999999
+}

@@ -1,0 +1,160 @@
+# 延迟性能要求配置
+# Latency Performance Requirements
+
+# 整体延迟目标
+end_to_end:
+  description: "端到端响应延迟（从用户输入到系统响应）"
+  targets:
+    p50: 500    # 50% 请求应在 500ms 内完成
+    p90: 800    # 90% 请求应在 800ms 内完成
+    p95: 1000   # 95% 请求应在 1000ms 内完成
+    p99: 2000   # 99% 请求应在 2000ms 内完成
+  unit: "ms"
+  sla:
+    critical: 3000  # 超过此值视为严重问题
+    warning: 1500   # 超过此值发出警告
+
+# 各组件延迟分解
+component_breakdown:
+  # 意图识别
+  intent_classification:
+    description: "意图分类延迟"
+    targets:
+      p50: 150
+      p95: 300
+      p99: 500
+    budget_percentage: 30  # 占总延迟预算的 30%
+
+  # 槽位提取
+  slot_extraction:
+    description: "槽位提取延迟"
+    targets:
+      p50: 100
+      p95: 200
+      p99: 400
+    budget_percentage: 20
+
+  # LLM 生成响应
+  llm_generation:
+    description: "LLM 响应生成延迟"
+    targets:
+      p50: 200
+      p95: 400
+      p99: 800
+    budget_percentage: 40
+
+  # 规则引擎验证
+  rules_validation:
+    description: "规则引擎验证延迟"
+    targets:
+      p50: 20
+      p95: 50
+      p99: 100
+    budget_percentage: 5
+
+  # 技能执行
+  skill_execution:
+    description: "技能执行延迟"
+    targets:
+      p50: 30
+      p95: 80
+      p99: 150
+    budget_percentage: 5
+
+# 按意图类型的延迟预期
+intent_specific:
+  ORDER_NEW:
+    description: "新订单处理"
+    expected_p95: 1200
+    note: "涉及槽位提取和订单创建，允许稍长"
+
+  ORDER_MODIFY:
+    description: "订单修改"
+    expected_p95: 800
+    note: "需要检索现有订单状态"
+
+  ORDER_QUERY:
+    description: "订单查询"
+    expected_p95: 500
+    note: "主要是数据库查询，应较快"
+
+  RECOMMEND:
+    description: "推荐请求"
+    expected_p95: 1500
+    note: "可能涉及 RAG 检索，允许较长"
+
+  CHITCHAT:
+    description: "闲聊"
+    expected_p95: 600
+    note: "简单 LLM 响应"
+
+  PRODUCT_INFO:
+    description: "产品信息查询"
+    expected_p95: 800
+    note: "可能需要检索产品数据"
+
+# 并发性能要求
+concurrency:
+  description: "并发处理能力"
+  targets:
+    max_concurrent_requests: 100
+    requests_per_second: 50
+    queue_wait_time_p95: 200  # ms
+
+# 冷启动延迟
+cold_start:
+  description: "首次请求延迟（模型加载等）"
+  targets:
+    acceptable: 5000   # 5 秒内可接受
+    warning: 10000     # 10 秒发出警告
+  mitigation: "使用预热机制减少冷启动影响"
+
+# 超时配置
+timeouts:
+  llm_call: 10000      # LLM 调用超时 10s
+  total_request: 15000  # 总请求超时 15s
+  retry_delay: 1000     # 重试间隔 1s
+  max_retries: 2        # 最大重试次数
+
+# 性能监控告警阈值
+alerting:
+  latency_spike:
+    description: "延迟突增告警"
+    condition: "p95 > 2x baseline for 5 minutes"
+    severity: "warning"
+
+  latency_degradation:
+    description: "延迟持续恶化"
+    condition: "p50 increasing trend for 1 hour"
+    severity: "warning"
+
+  sla_breach:
+    description: "SLA 违反"
+    condition: "p99 > critical threshold"
+    severity: "critical"
+
+  timeout_rate:
+    description: "超时率告警"
+    condition: "timeout_rate > 1%"
+    severity: "critical"
+
+# 性能优化建议
+optimization_hints:
+  caching:
+    - "对常见意图分类结果缓存"
+    - "产品信息查询结果缓存"
+    - "用户会话状态本地缓存"
+
+  batching:
+    - "批量处理多个槽位提取请求"
+    - "合并相似的 LLM 调用"
+
+  async_processing:
+    - "非关键路径操作异步执行"
+    - "日志记录异步化"
+    - "指标收集异步化"
+
+  model_optimization:
+    - "使用更小的模型处理简单意图"
+    - "意图分类使用专用小模型"
+    - "考虑模型量化减少推理时间"

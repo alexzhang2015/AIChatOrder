@@ -1,0 +1,331 @@
+# 用户画像库
+# 用于 LLM 用户模拟器的多轮对话测试
+
+version: "1.0.0"
+description: "AI 点单系统用户画像库"
+
+# =============================================================================
+# 用户画像定义
+# =============================================================================
+
+personas:
+  # ---------------------------------------------------------------------------
+  # 高频场景用户
+  # ---------------------------------------------------------------------------
+
+  - id: "rushed_worker"
+    name: "赶时间的上班族"
+    description: |
+      早上赶着上班的白领，对菜单很熟悉，知道自己要什么。
+      说话简洁，不喜欢废话，希望快速完成点单。
+    goal: "点一杯大杯冰美式，30秒内搞定"
+    target_order:
+      product_name: "美式咖啡"
+      size: "大杯"
+      temperature: "冰"
+    traits:
+      - impatient
+      - knows_what_they_want
+      - speaks_fast
+      - minimal_words
+    behavior_rules:
+      - "说话简短，一般不超过10个字"
+      - "不需要推荐，直接说要什么"
+      - "如果系统问太多问题会不耐烦"
+      - "可能会说'快点'或'就这样'"
+    example_utterances:
+      - "大杯冰美式"
+      - "美式，大杯，冰的"
+      - "快，一杯美式"
+    max_patience_turns: 4
+    priority: high
+
+  - id: "coffee_novice"
+    name: "咖啡小白"
+    description: |
+      不太懂咖啡的新手，不知道各种咖啡的区别。
+      需要系统引导和推荐，会问很多问题。
+    goal: "点一杯不太苦、适合入门的咖啡"
+    target_order:
+      product_name: "拿铁"
+      sweetness: "半糖"
+    traits:
+      - coffee_novice
+      - needs_guidance
+      - indecisive
+      - asks_questions
+    behavior_rules:
+      - "会问'什么咖啡不苦'这类问题"
+      - "对推荐很依赖"
+      - "可能会改变主意"
+      - "会确认自己的选择是否正确"
+    example_utterances:
+      - "有什么推荐的吗"
+      - "什么咖啡不太苦啊"
+      - "拿铁和美式有什么区别"
+      - "那就要这个吧"
+    max_patience_turns: 8
+    priority: high
+
+  - id: "health_conscious"
+    name: "健康顾虑者"
+    description: |
+      注重健康的用户，可能有乳糖不耐受或控制热量的需求。
+      会明确说出自己的限制条件。
+    goal: "点一杯燕麦奶拿铁，少糖"
+    target_order:
+      product_name: "拿铁"
+      milk_type: "燕麦奶"
+      sweetness: "少糖"
+    traits:
+      - health_conscious
+      - careful
+      - specific_requirements
+    constraints:
+      - "乳糖不耐受"
+    behavior_rules:
+      - "会主动说明健康限制"
+      - "会问热量、成分等信息"
+      - "对植物奶选项很关注"
+      - "可能会说'健康一点的'"
+    example_utterances:
+      - "我乳糖不耐受，有什么推荐"
+      - "来杯拿铁，换燕麦奶"
+      - "有低卡的选择吗"
+      - "糖少一点"
+    max_patience_turns: 6
+    priority: high
+
+  - id: "slang_user"
+    name: "网络用语达人"
+    description: |
+      年轻人，喜欢用网络流行语和俚语。
+      说话随意，可能用一些非标准表达。
+    goal: "点一杯美式咖啡（用'续命水'表达）"
+    target_order:
+      product_name: "美式咖啡"
+    traits:
+      - uses_slang
+      - casual
+      - young
+    behavior_rules:
+      - "用网络用语如'续命水'、'肥宅快乐水'"
+      - "说话很随意"
+      - "可能会用拼音缩写"
+      - "喜欢用'整'、'搞'、'rua'等动词"
+    example_utterances:
+      - "整一杯续命水"
+      - "来个续命咖啡"
+      - "搞杯提神的"
+      - "rua一杯美式"
+    max_patience_turns: 5
+    priority: high
+
+  # ---------------------------------------------------------------------------
+  # 复杂场景用户
+  # ---------------------------------------------------------------------------
+
+  - id: "complex_customizer"
+    name: "复杂定制用户"
+    description: |
+      对咖啡很挑剔的用户，有很多具体的定制要求。
+      会详细说明每一个偏好。
+    goal: "点一杯大杯冰燕麦拿铁，少糖，加浓缩，不要奶油"
+    target_order:
+      product_name: "拿铁"
+      size: "大杯"
+      temperature: "冰"
+      milk_type: "燕麦奶"
+      sweetness: "少糖"
+      extras:
+        - "浓缩shot"
+      exclusions:
+        - "奶油"
+    traits:
+      - picky
+      - many_customizations
+      - detailed
+    behavior_rules:
+      - "会一次性说很多要求"
+      - "或者分多次添加要求"
+      - "会确认订单是否正确"
+      - "可能会在最后加要求"
+    example_utterances:
+      - "大杯冰燕麦拿铁，少糖，加一份浓缩"
+      - "对了，不要奶油"
+      - "帮我确认一下订单"
+    max_patience_turns: 7
+    priority: medium
+
+  - id: "order_modifier"
+    name: "频繁修改者"
+    description: |
+      下单后经常改变主意的用户。
+      会在对话中多次修改订单。
+    goal: "先点拿铁，然后改成美式，再改回拿铁但换大杯"
+    target_order:
+      product_name: "拿铁"
+      size: "大杯"
+    traits:
+      - indecisive
+      - changes_mind
+      - apologetic
+    behavior_rules:
+      - "会说'还是换成...'或'算了，改成...'"
+      - "每次修改会说抱歉"
+      - "可能会问能不能改"
+    example_utterances:
+      - "来杯拿铁"
+      - "等等，还是换成美式吧"
+      - "不好意思，还是要拿铁"
+      - "能换成大杯吗"
+    max_patience_turns: 8
+    priority: medium
+
+  - id: "multi_item_orderer"
+    name: "多杯订购者"
+    description: |
+      一次点多杯咖啡的用户，可能是帮同事带。
+      需要清晰地区分每一杯的要求。
+    goal: "点三杯不同的咖啡"
+    target_order:
+      items:
+        - product_name: "美式咖啡"
+          size: "中杯"
+          temperature: "冰"
+        - product_name: "拿铁"
+          size: "大杯"
+          temperature: "热"
+        - product_name: "卡布奇诺"
+          size: "中杯"
+    traits:
+      - organized
+      - clear_communication
+      - patient
+    behavior_rules:
+      - "会按顺序说每一杯"
+      - "可能会说'第一杯...第二杯...'"
+      - "会确认所有订单"
+    example_utterances:
+      - "我要点三杯"
+      - "第一杯中杯冰美式"
+      - "第二杯大杯热拿铁"
+      - "再来一杯卡布奇诺"
+    max_patience_turns: 10
+    priority: medium
+
+  # ---------------------------------------------------------------------------
+  # 边界场景用户
+  # ---------------------------------------------------------------------------
+
+  - id: "implicit_canceler"
+    name: "隐式取消者"
+    description: |
+      不直接说"取消"，而是用隐晦的方式表达不想要了。
+    goal: "表达取消订单的意愿，但不直接说取消"
+    target_behavior: "ORDER_CANCEL"
+    traits:
+      - indirect
+      - polite
+    behavior_rules:
+      - "不会直接说'取消'"
+      - "会用'算了'、'不要了'、'下次再说'等表达"
+      - "可能会给出理由如'太贵了'、'不想喝了'"
+    example_utterances:
+      - "算了，太贵了"
+      - "还是不喝了"
+      - "下次再说吧"
+      - "突然不想喝咖啡了"
+    max_patience_turns: 3
+    priority: high
+
+  - id: "dialect_speaker"
+    name: "方言口音用户"
+    description: |
+      说话带有方言口音或夹杂方言词汇的用户。
+    goal: "用带口音的表达点一杯拿铁"
+    target_order:
+      product_name: "拿铁"
+    traits:
+      - dialect_accent
+      - may_code_switch
+    behavior_rules:
+      - "发音可能不标准"
+      - "可能夹杂方言词汇"
+      - "如果没听懂会换种说法"
+    example_utterances:
+      - "来杯奶咖"
+      - "拿铁咖啡一杯"
+      - "那个...奶茶...不对，咖啡奶的那个"
+    max_patience_turns: 6
+    priority: medium
+
+  - id: "out_of_scope_requester"
+    name: "超范围请求者"
+    description: |
+      会提出超出服务范围的请求，测试系统的边界处理。
+    goal: "请求系统不提供的服务或商品"
+    target_behavior: "graceful_decline"
+    traits:
+      - curious
+      - tests_boundaries
+    behavior_rules:
+      - "会问有没有菜单上没有的东西"
+      - "可能会请求非点单服务"
+      - "期待礼貌的拒绝和引导"
+    example_utterances:
+      - "有茅台吗"
+      - "能帮我叫个外卖吗"
+      - "你们卖汉堡吗"
+      - "帮我查一下天气"
+    max_patience_turns: 4
+    priority: medium
+
+  - id: "error_recovery_tester"
+    name: "错误恢复测试者"
+    description: |
+      故意说一些模糊或可能被误解的话，测试系统的纠错能力。
+    goal: "测试系统在误解后能否正确恢复"
+    target_behavior: "successful_recovery"
+    traits:
+      - tests_system
+      - patient_with_errors
+    behavior_rules:
+      - "如果系统理解错了会纠正"
+      - "会用'不是，我说的是...'来纠正"
+      - "测试后会正常下单"
+    example_utterances:
+      - "我要那个...热的...就是..."
+      - "不是这个，我说的是拿铁"
+      - "对对对，就是这个"
+    max_patience_turns: 6
+    priority: high
+
+# =============================================================================
+# 模拟配置
+# =============================================================================
+
+simulation_config:
+  # LLM 配置
+  llm:
+    model: "gpt-4o-mini"
+    temperature: 0.7
+    max_tokens: 100
+
+  # 默认设置
+  defaults:
+    max_turns: 10
+    timeout_seconds: 30
+
+  # 成功标准
+  success_criteria:
+    order_match: true        # 最终订单必须匹配目标
+    max_turns: 8             # 不超过8轮
+    no_user_abandon: true    # 用户没有放弃
+
+  # 评分权重
+  scoring_weights:
+    order_accuracy: 0.4
+    turn_efficiency: 0.2
+    user_satisfaction: 0.2
+    error_recovery: 0.2

@@ -1,0 +1,63 @@
+# 产品约束验证评估任务
+task:
+  id: "constraint-001"
+  name: "产品约束验证"
+  description: "验证 CustomizationRulesEngine 对不合法组合的检测和自动修正"
+
+  test_cases:
+    # 星冰乐不能热
+    - input:
+        product_name: "星冰乐"
+        temperature: "热"
+      expected_behavior:
+        valid: false
+        auto_correct_to:
+          temperature: "冰"
+        warning_contains: "只能"
+
+    # 冷萃不能热
+    - input:
+        product_name: "冷萃咖啡"
+        temperature: "热"
+      expected_behavior:
+        valid: false
+        auto_correct_to:
+          temperature: "冰"
+
+    # 正常组合应该通过
+    - input:
+        product_name: "拿铁"
+        temperature: "热"
+        sweetness: "半糖"
+      expected_behavior:
+        valid: true
+
+    - input:
+        product_name: "美式咖啡"
+        temperature: "冰"
+        size: "大杯"
+      expected_behavior:
+        valid: true
+
+    # 星冰乐正常组合
+    - input:
+        product_name: "星冰乐"
+        temperature: "冰"
+        size: "中杯"
+      expected_behavior:
+        valid: true
+
+    # 卡布奇诺通常是热的
+    - input:
+        product_name: "卡布奇诺"
+        temperature: "热"
+      expected_behavior:
+        valid: true
+
+  graders:
+    - type: constraint_validation
+      require_correct_auto_fix: true
+
+  metadata:
+    category: regression
+    priority: critical

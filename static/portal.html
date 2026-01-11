@@ -1,0 +1,3332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 点单 Agent 运营监控 Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .header-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .header-nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Sidebar */
+        .layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            min-height: calc(100vh - 60px);
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin: 0.25rem 0;
+        }
+
+        .sidebar-nav .nav-section {
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            padding: 0 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .sidebar-nav a.active {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .sidebar-nav .icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .metric-change {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .metric-change.up { color: var(--success); }
+        .metric-change.down { color: var(--error); }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        tr:hover {
+            background: var(--bg);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-error { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .badge-pending { background: #e2e8f0; color: #475569; }
+        .badge-secondary { background: #e2e8f0; color: #475569; }
+        .badge-sm { font-size: 0.65rem; padding: 0.15rem 0.4rem; }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 { margin: 0; }
+        .modal-body {
+            padding: 1.5rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .row-error {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .btn-close:hover { color: var(--text-primary); }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .form-group textarea {
+            min-height: 80px;
+            font-family: monospace;
+        }
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .pagination {
+            display: flex;
+            gap: 0.25rem;
+            padding: 1rem;
+            justify-content: center;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+
+        /* Alerts */
+        .alerts {
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert-icon {
+            font-size: 1.25rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .alert-action {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Activity List */
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .activity-icon.eval { background: #dbeafe; }
+        .activity-icon.fix { background: #dcfce7; }
+        .activity-icon.data { background: #fef3c7; }
+        .activity-icon.optimize { background: #f3e8ff; }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        select, input[type="text"] {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.75rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>AI 点单 Agent 运营监控</h1>
+        <nav class="header-nav">
+            <a href="/intent">意图分析</a>
+            <a href="/chat">多轮对话</a>
+            <a href="/" class="active">运营 Portal</a>
+        </nav>
+        <div class="header-status">
+            <span class="status-dot"></span>
+            <span id="system-status">系统正常</span>
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-nav">
+                <!-- 概览 -->
+                <li><a href="#overview" class="active" data-page="overview">
+                    <span class="icon">📊</span> 概览
+                </a></li>
+
+                <!-- 评估分析 -->
+                <li class="nav-section">📋 评估分析</li>
+                <li><a href="#evaluation" data-page="evaluation">
+                    <span class="icon">🧪</span> 评估管理
+                </a></li>
+                <li><a href="#confusion" data-page="confusion">
+                    <span class="icon">🎯</span> 混淆矩阵
+                </a></li>
+                <li><a href="#badcases" data-page="badcases">
+                    <span class="icon">🐛</span> Bad Case
+                </a></li>
+
+                <!-- 数据管理 -->
+                <li class="nav-section">📦 数据管理</li>
+                <li><a href="#samples" data-page="samples">
+                    <span class="icon">📝</span> 训练样本
+                </a></li>
+                <li><a href="#data" data-page="data">
+                    <span class="icon">📦</span> 数据增强
+                </a></li>
+                <li><a href="#sessions" data-page="sessions">
+                    <span class="icon">💬</span> 会话回放
+                </a></li>
+
+                <!-- 优化实验 -->
+                <li class="nav-section">🔬 优化实验</li>
+                <li><a href="#optimization" data-page="optimization">
+                    <span class="icon">📈</span> 优化追踪
+                </a></li>
+                <li><a href="#abtesting" data-page="abtesting">
+                    <span class="icon">🔬</span> A/B 测试
+                </a></li>
+
+                <!-- 系统监控 -->
+                <li class="nav-section">🖥️ 系统监控</li>
+                <li><a href="#monitor" data-page="monitor">
+                    <span class="icon">🔍</span> 实时监控
+                </a></li>
+                <li><a href="#status" data-page="status">
+                    <span class="icon">💚</span> 系统状态
+                </a></li>
+                <li><a href="#business" data-page="business">
+                    <span class="icon">📈</span> 业务看板
+                </a></li>
+                <li><a href="#workflow" data-page="workflow">
+                    <span class="icon">🔀</span> 工作流图
+                </a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Overview Page -->
+            <div id="overview" class="page active">
+                <h2 class="page-title">📊 系统概览</h2>
+
+                <!-- Alerts -->
+                <div id="alerts" class="alerts"></div>
+
+                <!-- Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">意图准确率</div>
+                        <div class="metric-value" id="metric-accuracy">--</div>
+                        <div class="metric-change up" id="accuracy-change">-- --</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">槽位 F1</div>
+                        <div class="metric-value" id="metric-slot-f1">--</div>
+                        <div class="metric-change up" id="slot-f1-change">-- --</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Bad Case 率</div>
+                        <div class="metric-value" id="metric-badcase-rate">--</div>
+                        <div class="metric-change down" id="badcase-change">-- --</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">平均置信度</div>
+                        <div class="metric-value" id="metric-confidence">--</div>
+                        <div class="metric-change" id="confidence-change">-- --</div>
+                    </div>
+                </div>
+
+                <!-- Charts and Activity -->
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">趋势图</h3>
+                            <select id="trend-metric" onchange="updateTrendChart()">
+                                <option value="intent_accuracy">意图准确率</option>
+                                <option value="slot_f1">槽位 F1</option>
+                                <option value="bad_case_rate">Bad Case 率</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="trend-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">最近活动</h3>
+                        </div>
+                        <ul class="activity-list" id="activity-list"></ul>
+                    </div>
+                </div>
+
+                <!-- Counts -->
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-title">待处理 Bad Case</div>
+                        <div class="metric-value" id="count-pending">--</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">优化轮次</div>
+                        <div class="metric-value" id="count-rounds">--</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">生产样本数</div>
+                        <div class="metric-value" id="count-samples">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evaluation Page -->
+            <div id="evaluation" class="page">
+                <h2 class="page-title">🧪 评估管理</h2>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">运行评估</h3>
+                        <button class="btn btn-primary" onclick="runEvaluation()">
+                            ▶️ 运行评估
+                        </button>
+                    </div>
+
+                    <div id="eval-status" style="display: none;">
+                        <div style="margin-bottom: 0.5rem;">
+                            <span id="eval-task">准备中...</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="eval-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">评估历史</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>套件</th>
+                                    <th>通过/失败</th>
+                                    <th>意图准确率</th>
+                                    <th>槽位 F1</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eval-history"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bad Cases Page -->
+            <div id="badcases" class="page">
+                <h2 class="page-title">🐛 Bad Case 管理</h2>
+
+                <!-- 快速操作工具栏 -->
+                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.2);">
+                        <h3 class="card-title" style="color: white;">🚀 快速操作</h3>
+                    </div>
+                    <div style="padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn" style="background: white; color: #667eea;" onclick="collectFromEvaluation()">
+                            📥 从评估收集
+                        </button>
+                        <button class="btn" style="background: white; color: #667eea;" onclick="showAddBadCaseModal()">
+                            ➕ 手动添加
+                        </button>
+                        <button class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5);" onclick="batchAnalyze()">
+                            🔍 批量分析
+                        </button>
+                        <button class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5);" onclick="generateFixSuggestions()">
+                            💡 生成修复建议
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">分析概览</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="loadBadCaseAnalysis()">
+                            刷新分析
+                        </button>
+                    </div>
+                    <div class="grid-3" id="badcase-summary"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">模式识别</h3>
+                    </div>
+                    <div id="badcase-patterns"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Bad Case 列表</h3>
+                        <div class="filters">
+                            <div class="filter-group">
+                                <label>状态:</label>
+                                <select id="filter-status" onchange="loadBadCases()">
+                                    <option value="">全部</option>
+                                    <option value="pending">待处理</option>
+                                    <option value="analyzing">分析中</option>
+                                    <option value="in_progress">修复中</option>
+                                    <option value="fixed">已修复</option>
+                                    <option value="verified">已验证</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>严重程度:</label>
+                                <select id="filter-severity" onchange="loadBadCases()">
+                                    <option value="">全部</option>
+                                    <option value="critical">严重</option>
+                                    <option value="major">重要</option>
+                                    <option value="minor">轻微</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>类别:</label>
+                                <select id="filter-category" onchange="loadBadCases()">
+                                    <option value="">全部</option>
+                                    <option value="intent_confusion">意图混淆</option>
+                                    <option value="slot_extraction">槽位提取</option>
+                                    <option value="fuzzy_expression">模糊表达</option>
+                                    <option value="constraint_violation">约束违反</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30px;"><input type="checkbox" id="select-all-badcases" onchange="toggleSelectAllBadCases()"></th>
+                                    <th>用户输入</th>
+                                    <th>期望 → 实际</th>
+                                    <th>类别</th>
+                                    <th>严重程度</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="badcase-list"></tbody>
+                        </table>
+                    </div>
+                    <div style="padding: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                        <div id="badcase-selection-info" style="color: var(--text-secondary); font-size: 0.875rem;">
+                            已选择 <span id="selected-count">0</span> 项
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary btn-sm" onclick="batchUpdateStatus('analyzing')" id="batch-analyze-btn" disabled>
+                                标记分析中
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="batchUpdateStatus('fixed')" id="batch-fix-btn" disabled>
+                                标记已修复
+                            </button>
+                            <button class="btn btn-error btn-sm" onclick="batchDelete()" id="batch-delete-btn" disabled>
+                                批量删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optimization Page -->
+            <div id="optimization" class="page">
+                <h2 class="page-title">📈 优化追踪</h2>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">优化进度</h3>
+                        <button class="btn btn-primary btn-sm" onclick="showNewRoundModal()">
+                            + 开始新轮次
+                        </button>
+                    </div>
+                    <div id="optimization-summary"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">指标趋势</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="optimization-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">优化历史</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>轮次</th>
+                                    <th>版本</th>
+                                    <th>修复/新增</th>
+                                    <th>准确率变化</th>
+                                    <th>完成时间</th>
+                                </tr>
+                            </thead>
+                            <tbody id="optimization-history"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Management Page -->
+            <div id="data" class="page">
+                <h2 class="page-title">📦 数据管理</h2>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">数据增强</h3>
+                            <button class="btn btn-primary btn-sm" onclick="generateAugmentedData()">
+                                生成数据
+                            </button>
+                        </div>
+                        <div id="augment-stats">
+                            <div class="loading">
+                                <div class="spinner"></div> 加载中...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Embedding 知识库</h3>
+                            <button class="btn btn-primary btn-sm" onclick="buildEmbedding()">
+                                重建知识库
+                            </button>
+                        </div>
+                        <div id="embedding-stats">
+                            <div class="loading">
+                                <div class="spinner"></div> 加载中...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">生产数据</h3>
+                        <div>
+                            <button class="btn btn-secondary btn-sm" onclick="exportProductionData('jsonl')">
+                                导出训练数据
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="exportProductionData('fine_tune')">
+                                导出 Fine-tune 数据
+                            </button>
+                        </div>
+                    </div>
+                    <div id="production-stats"></div>
+                </div>
+            </div>
+
+            <!-- Monitor Page -->
+            <div id="monitor" class="page">
+                <h2 class="page-title">🔍 实时监控</h2>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">请求/分钟</div>
+                        <div class="metric-value" id="monitor-rpm">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">平均延迟</div>
+                        <div class="metric-value" id="monitor-latency">-- ms</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">错误率</div>
+                        <div class="metric-value" id="monitor-error-rate">--%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">活跃会话</div>
+                        <div class="metric-value" id="monitor-sessions">--</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">意图分布</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="intent-distribution-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">系统健康</h3>
+                        </div>
+                        <div id="health-status"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status Page -->
+            <div id="status" class="page">
+                <h2 class="page-title">💚 系统状态</h2>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">系统状态</div>
+                        <div class="metric-value" id="status-overall">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">运行时间</div>
+                        <div class="metric-value" id="status-uptime">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">API 版本</div>
+                        <div class="metric-value" id="status-version">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">环境</div>
+                        <div class="metric-value" id="status-env">--</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">组件状态</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="loadSystemStatus()">刷新</button>
+                        </div>
+                        <div id="status-components">
+                            <div class="loading"><div class="spinner"></div> 加载中...</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">分类器配置</h3>
+                        </div>
+                        <div id="status-classifier">
+                            <div class="loading"><div class="spinner"></div> 加载中...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">支持的意图类型</h3>
+                    </div>
+                    <div id="status-intents" class="grid-3"></div>
+                </div>
+            </div>
+
+            <!-- Business Dashboard Page -->
+            <div id="business" class="page">
+                <h2 class="page-title">📊 业务看板</h2>
+
+                <div class="metrics-grid" style="grid-template-columns: repeat(5, 1fr);">
+                    <div class="metric-card">
+                        <div class="metric-label">意图准确率</div>
+                        <div class="metric-value" id="biz-accuracy">--</div>
+                        <div class="metric-change" id="biz-accuracy-status"></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">槽位 F1</div>
+                        <div class="metric-value" id="biz-slot-f1">--</div>
+                        <div class="metric-change" id="biz-slot-f1-status"></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">订单成功率</div>
+                        <div class="metric-value" id="biz-success-rate">--</div>
+                        <div class="metric-change" id="biz-success-status"></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">人工介入率</div>
+                        <div class="metric-value" id="biz-escalation">--</div>
+                        <div class="metric-change" id="biz-escalation-status"></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">健康度</div>
+                        <div class="metric-value" id="biz-health">--</div>
+                        <div class="metric-change" id="biz-health-status"></div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">告警列表</h3>
+                        </div>
+                        <div id="biz-alerts"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">改进建议</h3>
+                        </div>
+                        <div id="biz-actions"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">业务影响分析</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="loadBusinessDashboard()">刷新</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>指标</th>
+                                    <th>当前值</th>
+                                    <th>目标值</th>
+                                    <th>差距</th>
+                                    <th>业务影响</th>
+                                </tr>
+                            </thead>
+                            <tbody id="biz-impact-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Graph Page -->
+            <div id="workflow" class="page">
+                <h2 class="page-title">🔀 工作流图</h2>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">LangGraph 工作流</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="loadWorkflowGraph()">刷新</button>
+                    </div>
+                    <div id="workflow-diagram" style="padding: 1rem; background: #f8fafc; border-radius: 8px; min-height: 400px;">
+                        <div class="loading"><div class="spinner"></div> 加载中...</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">节点说明</h3>
+                    </div>
+                    <div class="grid-3" id="workflow-nodes"></div>
+                </div>
+            </div>
+
+            <!-- A/B Testing Page -->
+            <div id="abtesting" class="page">
+                <h2 class="page-title">🧪 A/B 测试</h2>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">创建实验</h3>
+                        <button class="btn btn-primary" onclick="showCreateExperimentModal()">
+                            + 新建实验
+                        </button>
+                    </div>
+                    <div class="grid-3">
+                        <div class="metric-card">
+                            <div class="metric-label">运行中实验</div>
+                            <div class="metric-value" id="ab-running">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">已完成实验</div>
+                            <div class="metric-value" id="ab-completed">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">草稿实验</div>
+                            <div class="metric-value" id="ab-draft">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">实验列表</h3>
+                        <div class="filters">
+                            <div class="filter-group">
+                                <label>状态:</label>
+                                <select id="ab-filter-status" onchange="loadExperiments()">
+                                    <option value="">全部</option>
+                                    <option value="running">运行中</option>
+                                    <option value="completed">已完成</option>
+                                    <option value="draft">草稿</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>实验名称</th>
+                                    <th>假设</th>
+                                    <th>变体</th>
+                                    <th>主要指标</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ab-experiments-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" id="ab-analysis-card" style="display: none;">
+                    <div class="card-header">
+                        <h3 class="card-title">实验分析</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="hideAnalysis()">关闭</button>
+                    </div>
+                    <div id="ab-analysis-content"></div>
+                </div>
+            </div>
+
+            <!-- Confusion Matrix Page -->
+            <div id="confusion" class="page">
+                <h2 class="page-title">🎯 意图混淆矩阵</h2>
+
+                <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="metric-card">
+                        <div class="metric-label">整体准确率</div>
+                        <div class="metric-value" id="confusion-accuracy">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">最易混淆意图对</div>
+                        <div class="metric-value" id="confusion-worst-pair" style="font-size: 1rem;">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">需关注意图数</div>
+                        <div class="metric-value" id="confusion-attention-count">--</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">混淆矩阵热力图</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="loadConfusionMatrix()">刷新</button>
+                        </div>
+                    </div>
+                    <div id="confusion-matrix-container" style="overflow-x: auto;">
+                        <p style="text-align: center; padding: 2rem; color: var(--text-secondary);">加载中...</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Top 混淆案例</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>真实意图</th>
+                                    <th>预测意图</th>
+                                    <th>混淆次数</th>
+                                    <th>典型样本</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="confusion-cases-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Samples Page -->
+            <div id="samples" class="page">
+                <h2 class="page-title">📝 训练样本管理</h2>
+
+                <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="metric-card">
+                        <div class="metric-label">总样本数</div>
+                        <div class="metric-value" id="samples-total">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">已验证</div>
+                        <div class="metric-value" id="samples-verified">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">手动添加</div>
+                        <div class="metric-value" id="samples-manual">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">意图类型数</div>
+                        <div class="metric-value" id="samples-intents">--</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">样本列表</h3>
+                        <div class="filters">
+                            <div class="filter-group">
+                                <label>意图:</label>
+                                <select id="samples-filter-intent" onchange="loadTrainingSamples()">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>来源:</label>
+                                <select id="samples-filter-source" onchange="loadTrainingSamples()">
+                                    <option value="">全部</option>
+                                    <option value="builtin">内置</option>
+                                    <option value="manual">手动添加</option>
+                                    <option value="augmented">数据增强</option>
+                                    <option value="production">生产数据</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <input type="text" id="samples-search" placeholder="搜索文本..." onkeyup="debounceSearch()">
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="showAddSampleModal()">+ 添加样本</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>文本</th>
+                                    <th>意图</th>
+                                    <th>槽位</th>
+                                    <th>来源</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="samples-list"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="samples-pagination"></div>
+                </div>
+
+                <!-- Add Sample Modal -->
+                <div id="add-sample-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>添加训练样本</h3>
+                            <button class="btn-close" onclick="hideAddSampleModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>文本内容</label>
+                                <input type="text" id="new-sample-text" placeholder="输入用户话语...">
+                            </div>
+                            <div class="form-group">
+                                <label>意图类型</label>
+                                <select id="new-sample-intent"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>槽位 (JSON)</label>
+                                <textarea id="new-sample-slots" placeholder='{"product_name": "拿铁"}'></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="hideAddSampleModal()">取消</button>
+                            <button class="btn btn-primary" onclick="addTrainingSample()">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Session Replay Page -->
+            <div id="sessions" class="page">
+                <h2 class="page-title">💬 会话回放</h2>
+
+                <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="metric-card">
+                        <div class="metric-label">总会话数</div>
+                        <div class="metric-value" id="sessions-total">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">已完成</div>
+                        <div class="metric-value" id="sessions-completed">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">进行中</div>
+                        <div class="metric-value" id="sessions-active">--</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">平均消息数</div>
+                        <div class="metric-value" id="sessions-avg-messages">--</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">会话列表</h3>
+                            <div class="filters">
+                                <select id="sessions-filter-state" onchange="loadSessions()">
+                                    <option value="">全部状态</option>
+                                    <option value="greeting">greeting</option>
+                                    <option value="ordering">ordering</option>
+                                    <option value="confirming">confirming</option>
+                                    <option value="completed">completed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container" style="max-height: 500px; overflow-y: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>会话 ID</th>
+                                        <th>状态</th>
+                                        <th>消息数</th>
+                                        <th>时长</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sessions-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">对话详情</h3>
+                            <div id="session-detail-header" style="font-size: 0.875rem; color: var(--text-secondary);">
+                                选择一个会话查看详情
+                            </div>
+                        </div>
+                        <div id="session-replay-container" style="max-height: 500px; overflow-y: auto; padding: 1rem;">
+                            <p style="text-align: center; color: var(--text-secondary);">← 从左侧列表选择会话</p>
+                        </div>
+                        <div id="session-summary" style="padding: 1rem; border-top: 1px solid var(--border); display: none;">
+                            <h4 style="margin-bottom: 0.5rem;">会话摘要</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+                                <div><strong>意图流:</strong> <span id="session-intents-flow">--</span></div>
+                                <div><strong>槽位:</strong> <span id="session-slots">--</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ==================== 全局变量 ====================
+        let trendChart = null;
+        let optimizationChart = null;
+        let intentDistributionChart = null;
+        let trendData = null;
+
+        // ==================== 页面导航 ====================
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+
+                // 更新导航状态
+                document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                // 显示页面
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+
+                // 加载页面数据
+                loadPageData(pageId);
+            });
+        });
+
+        // ==================== 数据加载 ====================
+        async function loadPageData(pageId) {
+            switch (pageId) {
+                case 'overview':
+                    await loadOverview();
+                    break;
+                case 'evaluation':
+                    await loadEvalHistory();
+                    break;
+                case 'badcases':
+                    await loadBadCases();
+                    await loadBadCaseAnalysis();
+                    break;
+                case 'optimization':
+                    await loadOptimizationHistory();
+                    break;
+                case 'data':
+                    await loadDataStats();
+                    break;
+                case 'monitor':
+                    startMonitoring();
+                    break;
+                case 'status':
+                    await loadSystemStatus();
+                    break;
+                case 'business':
+                    await loadBusinessDashboard();
+                    break;
+                case 'workflow':
+                    await loadWorkflowGraph();
+                    break;
+                case 'abtesting':
+                    await loadExperiments();
+                    break;
+                case 'confusion':
+                    await loadConfusionMatrix();
+                    break;
+                case 'samples':
+                    await loadTrainingSamples();
+                    break;
+                case 'sessions':
+                    await loadSessions();
+                    break;
+            }
+        }
+
+        // ==================== 概览 ====================
+        async function loadOverview() {
+            try {
+                const [overview, trends] = await Promise.all([
+                    fetch('/api/portal/overview').then(r => r.json()),
+                    fetch('/api/portal/trends?days=30').then(r => r.json())
+                ]);
+
+                // 更新指标
+                document.getElementById('metric-accuracy').textContent =
+                    (overview.metrics.intent_accuracy * 100).toFixed(1) + '%';
+                document.getElementById('metric-slot-f1').textContent =
+                    (overview.metrics.slot_f1 * 100).toFixed(1) + '%';
+                document.getElementById('metric-badcase-rate').textContent =
+                    (overview.metrics.bad_case_rate * 100).toFixed(1) + '%';
+                document.getElementById('metric-confidence').textContent =
+                    (overview.metrics.avg_confidence * 100).toFixed(1) + '%';
+
+                // 更新变化
+                updateMetricChange('accuracy-change', trends.summary.intent_accuracy_change);
+                updateMetricChange('slot-f1-change', trends.summary.slot_f1_change);
+                updateMetricChange('badcase-change', trends.summary.bad_case_rate_change, true);
+
+                // 更新计数
+                document.getElementById('count-pending').textContent = overview.counts.pending_badcases;
+                document.getElementById('count-rounds').textContent = overview.counts.optimization_rounds;
+                document.getElementById('count-samples').textContent = overview.counts.production_samples;
+
+                // 更新告警
+                const alertsHtml = overview.alerts.map(alert => `
+                    <div class="alert alert-${alert.level}">
+                        <span class="alert-icon">${alert.level === 'error' ? '⚠️' : '⚡'}</span>
+                        <div class="alert-content">
+                            <div class="alert-title">${alert.message}</div>
+                            <div class="alert-action">${alert.action}</div>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('alerts').innerHTML = alertsHtml;
+
+                // 更新活动列表
+                const activityHtml = overview.recent_activity.map(activity => `
+                    <li class="activity-item">
+                        <div class="activity-icon ${activity.type}">${getActivityIcon(activity.type)}</div>
+                        <div class="activity-content">
+                            <div>${activity.message}</div>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    </li>
+                `).join('');
+                document.getElementById('activity-list').innerHTML = activityHtml;
+
+                // 保存趋势数据并更新图表
+                trendData = trends.data;
+                updateTrendChart();
+
+            } catch (e) {
+                console.error('加载概览失败:', e);
+            }
+        }
+
+        function updateMetricChange(elementId, change, inverse = false) {
+            const el = document.getElementById(elementId);
+            if (!change) return;
+
+            let direction = change.direction;
+            if (inverse) {
+                const inverseMap = { 'up': 'down', 'down': 'up' };
+                direction = inverseMap[direction] || 'stable';
+            }
+
+            const icons = { 'up': '↑', 'down': '↓', 'stable': '→' };
+            const icon = icons[direction] || '→';
+            el.textContent = `${icon} ${Math.abs(change.value).toFixed(1)}%`;
+            el.className = `metric-change ${direction}`;
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'eval': '🧪',
+                'fix': '🔧',
+                'data': '📦',
+                'optimize': '📈'
+            };
+            return icons[type] || '📌';
+        }
+
+        function updateTrendChart() {
+            const metric = document.getElementById('trend-metric').value;
+            const ctx = document.getElementById('trend-chart').getContext('2d');
+
+            if (trendChart) {
+                trendChart.destroy();
+            }
+
+            if (!trendData || trendData.length === 0) return;
+
+            const labels = trendData.map(d => d.date.slice(5)); // MM-DD
+            const data = trendData.map(d => d[metric] * 100);
+
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: metric,
+                        data: data,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: v => v + '%'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ==================== 评估 ====================
+        async function loadEvalHistory() {
+            try {
+                const data = await fetch('/api/portal/eval/results?limit=10').then(r => r.json());
+
+                const html = data.results.map(result => `
+                    <tr>
+                        <td>${result.date}</td>
+                        <td>${result.suite}</td>
+                        <td>
+                            <span class="badge badge-success">${result.passed} 通过</span>
+                            ${result.failed > 0 ? `<span class="badge badge-error">${result.failed} 失败</span>` : ''}
+                        </td>
+                        <td>${(result.intent_accuracy * 100).toFixed(1)}%</td>
+                        <td>${(result.slot_f1 * 100).toFixed(1)}%</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="showEvalDetail('${result.id}')">查看详情</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('eval-history').innerHTML = html;
+            } catch (e) {
+                console.error('加载评估历史失败:', e);
+            }
+        }
+
+        async function runEvaluation() {
+            const statusEl = document.getElementById('eval-status');
+            const progressEl = document.getElementById('eval-progress');
+            const taskEl = document.getElementById('eval-task');
+
+            statusEl.style.display = 'block';
+            taskEl.textContent = '启动评估...';
+            progressEl.style.width = '0%';
+
+            try {
+                await fetch('/api/portal/eval/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ suite: 'full' })
+                });
+
+                // 轮询状态
+                const pollStatus = async () => {
+                    const status = await fetch('/api/portal/eval/status').then(r => r.json());
+
+                    if (status.running) {
+                        taskEl.textContent = `正在执行: ${status.current_task}`;
+                        progressEl.style.width = status.progress + '%';
+                        setTimeout(pollStatus, 1000);
+                    } else {
+                        taskEl.textContent = '评估完成!';
+                        progressEl.style.width = '100%';
+                        await loadEvalHistory();
+                    }
+                };
+
+                setTimeout(pollStatus, 500);
+
+            } catch (e) {
+                console.error('运行评估失败:', e);
+                taskEl.textContent = '评估失败: ' + e.message;
+            }
+        }
+
+        async function showEvalDetail(evalId) {
+            try {
+                const data = await fetch(`/api/portal/eval/results/${evalId}`).then(r => r.json());
+
+                const testCaseRows = data.test_cases.map((tc, idx) => `
+                    <tr style="background: ${tc.passed ? (idx % 2 === 0 ? '#fff' : '#f8fafc') : 'rgba(239, 68, 68, 0.1)'};">
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; max-width: 180px;">${tc.input}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 12px;">${tc.expected_intent}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 12px;">${tc.actual_intent}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 11px; max-width: 150px; word-break: break-all;">${JSON.stringify(tc.expected_slots)}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 11px; max-width: 150px; word-break: break-all;">${JSON.stringify(tc.actual_slots)}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
+                            ${tc.passed
+                                ? '<span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 12px;">✓ 通过</span>'
+                                : `<span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 12px;">✗ 失败</span><div style="color: #991b1b; font-size: 11px; margin-top: 4px;">${tc.error || ''}</div>`}
+                        </td>
+                    </tr>
+                `).join('');
+
+                const modalContent = `
+                    <div style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                        <h3 style="margin: 0; font-size: 18px; color: #1e293b;">📋 评估详情 - ${data.eval_id}</h3>
+                        <button onclick="closeModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; padding: 0; line-height: 1;">&times;</button>
+                    </div>
+                    <div style="padding: 20px 24px; background: white;">
+                        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">套件</div>
+                                <div style="font-weight: 600; color: #1e293b;">${data.suite}</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">时间</div>
+                                <div style="font-weight: 600; color: #1e293b;">${data.date}</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">通过</div>
+                                <div style="font-weight: 600; color: #166534; font-size: 20px;">${data.passed}</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">失败</div>
+                                <div style="font-weight: 600; color: #991b1b; font-size: 20px;">${data.failed}</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">意图准确率</div>
+                                <div style="font-weight: 600; color: #1e293b;">${(data.intent_accuracy * 100).toFixed(1)}%</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">槽位 F1</div>
+                                <div style="font-weight: 600; color: #1e293b;">${(data.slot_f1 * 100).toFixed(1)}%</div>
+                            </div>
+                        </div>
+                        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f1f5f9;">
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;">输入</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;">期望意图</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;">实际意图</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;">期望槽位</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;">实际槽位</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;">结果</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${testCaseRows}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div style="padding: 16px 24px; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: flex-end; gap: 12px;">
+                        <button onclick="closeModal()" style="padding: 8px 16px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">关闭</button>
+                    </div>
+                `;
+
+                document.getElementById('modal-content').innerHTML = modalContent;
+                document.getElementById('modal-overlay').style.display = 'flex';
+            } catch (e) {
+                console.error('加载评估详情失败:', e);
+                alert('加载评估详情失败: ' + e.message);
+            }
+        }
+
+        // ==================== Bad Case ====================
+        let selectedBadCases = new Set();
+
+        async function loadBadCases() {
+            const status = document.getElementById('filter-status').value;
+            const severity = document.getElementById('filter-severity').value;
+            const category = document.getElementById('filter-category')?.value;
+
+            try {
+                const params = new URLSearchParams();
+                if (status) params.append('status', status);
+                if (severity) params.append('severity', severity);
+                if (category) params.append('category', category);
+
+                const data = await fetch(`/api/portal/badcases?${params}`).then(r => r.json());
+
+                if (data.badcases.length === 0) {
+                    document.getElementById('badcase-list').innerHTML = `
+                        <tr><td colspan="7" class="empty-state">暂无 Bad Case</td></tr>
+                    `;
+                    updateBatchButtons();
+                    return;
+                }
+
+                const html = data.badcases.map(bc => `
+                    <tr data-id="${bc.id}">
+                        <td><input type="checkbox" class="badcase-checkbox" value="${bc.id}" onchange="toggleBadCaseSelection('${bc.id}')"></td>
+                        <td style="max-width: 200px;">${bc.user_input}</td>
+                        <td style="font-size: 0.8rem;">
+                            <div style="color: #059669;">${bc.expected_intent || '-'}</div>
+                            <div style="color: #dc2626;">→ ${bc.actual_intent || '-'}</div>
+                        </td>
+                        <td><span class="badge badge-secondary">${getCategoryLabel(bc.category)}</span></td>
+                        <td><span class="badge badge-${getSeverityBadge(bc.severity)}">${getSeverityLabel(bc.severity)}</span></td>
+                        <td><span class="badge badge-${getStatusBadge(bc.fix_status)}">${getStatusLabel(bc.fix_status)}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 4px;">
+                                <button class="btn btn-secondary btn-sm" onclick="viewBadCaseDetail('${bc.id}')" title="查看详情">👁️</button>
+                                <button class="btn btn-secondary btn-sm" onclick="markAsFixed('${bc.id}')" title="标记修复">✓</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('badcase-list').innerHTML = html;
+                selectedBadCases.clear();
+                updateBatchButtons();
+            } catch (e) {
+                console.error('加载 Bad Case 失败:', e);
+            }
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'intent_confusion': '意图混淆',
+                'slot_extraction': '槽位错误',
+                'fuzzy_expression': '模糊表达',
+                'constraint_violation': '约束违反',
+                'dialogue_context': '上下文',
+                'other': '其他'
+            };
+            return labels[category] || category;
+        }
+
+        function getSeverityLabel(severity) {
+            const labels = { 'critical': '严重', 'major': '重要', 'minor': '轻微' };
+            return labels[severity] || severity;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'pending': '待处理',
+                'analyzing': '分析中',
+                'in_progress': '修复中',
+                'fixed': '已修复',
+                'verified': '已验证'
+            };
+            return labels[status] || status;
+        }
+
+        function toggleBadCaseSelection(id) {
+            if (selectedBadCases.has(id)) {
+                selectedBadCases.delete(id);
+            } else {
+                selectedBadCases.add(id);
+            }
+            updateBatchButtons();
+        }
+
+        function toggleSelectAllBadCases() {
+            const selectAll = document.getElementById('select-all-badcases').checked;
+            const checkboxes = document.querySelectorAll('.badcase-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll;
+                if (selectAll) {
+                    selectedBadCases.add(cb.value);
+                } else {
+                    selectedBadCases.delete(cb.value);
+                }
+            });
+            updateBatchButtons();
+        }
+
+        function updateBatchButtons() {
+            const count = selectedBadCases.size;
+            document.getElementById('selected-count').textContent = count;
+            document.getElementById('batch-analyze-btn').disabled = count === 0;
+            document.getElementById('batch-fix-btn').disabled = count === 0;
+            document.getElementById('batch-delete-btn').disabled = count === 0;
+        }
+
+        async function collectFromEvaluation() {
+            try {
+                const result = await fetch('/api/portal/badcases/collect-from-eval', {
+                    method: 'POST'
+                }).then(r => r.json());
+                alert(`✅ 已从评估结果收集 ${result.collected || 0} 个 Bad Case`);
+                loadBadCases();
+                loadBadCaseAnalysis();
+            } catch (e) {
+                alert('收集失败: ' + e.message);
+            }
+        }
+
+        function showAddBadCaseModal() {
+            const modalContent = `
+                <div style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+                    <h3 style="margin: 0;">➕ 手动添加 Bad Case</h3>
+                </div>
+                <div style="padding: 20px 24px;">
+                    <div class="form-group">
+                        <label>用户输入</label>
+                        <input type="text" id="new-bc-input" placeholder="输入导致问题的用户话语..." style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>期望意图</label>
+                            <select id="new-bc-expected" style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                <option value="ORDER_NEW">ORDER_NEW</option>
+                                <option value="ORDER_MODIFY">ORDER_MODIFY</option>
+                                <option value="ORDER_CANCEL">ORDER_CANCEL</option>
+                                <option value="ORDER_QUERY">ORDER_QUERY</option>
+                                <option value="RECOMMEND">RECOMMEND</option>
+                                <option value="PRODUCT_INFO">PRODUCT_INFO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>实际意图</label>
+                            <input type="text" id="new-bc-actual" placeholder="系统识别的意图" style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>类别</label>
+                            <select id="new-bc-category" style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                <option value="intent_confusion">意图混淆</option>
+                                <option value="slot_extraction">槽位提取错误</option>
+                                <option value="fuzzy_expression">模糊表达未识别</option>
+                                <option value="constraint_violation">约束违反</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>严重程度</label>
+                            <select id="new-bc-severity" style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                <option value="critical">严重</option>
+                                <option value="major">重要</option>
+                                <option value="minor">轻微</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding: 16px 24px; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button onclick="closeModal()" style="padding: 8px 16px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer;">取消</button>
+                    <button onclick="addBadCase()" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">添加</button>
+                </div>
+            `;
+            document.getElementById('modal-content').innerHTML = modalContent;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        async function addBadCase() {
+            const input = document.getElementById('new-bc-input').value;
+            const expected = document.getElementById('new-bc-expected').value;
+            const actual = document.getElementById('new-bc-actual').value;
+            const category = document.getElementById('new-bc-category').value;
+            const severity = document.getElementById('new-bc-severity').value;
+
+            if (!input) {
+                alert('请输入用户话语');
+                return;
+            }
+
+            try {
+                await fetch('/api/portal/badcases', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_input: input,
+                        expected_intent: expected,
+                        actual_intent: actual,
+                        category: category,
+                        severity: severity
+                    })
+                });
+                closeModal();
+                loadBadCases();
+                loadBadCaseAnalysis();
+                alert('✅ Bad Case 已添加');
+            } catch (e) {
+                alert('添加失败: ' + e.message);
+            }
+        }
+
+        async function batchAnalyze() {
+            if (selectedBadCases.size === 0) return;
+            alert(`🔍 正在分析 ${selectedBadCases.size} 个 Bad Case...`);
+            await batchUpdateStatus('analyzing');
+        }
+
+        async function generateFixSuggestions() {
+            alert('💡 正在生成修复建议...\n\n功能开发中，将调用 AI 分析 Bad Case 模式并生成修复策略。');
+        }
+
+        async function batchUpdateStatus(status) {
+            if (selectedBadCases.size === 0) return;
+            try {
+                await fetch('/api/portal/badcases/batch-update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ids: Array.from(selectedBadCases),
+                        status: status
+                    })
+                });
+                loadBadCases();
+            } catch (e) {
+                alert('批量更新失败: ' + e.message);
+            }
+        }
+
+        async function batchDelete() {
+            if (selectedBadCases.size === 0) return;
+            if (!confirm(`确定要删除 ${selectedBadCases.size} 个 Bad Case 吗？`)) return;
+            try {
+                await fetch('/api/portal/badcases/batch-delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: Array.from(selectedBadCases) })
+                });
+                loadBadCases();
+                loadBadCaseAnalysis();
+            } catch (e) {
+                alert('批量删除失败: ' + e.message);
+            }
+        }
+
+        async function viewBadCaseDetail(id) {
+            // 简单展示 Bad Case 详情
+            alert('查看 Bad Case 详情: ' + id + '\n\n功能开发中，将显示完整的 Bad Case 信息和修复历史。');
+        }
+
+        async function markAsFixed(id) {
+            if (!confirm('确定将此 Bad Case 标记为已修复吗？')) return;
+            try {
+                await fetch(`/api/portal/badcases/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'fixed' })
+                });
+                loadBadCases();
+            } catch (e) {
+                alert('更新失败: ' + e.message);
+            }
+        }
+
+        async function loadBadCaseAnalysis() {
+            try {
+                const data = await fetch('/api/portal/badcases/analysis').then(r => r.json());
+
+                // 摘要
+                const summaryHtml = `
+                    <div class="metric-card">
+                        <div class="metric-label">总 Bad Case</div>
+                        <div class="metric-value">${data.total_cases}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">意图混淆</div>
+                        <div class="metric-value">${data.by_category?.intent_confusion || 0}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">槽位错误</div>
+                        <div class="metric-value">${data.by_category?.slot_extraction || 0}</div>
+                    </div>
+                `;
+                document.getElementById('badcase-summary').innerHTML = summaryHtml;
+
+                // 模式
+                const patternsHtml = data.patterns.map(p => `
+                    <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${p.description}</strong>
+                                <span class="badge badge-info">${p.count} 个案例</span>
+                            </div>
+                            <span class="badge badge-${p.priority <= 2 ? 'error' : 'warning'}">优先级 ${p.priority}</span>
+                        </div>
+                        <div style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                            建议: ${p.suggested_fix}
+                        </div>
+                    </div>
+                `).join('') || '<div class="empty-state">暂无模式</div>';
+                document.getElementById('badcase-patterns').innerHTML = patternsHtml;
+
+            } catch (e) {
+                console.error('加载 Bad Case 分析失败:', e);
+            }
+        }
+
+        // Badge mapping helper
+        function getBadgeClass(value, mappings) {
+            return mappings[value] || 'pending';
+        }
+
+        function getSeverityBadge(severity) {
+            return getBadgeClass(severity, { 'critical': 'error', 'major': 'warning', 'minor': 'info' });
+        }
+
+        function getStatusBadge(status) {
+            return getBadgeClass(status, { 'pending': 'pending', 'fixed': 'success', 'verified': 'success' });
+        }
+
+        function viewBadCase(id) {
+            alert('查看 Bad Case: ' + id);
+        }
+
+        // ==================== 优化 ====================
+        async function loadOptimizationHistory() {
+            try {
+                const data = await fetch('/api/portal/optimization/history').then(r => r.json());
+
+                // 摘要
+                const summary = data.summary;
+                if (summary && !summary.message) {
+                    document.getElementById('optimization-summary').innerHTML = `
+                        <div class="grid-3">
+                            <div>
+                                <div class="metric-label">总轮次</div>
+                                <div class="metric-value">${summary.total_rounds || 0}</div>
+                            </div>
+                            <div>
+                                <div class="metric-label">累计修复</div>
+                                <div class="metric-value">${summary.total_badcases_fixed || 0}</div>
+                            </div>
+                            <div>
+                                <div class="metric-label">净减少</div>
+                                <div class="metric-value">${summary.net_reduction || 0}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 历史表格
+                if (data.rounds && data.rounds.length > 0) {
+                    const html = data.rounds.map(r => `
+                        <tr>
+                            <td>${r.round_id}</td>
+                            <td>${r.version.startsWith('v') ? r.version : 'v' + r.version}</td>
+                            <td>
+                                <span class="badge badge-success">+${r.badcases_fixed}</span>
+                                ${r.badcases_new > 0 ? `<span class="badge badge-warning">-${r.badcases_new}</span>` : ''}
+                            </td>
+                            <td>--</td>
+                            <td>${r.completed_at ? r.completed_at.slice(0, 10) : '进行中'}</td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('optimization-history').innerHTML = html;
+                } else {
+                    document.getElementById('optimization-history').innerHTML = `
+                        <tr><td colspan="5" class="empty-state">暂无优化历史</td></tr>
+                    `;
+                }
+
+            } catch (e) {
+                console.error('加载优化历史失败:', e);
+            }
+        }
+
+        function showNewRoundModal() {
+            const version = prompt('请输入版本号:', '1.0.0');
+            if (version) {
+                startNewRound(version);
+            }
+        }
+
+        async function startNewRound(version) {
+            try {
+                await fetch('/api/portal/optimization/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        version: version,
+                        baseline_metrics: { intent_accuracy: 0.85, slot_f1: 0.80 }
+                    })
+                });
+                alert('新轮次已开始!');
+                await loadOptimizationHistory();
+            } catch (e) {
+                alert('启动失败: ' + e.message);
+            }
+        }
+
+        // ==================== 数据管理 ====================
+        async function loadDataStats() {
+            try {
+                const [augment, embedding, production] = await Promise.all([
+                    fetch('/api/portal/augment/stats').then(r => r.json()),
+                    fetch('/api/portal/embedding/stats').then(r => r.json()),
+                    fetch('/api/portal/production/stats').then(r => r.json())
+                ]);
+
+                // 数据增强统计
+                document.getElementById('augment-stats').innerHTML = `
+                    <div class="grid-2" style="gap: 1rem;">
+                        <div>
+                            <div class="metric-label">商品语料</div>
+                            <div class="metric-value">${augment.product_corpus_size || 0}</div>
+                        </div>
+                        <div>
+                            <div class="metric-label">变体总数</div>
+                            <div class="metric-value">${augment.total_variants || 0}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.875rem;">
+                        商品: ${(augment.products || []).join(', ')}
+                    </div>
+                `;
+
+                // Embedding 统计
+                document.getElementById('embedding-stats').innerHTML = `
+                    <div class="grid-2" style="gap: 1rem;">
+                        <div>
+                            <div class="metric-label">总文档数</div>
+                            <div class="metric-value">${embedding.total_documents || 0}</div>
+                        </div>
+                        <div>
+                            <div class="metric-label">层数</div>
+                            <div class="metric-value">${Object.keys(embedding.by_layer || {}).length}</div>
+                        </div>
+                    </div>
+                `;
+
+                // 生产数据统计
+                if (production.total_samples) {
+                    document.getElementById('production-stats').innerHTML = `
+                        <div class="grid-3" style="gap: 1rem;">
+                            <div>
+                                <div class="metric-label">总样本</div>
+                                <div class="metric-value">${production.total_samples}</div>
+                            </div>
+                            <div>
+                                <div class="metric-label">待标注</div>
+                                <div class="metric-value">${production.by_label_status?.pending || 0}</div>
+                            </div>
+                            <div>
+                                <div class="metric-label">边界案例</div>
+                                <div class="metric-value">${production.edge_cases_count || 0}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('production-stats').innerHTML = `
+                        <div class="empty-state">暂无生产数据</div>
+                    `;
+                }
+
+            } catch (e) {
+                console.error('加载数据统计失败:', e);
+            }
+        }
+
+        async function generateAugmentedData() {
+            try {
+                const result = await fetch('/api/portal/augment/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ num_per_intent: 30, edge_cases: 30 })
+                }).then(r => r.json());
+
+                alert(`生成成功! 共 ${result.generated.total} 个样本`);
+                await loadDataStats();
+            } catch (e) {
+                alert('生成失败: ' + e.message);
+            }
+        }
+
+        async function buildEmbedding() {
+            try {
+                const result = await fetch('/api/portal/embedding/build', {
+                    method: 'POST'
+                }).then(r => r.json());
+
+                alert(`构建成功! 共 ${result.stats.total_documents} 个文档`);
+                await loadDataStats();
+            } catch (e) {
+                alert('构建失败: ' + e.message);
+            }
+        }
+
+        async function exportProductionData(format) {
+            try {
+                const result = await fetch(`/api/portal/production/export?format=${format}`, {
+                    method: 'POST'
+                }).then(r => r.json());
+
+                alert(`导出成功: ${result.file}`);
+            } catch (e) {
+                alert('导出失败: ' + e.message);
+            }
+        }
+
+        // ==================== 实时监控 ====================
+        let monitorInterval = null;
+
+        function startMonitoring() {
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+            }
+
+            updateMonitorData();
+            monitorInterval = setInterval(updateMonitorData, 5000);
+        }
+
+        async function updateMonitorData() {
+            try {
+                const [realtime, health] = await Promise.all([
+                    fetch('/api/portal/monitor/realtime').then(r => r.json()),
+                    fetch('/api/portal/monitor/health').then(r => r.json())
+                ]);
+
+                // 更新指标
+                document.getElementById('monitor-rpm').textContent = realtime.requests_per_minute;
+                document.getElementById('monitor-latency').textContent = realtime.avg_latency_ms + ' ms';
+                document.getElementById('monitor-error-rate').textContent = (realtime.error_rate * 100).toFixed(2) + '%';
+                document.getElementById('monitor-sessions').textContent = realtime.active_sessions;
+
+                // 更新意图分布图
+                updateIntentDistributionChart(realtime.intent_distribution);
+
+                // 更新健康状态
+                const healthHtml = Object.entries(health.components).map(([name, status]) => `
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                        <span>${name}</span>
+                        <span class="badge badge-${status.status === 'up' ? 'success' : 'error'}">
+                            ${status.status === 'up' ? '正常' : '异常'}
+                        </span>
+                    </div>
+                `).join('');
+                document.getElementById('health-status').innerHTML = healthHtml;
+
+            } catch (e) {
+                console.error('更新监控数据失败:', e);
+            }
+        }
+
+        function updateIntentDistributionChart(distribution) {
+            const ctx = document.getElementById('intent-distribution-chart').getContext('2d');
+
+            if (intentDistributionChart) {
+                intentDistributionChart.destroy();
+            }
+
+            const labels = Object.keys(distribution);
+            const data = Object.values(distribution);
+            const colors = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+            intentDistributionChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+        // ==================== 系统状态 ====================
+        async function loadSystemStatus() {
+            try {
+                const data = await fetch('/api/status').then(r => r.json());
+
+                // 基本信息
+                document.getElementById('status-overall').textContent = data.status === 'ok' ? '正常' : '异常';
+                document.getElementById('status-overall').style.color = data.status === 'ok' ? 'var(--success)' : 'var(--error)';
+                document.getElementById('status-version').textContent = data.version || '1.0.0';
+                document.getElementById('status-env').textContent = data.environment || 'development';
+                document.getElementById('status-uptime').textContent = formatUptime(data.uptime_seconds);
+
+                // 组件状态
+                const components = data.components || {};
+                const componentsHtml = Object.entries(components).map(([name, info]) => `
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <strong>${name}</strong>
+                            ${info.details ? `<div style="font-size: 0.75rem; color: var(--text-secondary);">${info.details}</div>` : ''}
+                        </div>
+                        <span class="badge badge-${info.status === 'ok' ? 'success' : 'error'}">
+                            ${info.status === 'ok' ? '正常' : '异常'}
+                        </span>
+                    </div>
+                `).join('');
+                document.getElementById('status-components').innerHTML = componentsHtml || '<div class="empty-state">无组件信息</div>';
+
+                // 分类器配置
+                const classifier = data.classifier || {};
+                document.getElementById('status-classifier').innerHTML = `
+                    <div style="padding: 0.5rem 0;"><strong>方法:</strong> ${classifier.method || '-'}</div>
+                    <div style="padding: 0.5rem 0;"><strong>模型:</strong> ${classifier.model || '-'}</div>
+                    <div style="padding: 0.5rem 0;"><strong>可用方法:</strong> ${(classifier.available_methods || []).join(', ') || '-'}</div>
+                `;
+
+                // 意图类型
+                const intents = data.supported_intents || [];
+                const intentsHtml = intents.map(intent => `
+                    <div class="badge badge-info" style="margin: 0.25rem;">${intent}</div>
+                `).join('');
+                document.getElementById('status-intents').innerHTML = intentsHtml || '<div class="empty-state">无意图信息</div>';
+
+            } catch (e) {
+                console.error('加载系统状态失败:', e);
+                document.getElementById('status-components').innerHTML = '<div class="empty-state">加载失败</div>';
+            }
+        }
+
+        function formatUptime(seconds) {
+            if (!seconds) return '--';
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            if (hours > 24) {
+                return `${Math.floor(hours / 24)}天${hours % 24}时`;
+            }
+            return `${hours}时${minutes}分`;
+        }
+
+        // ==================== 业务看板 ====================
+        async function loadBusinessDashboard() {
+            try {
+                const data = await fetch('/api/portal/business/dashboard').then(r => r.json());
+
+                // 更新摘要
+                const summary = data.summary || {};
+                document.getElementById('biz-health').textContent = (summary.health_score || 0).toFixed(0);
+                document.getElementById('biz-health-status').innerHTML = `${summary.health_emoji || ''} ${summary.health_text || ''}`;
+
+                // 更新指标卡片
+                const cardsWidget = (data.widgets || []).find(w => w.type === 'metric_card');
+                if (cardsWidget && cardsWidget.data && cardsWidget.data.cards) {
+                    const cards = cardsWidget.data.cards;
+                    // 名称到 ID 的映射
+                    const nameToId = {
+                        '订单理解准确率': 'accuracy',
+                        '意图准确率': 'accuracy',
+                        '订单详情准确率': 'slot-f1',
+                        '槽位 F1': 'slot-f1',
+                        '点单成功率': 'success-rate',
+                        '订单成功率': 'success-rate',
+                        '人工介入率': 'escalation'
+                    };
+                    cards.forEach(card => {
+                        const id = card.id || nameToId[card.name];
+                        if (!id) return;
+                        const valueEl = document.getElementById(`biz-${id}`);
+                        const statusEl = document.getElementById(`biz-${id}-status`);
+                        if (valueEl) {
+                            valueEl.textContent = card.value;
+                            if (statusEl) {
+                                statusEl.innerHTML = `${card.trend || ''} ${card.status_emoji || ''}`;
+                                statusEl.className = `metric-change ${card.trend?.includes('↑') ? 'up' : card.trend?.includes('↓') ? 'down' : ''}`;
+                            }
+                        }
+                    });
+                }
+
+                // 更新告警
+                const alertsWidget = (data.widgets || []).find(w => w.type === 'alert_list');
+                if (alertsWidget && alertsWidget.data && alertsWidget.data.alerts) {
+                    const alertsHtml = alertsWidget.data.alerts.map(a => `
+                        <div class="alert alert-${a.level === 'critical' ? 'error' : 'warning'}">
+                            <span class="alert-icon">${a.level === 'critical' ? '🚨' : '⚠️'}</span>
+                            <div class="alert-content">
+                                <div class="alert-title">${a.metric}: ${a.message}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                    document.getElementById('biz-alerts').innerHTML = alertsHtml || '<div class="empty-state">暂无告警</div>';
+                }
+
+                // 更新建议
+                const actionsWidget = (data.widgets || []).find(w => w.type === 'action_list');
+                if (actionsWidget && actionsWidget.data && actionsWidget.data.actions) {
+                    const actionsHtml = actionsWidget.data.actions.map((a, i) => `
+                        <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border);">
+                            <span class="badge badge-${a.priority === 'high' ? 'error' : 'warning'}">${i + 1}</span>
+                            <strong style="margin-left: 0.5rem;">${a.suggestion || a.action || a.metric}</strong>
+                            <div style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--text-secondary);">
+                                预期效果: ${a.expected_impact}
+                            </div>
+                        </div>
+                    `).join('');
+                    document.getElementById('biz-actions').innerHTML = actionsHtml || '<div class="empty-state">暂无建议</div>';
+                }
+
+                // 更新影响分析表
+                const impactWidget = (data.widgets || []).find(w => w.type === 'table');
+                if (impactWidget && impactWidget.data && impactWidget.data.rows) {
+                    const impactHtml = impactWidget.data.rows.map(row => `
+                        <tr>
+                            <td>${row.metric}</td>
+                            <td>${row.current}</td>
+                            <td>${row.target}</td>
+                            <td><span class="badge badge-${row.gap?.includes('-') ? 'error' : 'success'}">${row.gap}</span></td>
+                            <td>${row.business_impact}</td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('biz-impact-table').innerHTML = impactHtml;
+                }
+
+            } catch (e) {
+                console.error('加载业务看板失败:', e);
+            }
+        }
+
+        // ==================== 工作流图 ====================
+        async function loadWorkflowGraph() {
+            try {
+                const data = await fetch('/api/workflow/graph').then(r => r.json());
+
+                // 渲染 Mermaid 图
+                const mermaidCode = data.mermaid || data.graph || '';
+                if (mermaidCode) {
+                    document.getElementById('workflow-diagram').innerHTML = `
+                        <pre class="mermaid" style="text-align: center;">${mermaidCode}</pre>
+                    `;
+                    // 动态加载 mermaid
+                    if (!window.mermaid) {
+                        const script = document.createElement('script');
+                        script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+                        script.onload = () => {
+                            mermaid.initialize({ startOnLoad: true, theme: 'default' });
+                            mermaid.contentLoaded();
+                        };
+                        document.head.appendChild(script);
+                    } else {
+                        mermaid.contentLoaded();
+                    }
+                } else {
+                    document.getElementById('workflow-diagram').innerHTML = '<div class="empty-state">无工作流数据</div>';
+                }
+
+                // 节点说明
+                const nodes = data.nodes || [
+                    { name: 'intent_recognition', description: '意图识别入口节点' },
+                    { name: 'route_by_intent', description: '根据意图路由到处理节点' },
+                    { name: 'handle_new_order', description: '处理新订单' },
+                    { name: 'handle_modify', description: '处理订单修改' },
+                    { name: 'handle_cancel', description: '处理订单取消' },
+                    { name: 'handle_query', description: '处理订单查询' },
+                    { name: 'handle_recommend', description: '处理推荐请求' },
+                    { name: 'record_message', description: '记录消息到历史' }
+                ];
+                const nodesHtml = nodes.map(n => `
+                    <div class="metric-card">
+                        <div class="metric-label">${n.name}</div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);">${n.description}</div>
+                    </div>
+                `).join('');
+                document.getElementById('workflow-nodes').innerHTML = nodesHtml;
+
+            } catch (e) {
+                console.error('加载工作流图失败:', e);
+                document.getElementById('workflow-diagram').innerHTML = '<div class="empty-state">加载失败</div>';
+            }
+        }
+
+        // ==================== A/B 测试 ====================
+        let experiments = [];
+
+        async function loadExperiments() {
+            try {
+                const data = await fetch('/api/portal/ab/experiments').then(r => r.json());
+                experiments = data.experiments || [];
+
+                // 统计
+                const running = experiments.filter(e => e.status === 'running').length;
+                const completed = experiments.filter(e => e.status === 'completed').length;
+                const draft = experiments.filter(e => e.status === 'draft').length;
+
+                document.getElementById('ab-running').textContent = running;
+                document.getElementById('ab-completed').textContent = completed;
+                document.getElementById('ab-draft').textContent = draft;
+
+                // 过滤
+                const filterStatus = document.getElementById('ab-filter-status').value;
+                let filtered = experiments;
+                if (filterStatus) {
+                    filtered = experiments.filter(e => e.status === filterStatus);
+                }
+
+                // 渲染列表
+                if (filtered.length === 0) {
+                    document.getElementById('ab-experiments-list').innerHTML = `
+                        <tr><td colspan="6" class="empty-state">暂无实验</td></tr>
+                    `;
+                    return;
+                }
+
+                const html = filtered.map(exp => `
+                    <tr>
+                        <td>
+                            <strong>${exp.name}</strong>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">${exp.id}</div>
+                        </td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${exp.hypothesis || '-'}</td>
+                        <td>${exp.variants?.length || 0} 个</td>
+                        <td>${exp.primary_metric || '-'}</td>
+                        <td><span class="badge badge-${getExpStatusBadge(exp.status)}">${getExpStatusText(exp.status)}</span></td>
+                        <td>
+                            ${exp.status === 'draft' ? `<button class="btn btn-primary btn-sm" onclick="startExperiment('${exp.id}')">启动</button>` : ''}
+                            ${exp.status === 'running' ? `<button class="btn btn-secondary btn-sm" onclick="analyzeExperiment('${exp.id}')">分析</button>` : ''}
+                            ${exp.status === 'completed' ? `<button class="btn btn-secondary btn-sm" onclick="viewExperiment('${exp.id}')">查看</button>` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('ab-experiments-list').innerHTML = html;
+
+            } catch (e) {
+                console.error('加载实验列表失败:', e);
+                // 显示模拟数据
+                document.getElementById('ab-experiments-list').innerHTML = `
+                    <tr><td colspan="6" class="empty-state">暂无实验数据 (API 未配置)</td></tr>
+                `;
+            }
+        }
+
+        function getExpStatusBadge(status) {
+            return getBadgeClass(status, { 'running': 'success', 'completed': 'info', 'draft': 'pending', 'paused': 'warning', 'aborted': 'error' });
+        }
+
+        function getExpStatusText(status) {
+            const texts = { 'running': '运行中', 'completed': '已完成', 'draft': '草稿', 'paused': '已暂停', 'aborted': '已中止' };
+            return texts[status] || status;
+        }
+
+        function showCreateExperimentModal() {
+            const name = prompt('实验名称:', '分类方法对比');
+            if (!name) return;
+
+            const hypothesis = prompt('实验假设:', 'few_shot 方法将提高 5% 准确率');
+            if (!hypothesis) return;
+
+            createExperiment(name, hypothesis);
+        }
+
+        async function createExperiment(name, hypothesis) {
+            try {
+                await fetch('/api/portal/ab/experiments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        hypothesis: hypothesis,
+                        control_config: { method: 'zero_shot' },
+                        treatment_config: { method: 'few_shot' },
+                        primary_metric: 'intent_accuracy'
+                    })
+                });
+                alert('实验创建成功!');
+                await loadExperiments();
+            } catch (e) {
+                alert('创建失败: ' + e.message);
+            }
+        }
+
+        async function startExperiment(expId) {
+            try {
+                await fetch(`/api/portal/ab/experiments/${expId}/start`, { method: 'POST' });
+                alert('实验已启动!');
+                await loadExperiments();
+            } catch (e) {
+                alert('启动失败: ' + e.message);
+            }
+        }
+
+        async function analyzeExperiment(expId) {
+            try {
+                const data = await fetch(`/api/portal/ab/experiments/${expId}/analysis`).then(r => r.json());
+
+                document.getElementById('ab-analysis-card').style.display = 'block';
+                document.getElementById('ab-analysis-content').innerHTML = `
+                    <div class="grid-2">
+                        <div>
+                            <h4>对照组 (Control)</h4>
+                            <div>样本数: ${data.control?.sample_size || '-'}</div>
+                            <div>平均值: ${data.control?.mean?.toFixed(4) || '-'}</div>
+                        </div>
+                        <div>
+                            <h4>实验组 (Treatment)</h4>
+                            <div>样本数: ${data.treatment?.sample_size || '-'}</div>
+                            <div>平均值: ${data.treatment?.mean?.toFixed(4) || '-'}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                        <strong>统计结果:</strong>
+                        <div>p-value: ${data.p_value?.toFixed(4) || '-'}</div>
+                        <div>显著性: ${data.is_significant ? '是' : '否'}</div>
+                        <div>相对变化: ${data.relative_change ? (data.relative_change * 100).toFixed(2) + '%' : '-'}</div>
+                        <div style="margin-top: 0.5rem;"><strong>建议:</strong> ${data.recommendation || '-'}</div>
+                    </div>
+                `;
+            } catch (e) {
+                alert('分析失败: ' + e.message);
+            }
+        }
+
+        // viewExperiment is an alias for analyzeExperiment
+        const viewExperiment = analyzeExperiment;
+
+        function hideAnalysis() {
+            document.getElementById('ab-analysis-card').style.display = 'none';
+        }
+
+        // ==================== 混淆矩阵 ====================
+        async function loadConfusionMatrix() {
+            try {
+                const data = await fetch('/api/portal/confusion-matrix').then(r => r.json());
+
+                // 更新指标
+                document.getElementById('confusion-accuracy').textContent =
+                    (data.summary.overall_accuracy * 100).toFixed(1) + '%';
+
+                if (data.summary.most_confused_pair) {
+                    document.getElementById('confusion-worst-pair').textContent =
+                        `${data.summary.most_confused_pair[0]} ↔ ${data.summary.most_confused_pair[1]}`;
+                }
+
+                document.getElementById('confusion-attention-count').textContent =
+                    data.summary.intents_needing_attention.length;
+
+                // 渲染混淆矩阵表格
+                renderConfusionMatrix(data.intents, data.matrix);
+
+                // 渲染混淆案例
+                const casesHtml = data.confusion_cases.map(c => `
+                    <tr>
+                        <td><span class="badge">${c.true_intent}</span></td>
+                        <td><span class="badge badge-warning">${c.predicted_intent}</span></td>
+                        <td>${c.count}</td>
+                        <td style="font-size: 0.85rem; color: var(--text-secondary);">
+                            ${c.examples.slice(0, 2).join('<br>')}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm" onclick="addConfusionSample('${c.true_intent}', '${c.examples[0] || ''}')">
+                                添加样本
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('confusion-cases-list').innerHTML = casesHtml ||
+                    '<tr><td colspan="5" style="text-align: center;">暂无显著混淆案例</td></tr>';
+
+            } catch (e) {
+                console.error('加载混淆矩阵失败:', e);
+            }
+        }
+
+        function renderConfusionMatrix(intents, matrix) {
+            const container = document.getElementById('confusion-matrix-container');
+
+            // 计算最大值用于颜色映射
+            let maxVal = 0;
+            for (const row of Object.values(matrix)) {
+                for (const val of Object.values(row)) {
+                    if (val > maxVal) maxVal = val;
+                }
+            }
+
+            let html = '<table class="confusion-matrix-table" style="font-size: 0.75rem; border-collapse: collapse;">';
+
+            // 表头
+            html += '<thead><tr><th style="padding: 0.5rem;">实际 \\ 预测</th>';
+            for (const intent of intents) {
+                const shortName = intent.replace('ORDER_', '').replace('PRODUCT_', '');
+                html += `<th style="padding: 0.5rem; writing-mode: vertical-rl; transform: rotate(180deg);">${shortName}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+
+            // 数据行
+            for (const trueIntent of intents) {
+                const shortTrue = trueIntent.replace('ORDER_', '').replace('PRODUCT_', '');
+                html += `<tr><td style="padding: 0.5rem; font-weight: bold;">${shortTrue}</td>`;
+
+                for (const predIntent of intents) {
+                    const val = matrix[trueIntent]?.[predIntent] || 0;
+                    const isDiagonal = trueIntent === predIntent;
+                    const intensity = maxVal > 0 ? val / maxVal : 0;
+
+                    let bgColor;
+                    if (isDiagonal) {
+                        // 对角线用绿色表示正确
+                        bgColor = `rgba(16, 185, 129, ${0.2 + intensity * 0.6})`;
+                    } else if (val > 5) {
+                        // 非对角线用红色表示混淆
+                        bgColor = `rgba(239, 68, 68, ${0.1 + intensity * 0.5})`;
+                    } else {
+                        bgColor = val > 0 ? `rgba(239, 68, 68, 0.1)` : 'transparent';
+                    }
+
+                    html += `<td style="padding: 0.5rem; text-align: center; background: ${bgColor}; min-width: 40px;">
+                        ${val > 0 ? val : '-'}
+                    </td>`;
+                }
+                html += '</tr>';
+            }
+
+            html += '</tbody></table>';
+            html += '<div style="margin-top: 1rem; font-size: 0.75rem; color: var(--text-secondary);">绿色=正确预测 | 红色=混淆</div>';
+
+            container.innerHTML = html;
+        }
+
+        function addConfusionSample(intent, text) {
+            // 跳转到样本管理页面并预填
+            document.querySelector('[data-page="samples"]').click();
+            setTimeout(() => {
+                showAddSampleModal();
+                document.getElementById('new-sample-text').value = text;
+                document.getElementById('new-sample-intent').value = intent;
+            }, 300);
+        }
+
+        // ==================== 训练样本管理 ====================
+        let samplesPage = 1;
+        let searchTimeout = null;
+
+        async function loadTrainingSamples() {
+            try {
+                const intent = document.getElementById('samples-filter-intent').value;
+                const source = document.getElementById('samples-filter-source').value;
+                const search = document.getElementById('samples-search').value;
+
+                const params = new URLSearchParams({
+                    page: samplesPage,
+                    page_size: 15
+                });
+                if (intent) params.append('intent', intent);
+                if (source) params.append('source', source);
+                if (search) params.append('search', search);
+
+                const data = await fetch(`/api/portal/training-samples?${params}`).then(r => r.json());
+
+                // 更新统计
+                document.getElementById('samples-total').textContent = data.total;
+                document.getElementById('samples-intents').textContent = Object.keys(data.intent_counts).length;
+
+                // 计算其他统计（简化）
+                const verifiedCount = data.samples.filter(s => s.verified).length;
+                const manualCount = data.samples.filter(s => s.source === 'manual').length;
+                document.getElementById('samples-verified').textContent = verifiedCount;
+                document.getElementById('samples-manual').textContent = manualCount;
+
+                // 填充意图过滤下拉框
+                const intentSelect = document.getElementById('samples-filter-intent');
+                if (intentSelect.options.length <= 1) {
+                    for (const [intentName, count] of Object.entries(data.intent_counts)) {
+                        const option = document.createElement('option');
+                        option.value = intentName;
+                        option.textContent = `${intentName} (${count})`;
+                        intentSelect.appendChild(option);
+                    }
+
+                    // 同时填充添加样本的意图下拉框
+                    const newIntentSelect = document.getElementById('new-sample-intent');
+                    newIntentSelect.innerHTML = '';
+                    for (const intentName of Object.keys(data.intent_counts)) {
+                        const option = document.createElement('option');
+                        option.value = intentName;
+                        option.textContent = intentName;
+                        newIntentSelect.appendChild(option);
+                    }
+                }
+
+                // 渲染表格
+                const html = data.samples.map(s => `
+                    <tr>
+                        <td>${s.id}</td>
+                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">${s.text}</td>
+                        <td><span class="badge">${s.intent}</span></td>
+                        <td style="font-size: 0.8rem; max-width: 150px; overflow: hidden;">
+                            ${Object.keys(s.slots || {}).length > 0 ? JSON.stringify(s.slots) : '-'}
+                        </td>
+                        <td><span class="badge badge-${s.source === 'builtin' ? 'secondary' : 'info'}">${s.source}</span></td>
+                        <td>${s.verified ? '✅' : '⏳'}</td>
+                        <td>
+                            <button class="btn btn-sm" onclick="editSample(${s.id})">编辑</button>
+                            ${s.source !== 'builtin' ? `<button class="btn btn-sm btn-danger" onclick="deleteSample(${s.id})">删除</button>` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('samples-list').innerHTML = html ||
+                    '<tr><td colspan="7" style="text-align: center;">暂无样本</td></tr>';
+
+                // 渲染分页
+                renderSamplesPagination(data.page, data.total_pages);
+
+            } catch (e) {
+                console.error('加载训练样本失败:', e);
+            }
+        }
+
+        function renderSamplesPagination(current, total) {
+            if (total <= 1) {
+                document.getElementById('samples-pagination').innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            for (let i = 1; i <= total; i++) {
+                html += `<button class="btn btn-sm ${i === current ? 'btn-primary' : ''}"
+                    onclick="goToSamplesPage(${i})">${i}</button> `;
+            }
+            document.getElementById('samples-pagination').innerHTML = html;
+        }
+
+        function goToSamplesPage(page) {
+            samplesPage = page;
+            loadTrainingSamples();
+        }
+
+        function debounceSearch() {
+            if (searchTimeout) clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                samplesPage = 1;
+                loadTrainingSamples();
+            }, 300);
+        }
+
+        function showAddSampleModal() {
+            document.getElementById('add-sample-modal').style.display = 'flex';
+        }
+
+        function hideAddSampleModal() {
+            document.getElementById('add-sample-modal').style.display = 'none';
+            document.getElementById('new-sample-text').value = '';
+            document.getElementById('new-sample-slots').value = '';
+        }
+
+        async function addTrainingSample() {
+            try {
+                const text = document.getElementById('new-sample-text').value.trim();
+                const intent = document.getElementById('new-sample-intent').value;
+                const slotsText = document.getElementById('new-sample-slots').value.trim();
+
+                if (!text) {
+                    alert('请输入文本内容');
+                    return;
+                }
+
+                let slots = {};
+                if (slotsText) {
+                    try {
+                        slots = JSON.parse(slotsText);
+                    } catch {
+                        alert('槽位 JSON 格式错误');
+                        return;
+                    }
+                }
+
+                await fetch('/api/portal/training-samples', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, intent, slots })
+                });
+
+                hideAddSampleModal();
+                loadTrainingSamples();
+
+            } catch (e) {
+                alert('添加失败: ' + e.message);
+            }
+        }
+
+        function editSample(id) {
+            alert('编辑功能开发中... 样本ID: ' + id);
+        }
+
+        async function deleteSample(id) {
+            if (!confirm('确定删除此样本?')) return;
+
+            try {
+                await fetch(`/api/portal/training-samples/${id}`, { method: 'DELETE' });
+                loadTrainingSamples();
+            } catch (e) {
+                alert('删除失败: ' + e.message);
+            }
+        }
+
+        // ==================== 会话回放 ====================
+        async function loadSessions() {
+            try {
+                const state = document.getElementById('sessions-filter-state').value;
+                const params = new URLSearchParams();
+                if (state) params.append('state', state);
+
+                const data = await fetch(`/api/portal/sessions?${params}`).then(r => r.json());
+
+                // 更新统计
+                document.getElementById('sessions-total').textContent = data.total;
+                document.getElementById('sessions-completed').textContent = data.state_counts?.completed || 0;
+                document.getElementById('sessions-active').textContent =
+                    (data.state_counts?.greeting || 0) + (data.state_counts?.ordering || 0);
+
+                const avgMessages = data.sessions.length > 0
+                    ? (data.sessions.reduce((sum, s) => sum + s.message_count, 0) / data.sessions.length).toFixed(1)
+                    : 0;
+                document.getElementById('sessions-avg-messages').textContent = avgMessages;
+
+                // 渲染会话列表
+                const html = data.sessions.map(s => `
+                    <tr onclick="loadSessionDetail('${s.session_id}')" style="cursor: pointer;">
+                        <td style="font-family: monospace; font-size: 0.8rem;">${s.session_id.substring(0, 12)}...</td>
+                        <td><span class="badge badge-${getStateBadge(s.state)}">${s.state}</span></td>
+                        <td>${s.message_count}</td>
+                        <td>${s.duration}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); loadSessionDetail('${s.session_id}')">
+                                查看
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('sessions-list').innerHTML = html ||
+                    '<tr><td colspan="5" style="text-align: center;">暂无会话记录</td></tr>';
+
+            } catch (e) {
+                console.error('加载会话列表失败:', e);
+            }
+        }
+
+        function getStateBadge(state) {
+            const badges = {
+                'greeting': 'info',
+                'ordering': 'warning',
+                'confirming': 'info',
+                'completed': 'success'
+            };
+            return badges[state] || 'secondary';
+        }
+
+        // 当前查看的会话ID
+        let currentSessionId = null;
+
+        async function loadSessionDetail(sessionId) {
+            try {
+                currentSessionId = sessionId;
+                const data = await fetch(`/api/portal/sessions/${sessionId}/messages`).then(r => r.json());
+
+                document.getElementById('session-detail-header').textContent =
+                    `会话 ${sessionId.substring(0, 12)}... | ${data.created_at}`;
+
+                // 渲染对话消息
+                const messagesHtml = data.messages.map((m, idx) => `
+                    <div class="chat-message ${m.role}" style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: ${m.role === 'user' ? 'flex-end' : 'flex-start'};
+                        margin-bottom: 1rem;
+                        position: relative;
+                    ">
+                        <div style="
+                            max-width: 80%;
+                            padding: 0.75rem 1rem;
+                            border-radius: 1rem;
+                            background: ${m.role === 'user' ? 'var(--primary)' : 'var(--bg-secondary)'};
+                            color: ${m.role === 'user' ? 'white' : 'var(--text-primary)'};
+                        ">
+                            ${m.content}
+                        </div>
+                        ${m.intent ? `
+                            <div style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary);">
+                                <span class="badge badge-sm">${m.intent}</span>
+                                ${m.confidence ? `(${(m.confidence * 100).toFixed(0)}%)` : ''}
+                                ${m.slots && Object.keys(m.slots).length > 0 ? `<span style="margin-left: 0.5rem;">${JSON.stringify(m.slots)}</span>` : ''}
+                            </div>
+                        ` : ''}
+                        <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                            ${m.timestamp}
+                            ${m.role === 'user' ? `
+                                <button onclick="showMarkBadCaseModal('${encodeURIComponent(m.content)}', '${m.intent || ''}', '${encodeURIComponent(JSON.stringify(m.slots || {}))}', ${idx})"
+                                    style="padding: 2px 6px; font-size: 0.65rem; background: #ff6b6b; color: white; border: none; border-radius: 4px; cursor: pointer;"
+                                    title="标记为 Bad Case">
+                                    🐛 标记
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('session-replay-container').innerHTML = messagesHtml;
+
+                // 显示摘要
+                document.getElementById('session-summary').style.display = 'block';
+                document.getElementById('session-intents-flow').textContent =
+                    data.intents_flow.join(' → ') || '无';
+                document.getElementById('session-slots').textContent =
+                    Object.keys(data.slots_extracted).length > 0
+                        ? JSON.stringify(data.slots_extracted)
+                        : '无';
+
+            } catch (e) {
+                console.error('加载会话详情失败:', e);
+            }
+        }
+
+        // ==================== 从会话标记 Bad Case ====================
+        function showMarkBadCaseModal(encodedContent, actualIntent, encodedSlots, messageIdx) {
+            const content = decodeURIComponent(encodedContent);
+            const slots = JSON.parse(decodeURIComponent(encodedSlots));
+
+            const modalContent = `
+                <div style="padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+                        <h3 style="margin: 0; color: #333;">🐛 标记为 Bad Case</h3>
+                        <button onclick="closeModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">&times;</button>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="font-weight: 600; color: #666; margin-bottom: 0.5rem;">用户输入:</div>
+                        <div style="font-size: 1.1rem; color: #333;">"${content}"</div>
+                        ${actualIntent ? `
+                            <div style="margin-top: 0.75rem; display: flex; gap: 1rem; font-size: 0.875rem; color: #666;">
+                                <span><strong>识别意图:</strong> ${actualIntent}</span>
+                                ${Object.keys(slots).length > 0 ? `<span><strong>槽位:</strong> ${JSON.stringify(slots)}</span>` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <form id="session-badcase-form" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <input type="hidden" id="bc-session-id" value="${currentSessionId || ''}">
+                        <input type="hidden" id="bc-message-idx" value="${messageIdx}">
+                        <input type="hidden" id="bc-user-input" value="${content}">
+                        <input type="hidden" id="bc-actual-intent" value="${actualIntent}">
+                        <input type="hidden" id="bc-actual-slots" value='${JSON.stringify(slots)}'>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">期望意图</label>
+                                <select id="bc-expected-intent" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
+                                    <option value="ORDER_NEW" ${actualIntent === 'ORDER_NEW' ? 'selected' : ''}>ORDER_NEW</option>
+                                    <option value="ORDER_MODIFY" ${actualIntent === 'ORDER_MODIFY' ? 'selected' : ''}>ORDER_MODIFY</option>
+                                    <option value="ORDER_CANCEL" ${actualIntent === 'ORDER_CANCEL' ? 'selected' : ''}>ORDER_CANCEL</option>
+                                    <option value="ORDER_QUERY" ${actualIntent === 'ORDER_QUERY' ? 'selected' : ''}>ORDER_QUERY</option>
+                                    <option value="RECOMMEND" ${actualIntent === 'RECOMMEND' ? 'selected' : ''}>RECOMMEND</option>
+                                    <option value="PRODUCT_INFO" ${actualIntent === 'PRODUCT_INFO' ? 'selected' : ''}>PRODUCT_INFO</option>
+                                    <option value="CUSTOMIZE" ${actualIntent === 'CUSTOMIZE' ? 'selected' : ''}>CUSTOMIZE</option>
+                                    <option value="PAYMENT" ${actualIntent === 'PAYMENT' ? 'selected' : ''}>PAYMENT</option>
+                                    <option value="COMPLAINT" ${actualIntent === 'COMPLAINT' ? 'selected' : ''}>COMPLAINT</option>
+                                    <option value="CHITCHAT" ${actualIntent === 'CHITCHAT' ? 'selected' : ''}>CHITCHAT</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">类别</label>
+                                <select id="bc-category" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
+                                    <option value="intent_confusion">意图混淆</option>
+                                    <option value="slot_extraction">槽位提取错误</option>
+                                    <option value="fuzzy_expression">模糊表达未识别</option>
+                                    <option value="constraint_violation">约束违反</option>
+                                    <option value="dialogue_context">对话上下文问题</option>
+                                    <option value="response_quality">回复质量问题</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">严重程度</label>
+                                <select id="bc-severity" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
+                                    <option value="critical">严重 - 影响核心功能</option>
+                                    <option value="major" selected>重要 - 影响用户体验</option>
+                                    <option value="minor">轻微 - 边缘场景</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">来源</label>
+                                <input type="text" value="session_replay" disabled
+                                    style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; background: #f5f5f5;">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">备注</label>
+                            <textarea id="bc-notes" rows="2" placeholder="描述问题原因或其他备注..."
+                                style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; resize: vertical;"></textarea>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
+                            <button type="button" onclick="closeModal()"
+                                style="padding: 0.5rem 1.5rem; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer;">
+                                取消
+                            </button>
+                            <button type="button" onclick="submitSessionBadCase()"
+                                style="padding: 0.5rem 1.5rem; background: #ff6b6b; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                🐛 确认标记
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('modal-content').innerHTML = modalContent;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        async function submitSessionBadCase() {
+            try {
+                const data = {
+                    user_input: document.getElementById('bc-user-input').value,
+                    expected_intent: document.getElementById('bc-expected-intent').value,
+                    actual_intent: document.getElementById('bc-actual-intent').value,
+                    actual_slots: JSON.parse(document.getElementById('bc-actual-slots').value || '{}'),
+                    category: document.getElementById('bc-category').value,
+                    severity: document.getElementById('bc-severity').value,
+                    source: 'session_replay',
+                    session_id: document.getElementById('bc-session-id').value,
+                    notes: document.getElementById('bc-notes').value
+                };
+
+                const response = await fetch('/api/portal/badcases', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    closeModal();
+                    alert('✅ Bad Case 已标记');
+                } else {
+                    const err = await response.json();
+                    alert('❌ 标记失败: ' + (err.detail || '未知错误'));
+                }
+            } catch (e) {
+                console.error('标记 Bad Case 失败:', e);
+                alert('❌ 标记失败: ' + e.message);
+            }
+        }
+
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOverview();
+        });
+
+        // 页面离开时清理
+        window.addEventListener('beforeunload', () => {
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+            }
+        });
+        function closeModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+    </script>
+
+    <!-- General Modal Overlay -->
+    <div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 99999; justify-content: center; align-items: center;">
+        <div id="modal-content" style="background: #ffffff; border-radius: 12px; max-width: 1000px; width: 90%; max-height: 85vh; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.4);"></div>
+    </div>
+</body>
+</html>

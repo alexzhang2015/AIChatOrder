@@ -1,0 +1,194 @@
+# 意图边界测试
+# 测试容易混淆的意图对，确保分类边界清晰
+
+task:
+  id: "intent-boundary-001"
+  name: "意图边界测试"
+  description: |
+    测试容易混淆的意图对，包括：
+    - ORDER_NEW vs RECOMMEND（点单 vs 推荐请求）
+    - ORDER_MODIFY vs ORDER_NEW（修改 vs 新点单）
+    - ORDER_CANCEL 隐式表达
+    - PRODUCT_INFO vs RECOMMEND
+
+  test_cases:
+    # =========================================================================
+    # ORDER_NEW vs RECOMMEND 边界
+    # =========================================================================
+
+    # 明确的推荐请求
+    - input: "有什么推荐的"
+      expected_intent: "RECOMMEND"
+
+    - input: "什么好喝"
+      expected_intent: "RECOMMEND"
+
+    - input: "推荐一下"
+      expected_intent: "RECOMMEND"
+
+    - input: "想喝点提神的"
+      expected_intent: "RECOMMEND"
+
+    - input: "有没有不太苦的咖啡"
+      expected_intent: "RECOMMEND"
+
+    - input: "适合下午喝的有吗"
+      expected_intent: "RECOMMEND"
+
+    # 隐式点单（看起来像询问但实际是点单）
+    - input: "有拿铁吗"
+      expected_intent: "ORDER_NEW"
+
+    - input: "来杯提神的"
+      expected_intent: "ORDER_NEW"
+
+    - input: "给我来一杯"
+      expected_intent: "ORDER_NEW"
+
+    - input: "我想要一杯咖啡"
+      expected_intent: "ORDER_NEW"
+
+    - input: "来个不太苦的"
+      expected_intent: "ORDER_NEW"
+
+    - input: "整一杯续命水"
+      expected_intent: "ORDER_NEW"
+
+    # =========================================================================
+    # ORDER_MODIFY vs ORDER_NEW 边界（上下文相关）
+    # =========================================================================
+
+    # 修改订单的表达（假设已有订单）
+    - input: "换成大杯"
+      expected_intent: "ORDER_MODIFY"
+      metadata:
+        context: "has_order"
+
+    - input: "改成冰的"
+      expected_intent: "ORDER_MODIFY"
+      metadata:
+        context: "has_order"
+
+    - input: "少放点糖"
+      expected_intent: "ORDER_MODIFY"
+      metadata:
+        context: "has_order"
+
+    - input: "加一份浓缩"
+      expected_intent: "ORDER_MODIFY"
+      metadata:
+        context: "has_order"
+
+    - input: "换燕麦奶"
+      expected_intent: "ORDER_MODIFY"
+      metadata:
+        context: "has_order"
+
+    # 新点单表达（即使没有量词）
+    - input: "要大杯"
+      expected_intent: "ORDER_NEW"
+      metadata:
+        context: "no_order"
+
+    - input: "冰美式"
+      expected_intent: "ORDER_NEW"
+
+    - input: "大杯拿铁"
+      expected_intent: "ORDER_NEW"
+
+    # =========================================================================
+    # ORDER_CANCEL 隐式表达
+    # =========================================================================
+
+    # 直接取消
+    - input: "取消订单"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "不要了"
+      expected_intent: "ORDER_CANCEL"
+
+    # 隐式取消
+    - input: "算了太贵了"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "还是不喝了"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "下次再说吧"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "突然不想喝咖啡了"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "等会再来"
+      expected_intent: "ORDER_CANCEL"
+
+    # =========================================================================
+    # PRODUCT_INFO vs RECOMMEND 边界
+    # =========================================================================
+
+    # 产品信息查询
+    - input: "拿铁多少钱"
+      expected_intent: "PRODUCT_INFO"
+
+    - input: "美式有多少卡路里"
+      expected_intent: "PRODUCT_INFO"
+
+    - input: "这个咖啡因含量多少"
+      expected_intent: "PRODUCT_INFO"
+
+    - input: "拿铁和美式有什么区别"
+      expected_intent: "PRODUCT_INFO"
+
+    # 带条件的推荐
+    - input: "有什么低卡的"
+      expected_intent: "RECOMMEND"
+
+    - input: "哪个咖啡因少"
+      expected_intent: "RECOMMEND"
+
+    # =========================================================================
+    # CHITCHAT 边界
+    # =========================================================================
+
+    - input: "谢谢"
+      expected_intent: "CHITCHAT"
+
+    - input: "好的"
+      expected_intent: "CHITCHAT"
+
+    - input: "嗯"
+      expected_intent: "CHITCHAT"
+
+    # 容易误判为闲聊但实际是确认的表达
+    - input: "对，就这个"
+      expected_intent: "ORDER_NEW"
+      metadata:
+        note: "确认选择，应识别为点单意图"
+
+  graders:
+    # 意图准确率
+    - type: intent_accuracy
+      min_accuracy: 0.90
+      per_intent_min: 0.85
+
+    # 混淆矩阵监控
+    - type: confusion_matrix
+      alert_pairs:
+        - ["ORDER_NEW", "RECOMMEND"]
+        - ["ORDER_MODIFY", "ORDER_NEW"]
+        - ["ORDER_CANCEL", "CHITCHAT"]
+        - ["PRODUCT_INFO", "RECOMMEND"]
+      alert_threshold: 0.10
+
+  tracked_metrics:
+    - total_predictions
+    - avg_confidence
+
+  metadata:
+    category: regression
+    priority: critical
+    tags:
+      - boundary
+      - confusion
+      - core_intent

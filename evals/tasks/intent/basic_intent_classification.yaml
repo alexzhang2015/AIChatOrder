@@ -1,0 +1,103 @@
+# 基础意图分类评估任务
+task:
+  id: "intent-basic-001"
+  name: "基础点单意图分类"
+  description: "验证常见点单场景的意图识别准确性"
+
+  test_cases:
+    # ORDER_NEW - 新订单
+    - input: "来一杯拿铁"
+      expected_intent: "ORDER_NEW"
+      expected_confidence: 0.85
+
+    - input: "我想点杯美式咖啡"
+      expected_intent: "ORDER_NEW"
+
+    - input: "给我一杯大杯冰的星冰乐"
+      expected_intent: "ORDER_NEW"
+
+    - input: "要一杯热的焦糖玛奇朵"
+      expected_intent: "ORDER_NEW"
+
+    - input: "来两杯中杯拿铁"
+      expected_intent: "ORDER_NEW"
+
+    # ORDER_MODIFY - 修改订单
+    - input: "把刚才那杯改成热的"
+      expected_intent: "ORDER_MODIFY"
+
+    - input: "换成燕麦奶"
+      expected_intent: "ORDER_MODIFY"
+
+    - input: "我要少糖的"
+      expected_intent: "ORDER_MODIFY"
+
+    - input: "帮我加一份浓缩"
+      expected_intent: "ORDER_MODIFY"
+
+    # ORDER_CANCEL - 取消订单
+    - input: "不要了，取消订单"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "算了不点了"
+      expected_intent: "ORDER_CANCEL"
+
+    - input: "我不想要了"
+      expected_intent: "ORDER_CANCEL"
+
+    # ORDER_QUERY - 查询订单
+    - input: "我的订单到哪了"
+      expected_intent: "ORDER_QUERY"
+
+    - input: "查一下我的订单"
+      expected_intent: "ORDER_QUERY"
+
+    - input: "订单状态是什么"
+      expected_intent: "ORDER_QUERY"
+
+    # RECOMMEND - 推荐
+    - input: "有什么推荐的吗"
+      expected_intent: "RECOMMEND"
+
+    - input: "什么咖啡好喝"
+      expected_intent: "RECOMMEND"
+
+    - input: "推荐一下"
+      expected_intent: "RECOMMEND"
+
+    - input: "有什么新品吗"
+      expected_intent: "RECOMMEND"
+
+    # PRODUCT_INFO - 产品信息
+    - input: "拿铁多少钱"
+      expected_intent: "PRODUCT_INFO"
+
+    - input: "美式咖啡有多少卡路里"
+      expected_intent: "PRODUCT_INFO"
+
+    - input: "这个有什么配料"
+      expected_intent: "PRODUCT_INFO"
+
+    # CHITCHAT - 闲聊
+    - input: "今天天气真好"
+      expected_intent: "CHITCHAT"
+
+    - input: "你好啊"
+      expected_intent: "CHITCHAT"
+
+    - input: "谢谢"
+      expected_intent: "CHITCHAT"
+
+  graders:
+    - type: intent_accuracy
+      min_accuracy: 0.90
+      per_intent_min: 0.85
+
+  tracked_metrics:
+    - total_predictions
+    - avg_confidence
+
+  metadata:
+    category: regression
+    priority: critical
+    author: "evals-team"

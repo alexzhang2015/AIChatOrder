@@ -1,0 +1,358 @@
+# 行业基准对标配置
+# Industry Benchmarks for Voice/Chat Ordering Agents
+
+# 数据来源说明
+metadata:
+  last_updated: "2024-01"
+  sources:
+    - "Internal benchmarking studies"
+    - "Published academic papers on task-oriented dialogue"
+    - "Industry reports on conversational AI"
+  note: "基准值基于类似场景的公开数据和内部测试，仅供参考"
+
+# =============================================================================
+# 意图识别基准
+# =============================================================================
+intent_recognition:
+  description: "意图分类准确率基准"
+
+  overall_accuracy:
+    excellent: 0.98    # >= 98% 优秀
+    good: 0.95         # 95-98% 良好
+    acceptable: 0.90   # 90-95% 可接受
+    poor: 0.85         # < 90% 需改进
+    industry_average: 0.92
+
+  # 按意图类型细分
+  by_intent:
+    ORDER_NEW:
+      benchmark: 0.95
+      note: "核心功能，要求高准确率"
+      common_confusion: ["RECOMMEND", "PRODUCT_INFO"]
+
+    ORDER_MODIFY:
+      benchmark: 0.93
+      note: "需要上下文理解"
+      common_confusion: ["ORDER_NEW", "CUSTOMIZE"]
+
+    ORDER_CANCEL:
+      benchmark: 0.90
+      note: "包含隐式取消表达，难度较高"
+      common_confusion: ["ORDER_MODIFY", "CHITCHAT"]
+
+    RECOMMEND:
+      benchmark: 0.92
+      note: "与点单意图边界模糊"
+      common_confusion: ["ORDER_NEW", "PRODUCT_INFO"]
+
+    PRODUCT_INFO:
+      benchmark: 0.94
+      note: "相对明确的查询意图"
+      common_confusion: ["RECOMMEND"]
+
+    CHITCHAT:
+      benchmark: 0.88
+      note: "范围广泛，难以穷尽"
+      common_confusion: ["UNKNOWN"]
+
+  # 多轮对话中的意图识别
+  multi_turn:
+    context_utilization: 0.90  # 正确使用上下文比例
+    intent_shift_detection: 0.85  # 检测意图转换
+
+# =============================================================================
+# 槽位提取基准
+# =============================================================================
+slot_extraction:
+  description: "槽位提取性能基准"
+
+  overall_f1:
+    excellent: 0.95
+    good: 0.90
+    acceptable: 0.85
+    poor: 0.80
+    industry_average: 0.88
+
+  # 按槽位类型细分
+  by_slot_type:
+    product:
+      precision: 0.95
+      recall: 0.92
+      f1: 0.93
+      note: "产品名称识别，有明确边界"
+
+    size:
+      precision: 0.96
+      recall: 0.94
+      f1: 0.95
+      note: "杯型识别，选项有限"
+
+    temperature:
+      precision: 0.94
+      recall: 0.92
+      f1: 0.93
+      note: "温度识别"
+
+    sweetness:
+      precision: 0.90
+      recall: 0.88
+      f1: 0.89
+      note: "甜度识别，包含模糊表达"
+
+    milk_type:
+      precision: 0.92
+      recall: 0.90
+      f1: 0.91
+      note: "奶品类型"
+
+    quantity:
+      precision: 0.97
+      recall: 0.95
+      f1: 0.96
+      note: "数量识别，相对简单"
+
+  # 复合槽位
+  compound_extraction:
+    description: "多槽位同时提取"
+    benchmark_f1: 0.85
+    note: "一句话包含多个定制要求"
+
+# =============================================================================
+# 模糊表达理解基准
+# =============================================================================
+fuzzy_understanding:
+  description: "模糊/口语化表达理解能力"
+
+  overall_accuracy:
+    excellent: 0.90
+    good: 0.85
+    acceptable: 0.80
+    industry_average: 0.82
+
+  by_category:
+    slang:
+      description: "网络流行语/俚语"
+      benchmark: 0.85
+      examples: ["续命水", "冰美丽", "大冰博"]
+
+    colloquial:
+      description: "口语化表达"
+      benchmark: 0.88
+      examples: ["不要那么甜", "来点提神的"]
+
+    implicit:
+      description: "隐含意图表达"
+      benchmark: 0.80
+      examples: ["算了", "还是不要了", "太贵了"]
+
+    dialect:
+      description: "方言/口音影响"
+      benchmark: 0.75
+      note: "受训练数据限制"
+
+# =============================================================================
+# 对话管理基准
+# =============================================================================
+dialogue_management:
+  description: "多轮对话管理能力"
+
+  task_completion_rate:
+    excellent: 0.92
+    good: 0.85
+    acceptable: 0.80
+    industry_average: 0.83
+
+  first_call_resolution:
+    description: "首次解决率（无需人工介入）"
+    excellent: 0.95
+    good: 0.90
+    acceptable: 0.85
+    industry_average: 0.88
+
+  average_turns_to_complete:
+    description: "平均完成对话轮数"
+    excellent: 3.0      # <= 3 轮优秀
+    good: 4.0           # 3-4 轮良好
+    acceptable: 5.0     # 4-5 轮可接受
+    industry_average: 3.8
+
+  context_retention:
+    description: "上下文保持能力"
+    benchmark: 0.92
+    test_scenarios:
+      - "修改之前提到的订单"
+      - "引用之前的选择"
+      - "延续之前的话题"
+
+  error_recovery:
+    description: "错误恢复能力"
+    benchmark: 0.85
+    test_scenarios:
+      - "用户纠正错误识别"
+      - "系统主动澄清"
+      - "优雅处理无法理解的输入"
+
+# =============================================================================
+# 用户体验基准
+# =============================================================================
+user_experience:
+  description: "用户体验相关指标"
+
+  response_relevance:
+    description: "响应相关性"
+    excellent: 0.95
+    good: 0.90
+    industry_average: 0.88
+
+  response_helpfulness:
+    description: "响应有用性"
+    excellent: 0.92
+    good: 0.85
+    industry_average: 0.83
+
+  tone_appropriateness:
+    description: "语气适当性"
+    benchmark: 0.95
+    aspects:
+      - "友好但不过度热情"
+      - "专业但不生硬"
+      - "简洁但信息完整"
+
+  escalation_rate:
+    description: "转人工比例"
+    excellent: 0.05     # < 5% 优秀
+    good: 0.10          # 5-10% 良好
+    acceptable: 0.15    # 10-15% 可接受
+    industry_average: 0.12
+
+# =============================================================================
+# 安全与合规基准
+# =============================================================================
+safety_compliance:
+  description: "安全与合规相关指标"
+
+  health_constraint_handling:
+    description: "健康约束处理准确率"
+    benchmark: 0.98
+    note: "涉及用户健康，要求极高"
+    test_cases:
+      - "乳糖不耐受"
+      - "咖啡因敏感"
+      - "糖分控制"
+
+  out_of_scope_handling:
+    description: "超范围请求处理"
+    benchmark: 0.95
+    requirements:
+      - "礼貌拒绝"
+      - "不提供错误信息"
+      - "引导回正确流程"
+
+  pii_protection:
+    description: "个人信息保护"
+    benchmark: 1.00
+    note: "绝对要求，不可泄露"
+
+# =============================================================================
+# 性能延迟基准（跨行业对比）
+# =============================================================================
+latency_benchmarks:
+  description: "响应延迟行业基准"
+
+  voice_assistants:
+    description: "语音助手（Alexa, Siri 等）"
+    p50: 300
+    p95: 800
+    note: "端侧处理，延迟较低"
+
+  chatbots:
+    description: "通用聊天机器人"
+    p50: 500
+    p95: 1500
+    note: "云端处理，包含 LLM 调用"
+
+  task_oriented_dialogue:
+    description: "任务型对话系统"
+    p50: 600
+    p95: 1200
+    note: "与本系统最相近"
+
+  customer_service:
+    description: "客服机器人"
+    p50: 800
+    p95: 2000
+    note: "可能涉及复杂业务逻辑"
+
+# =============================================================================
+# 评分等级定义
+# =============================================================================
+grading_scale:
+  description: "统一评分等级"
+
+  levels:
+    A:
+      range: [0.95, 1.00]
+      label: "优秀"
+      emoji: "🟢"
+      description: "超越行业领先水平"
+
+    B:
+      range: [0.90, 0.95]
+      label: "良好"
+      emoji: "🟡"
+      description: "达到行业领先水平"
+
+    C:
+      range: [0.85, 0.90]
+      label: "合格"
+      emoji: "🟠"
+      description: "达到行业平均水平"
+
+    D:
+      range: [0.80, 0.85]
+      label: "待改进"
+      emoji: "🔴"
+      description: "低于行业平均水平"
+
+    F:
+      range: [0.00, 0.80]
+      label: "不合格"
+      emoji: "⚫"
+      description: "需要紧急改进"
+
+# =============================================================================
+# 竞品对标（匿名化）
+# =============================================================================
+competitor_comparison:
+  description: "竞品能力对标（数据匿名化处理）"
+
+  competitor_a:
+    type: "大型连锁咖啡品牌 App"
+    intent_accuracy: 0.91
+    slot_f1: 0.87
+    task_completion: 0.82
+    strengths: ["品牌产品覆盖全", "支持会员系统"]
+    weaknesses: ["模糊表达理解弱", "多轮对话能力有限"]
+
+  competitor_b:
+    type: "通用外卖平台语音点单"
+    intent_accuracy: 0.88
+    slot_f1: 0.85
+    task_completion: 0.78
+    strengths: ["覆盖品类广"]
+    weaknesses: ["专业咖啡术语理解差", "定制化能力弱"]
+
+  competitor_c:
+    type: "智能音箱咖啡技能"
+    intent_accuracy: 0.85
+    slot_f1: 0.82
+    task_completion: 0.75
+    strengths: ["语音交互自然"]
+    weaknesses: ["功能有限", "无法处理复杂定制"]
+
+  our_target:
+    description: "我们的目标定位"
+    intent_accuracy: 0.95
+    slot_f1: 0.92
+    task_completion: 0.88
+    positioning: "专注咖啡领域的专业级对话系统"

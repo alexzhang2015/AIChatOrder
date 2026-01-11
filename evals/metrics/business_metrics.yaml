@@ -1,0 +1,237 @@
+# 业务指标体系定义
+# 基于 Anthropic Evals 方法论，建立分层指标体系
+
+version: "1.0.0"
+description: "AI 点单 Agent 业务指标体系"
+
+# =============================================================================
+# 分层指标体系
+# =============================================================================
+
+metrics:
+  # ---------------------------------------------------------------------------
+  # L2: 语言理解层 (NLU Layer)
+  # ---------------------------------------------------------------------------
+  natural_language_understanding:
+    intent_accuracy:
+      name: "意图识别准确率"
+      formula: "正确意图数 / 总样本数"
+      target: "> 95%"
+      critical: true
+      breakdown_by_intent:
+        ORDER_NEW: "> 97%"      # 核心场景，要求最高
+        ORDER_MODIFY: "> 93%"   # 上下文依赖，稍低
+        ORDER_CANCEL: "> 95%"   # 影响用户体验
+        ORDER_QUERY: "> 90%"
+        RECOMMEND: "> 90%"
+        PRODUCT_INFO: "> 90%"
+        CHITCHAT: "> 85%"       # 非核心，可以稍低
+        UNKNOWN: "N/A"
+      alert_threshold: 0.90     # 低于此值触发告警
+
+    slot_f1:
+      name: "槽位提取 F1"
+      formula: "2 × Precision × Recall / (P + R)"
+      target: "> 92%"
+      critical_slots:
+        product_name: "> 98%"   # 产品名不能错
+        quantity: "> 99%"       # 数量不能错
+        size: "> 95%"
+        temperature: "> 95%"
+        sweetness: "> 93%"
+        milk_type: "> 93%"
+      alert_threshold: 0.88
+
+    confusion_rate:
+      name: "意图混淆率"
+      description: "特定意图对的误分类比例"
+      critical_pairs:
+        - pair: ["ORDER_NEW", "RECOMMEND"]
+          max_rate: 0.05
+          description: "点单 vs 推荐 混淆"
+        - pair: ["ORDER_MODIFY", "ORDER_NEW"]
+          max_rate: 0.03
+          description: "修改 vs 新建 混淆"
+        - pair: ["ORDER_CANCEL", "ORDER_MODIFY"]
+          max_rate: 0.02
+          description: "取消 vs 修改 混淆（影响大）"
+
+  # ---------------------------------------------------------------------------
+  # L3: 对话管理层 (Dialogue Management Layer)
+  # ---------------------------------------------------------------------------
+  dialogue_management:
+    state_tracking_accuracy:
+      name: "状态追踪准确率"
+      description: "对话状态（当前订单内容）追踪准确率"
+      target: "> 98%"
+
+    context_resolution_rate:
+      name: "上下文理解率"
+      description: "指代消解准确率（如 '再来一杯' 指什么）"
+      target: "> 95%"
+      test_patterns:
+        - pattern: "再来一杯"
+          expected: "复制上一个订单项"
+        - pattern: "换成大杯"
+          expected: "修改当前订单的杯型"
+        - pattern: "那个不要了"
+          expected: "取消最后一个订单项"
+
+    turn_efficiency:
+      name: "对话轮效"
+      description: "完成订单的平均轮数"
+      target: "< 4 轮"
+      benchmark:
+        human_baseline: 3.5
+        acceptable: 5
+        poor: 7
+
+  # ---------------------------------------------------------------------------
+  # L4: 端到端业务指标 (End-to-End Business Metrics)
+  # ---------------------------------------------------------------------------
+  end_to_end:
+    order_completion_rate:
+      name: "订单完成率"
+      description: "成功完成订单 / 总尝试（包含用户主动放弃）"
+      formula: "completed_orders / total_attempts"
+      target: "> 85%"
+      breakdown:
+        success: "用户确认下单"
+        user_abandon: "用户主动放弃"
+        system_failure: "系统错误导致失败"
+      alert_threshold: 0.80
+
+    first_call_resolution:
+      name: "首次解决率"
+      description: "无需人工介入的订单比例"
+      formula: "auto_resolved_orders / total_orders"
+      target: "> 90%"
+      note: "衡量 AI 自主处理能力"
+      alert_threshold: 0.85
+
+    order_accuracy:
+      name: "订单准确率"
+      description: "最终订单与用户原始意图完全一致"
+      formula: "correct_orders / completed_orders"
+      target: "> 95%"
+      note: "所有字段都正确才算准确"
+      critical: true
+      alert_threshold: 0.92
+
+    average_handling_time:
+      name: "平均处理时长"
+      description: "从用户首次输入到订单确认的时间"
+      unit: "seconds"
+      target: "< 90"
+      benchmarks:
+        human_baseline: 120
+        excellent: 60
+        good: 90
+        acceptable: 120
+        poor: 180
+
+    modification_rate:
+      name: "订单修改率"
+      description: "用户下单后需要修改的比例"
+      formula: "modified_orders / completed_orders"
+      target: "< 10%"
+      note: "高修改率说明首次理解不准确"
+
+  # ---------------------------------------------------------------------------
+  # L5: 用户体验指标 (User Experience Metrics)
+  # ---------------------------------------------------------------------------
+  user_experience:
+    escalation_rate:
+      name: "转人工率"
+      description: "需要转人工处理的订单比例"
+      formula: "escalated_orders / total_orders"
+      target: "< 10%"
+      breakdown:
+        user_requested: "用户主动要求转人工"
+        system_escalated: "系统自动转人工（低置信度）"
+        failure_escalated: "多次失败后转人工"
+      alert_threshold: 0.15
+
+    repeat_usage_rate:
+      name: "复用率"
+      description: "再次使用 AI 点单的用户比例"
+      formula: "returning_users / total_users"
+      target: "> 60%"
+      note: "衡量用户对 AI 点单的接受度"
+      collection: "production"  # 需要生产数据
+
+    user_correction_rate:
+      name: "用户纠正率"
+      description: "用户需要纠正 AI 理解的比例"
+      formula: "correction_turns / total_turns"
+      target: "< 15%"
+      patterns:
+        - "不是，我说的是..."
+        - "我是说..."
+        - "错了，我要..."
+
+# =============================================================================
+# 性能指标
+# =============================================================================
+
+performance:
+  latency:
+    end_to_end:
+      name: "端到端延迟"
+      p50: 500   # ms
+      p95: 1000
+      p99: 2000
+      max_acceptable: 3000
+
+    breakdown:
+      nlu_inference:
+        name: "NLU 推理"
+        target: "< 200ms"
+      rag_retrieval:
+        name: "RAG 检索"
+        target: "< 100ms"
+      llm_generation:
+        name: "LLM 生成"
+        target: "< 400ms"
+      rules_engine:
+        name: "规则引擎"
+        target: "< 50ms"
+
+  throughput:
+    requests_per_second:
+      name: "QPS"
+      target: "> 100"
+    concurrent_sessions:
+      name: "并发会话数"
+      target: "> 500"
+
+# =============================================================================
+# 行业基准
+# =============================================================================
+
+industry_benchmarks:
+  source: "Hamming AI, Intouch Insight 2025 Report"
+
+  intent_accuracy:
+    excellent: "> 98%"
+    good: "95% - 98%"
+    acceptable: "90% - 95%"
+    not_production_ready: "< 90%"
+
+  order_accuracy:
+    industry_avg: "85%"
+    leading: "> 92%"
+    target_premium_brand: "> 95%"
+
+  escalation_rate:
+    excellent: "< 5%"
+    good: "5% - 10%"
+    acceptable: "10% - 15%"
+    concern: "> 20%"
+
+  emerging_experience_2025:
+    voice_ai_intervention_rate: "22%"
+    main_issues:
+      - "order customizations"
+      - "system glitches"
+    customer_satisfaction: "comparable to human"

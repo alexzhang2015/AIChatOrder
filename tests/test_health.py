@@ -6,10 +6,7 @@ import pytest
 import asyncio
 from unittest.mock import Mock, patch, AsyncMock
 
-import sys
-sys.path.insert(0, '/Users/sawzhang/code/AIChatOrder')
-
-from health import (
+from infrastructure.health import (
     HealthChecker, HealthStatus, CheckResult, HealthReport,
     get_health_checker, reset_health_checker
 )
