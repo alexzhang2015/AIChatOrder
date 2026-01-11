@@ -2529,7 +2529,14 @@
                             valueEl.textContent = card.value;
                             if (statusEl) {
                                 statusEl.innerHTML = `${card.trend || ''} ${card.status_emoji || ''}`;
-                                statusEl.className = `metric-change ${card.trend?.includes('↑') ? 'up' : card.trend?.includes('↓') ? 'down' : ''}`;
+                                // 根据趋势箭头设置样式类
+                                let trendClass = '';
+                                if (card.trend?.includes('↑')) {
+                                    trendClass = 'up';
+                                } else if (card.trend?.includes('↓')) {
+                                    trendClass = 'down';
+                                }
+                                statusEl.className = `metric-change ${trendClass}`;
                             }
                         }
                     });

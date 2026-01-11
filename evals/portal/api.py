@@ -1373,18 +1373,24 @@ async def analyze_experiment(exp_id: str):
 
 def _get_recommendation(result) -> str:
     """根据统计结果生成建议"""
+    # 结果不显著
     if result.p_value >= 0.05:
         return "结果不显著，建议继续收集数据或检查实验设计"
 
+    # 实验组表现不佳
     if result.relative_difference <= 0:
         return "实验组表现不如对照组，建议保持当前配置"
 
+    # 根据效应量大小给出建议
     effect = abs(result.effect_size)
     if effect > 0.8:
-        return "实验组显著优于对照组，效应量大，建议采用实验组配置"
-    if effect > 0.5:
-        return "实验组显著优于对照组，效应量中等，建议采用实验组配置"
-    return "实验组略优于对照组，效应量小，需权衡成本后决定"
+        effect_level = "大"
+    elif effect > 0.5:
+        effect_level = "中等"
+    else:
+        return "实验组略优于对照组，效应量小，需权衡成本后决定"
+
+    return f"实验组显著优于对照组，效应量{effect_level}，建议采用实验组配置"
 
 
 # ==================== 意图混淆矩阵 ====================

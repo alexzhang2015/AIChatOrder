@@ -291,99 +291,64 @@ class DataAugmenter:
     ) -> List[AugmentedExample]:
         """从模板生成训练样本"""
         examples = []
-
-        # 槽位值
-        sizes = ["中杯", "大杯", "超大杯"]
-        temperatures = ["冰", "热", "温", "去冰", "少冰"]
-        sweetness_levels = ["标准", "半糖", "少糖", "无糖", "三分糖"]
-        milk_types = ["全脂奶", "脱脂奶", "燕麦奶", "椰奶", "豆奶"]
-        quantities = ["一", "两", "三", "1", "2", "3"]
-        characteristics = ["不太甜", "提神", "健康", "低卡", "香浓", "清淡"]
-        modifiers = ["冰", "糖", "奶"]
-
         products = list(self.product_corpus.keys())
+
+        # 槽位值映射表：占位符 -> (可选值列表, 槽位名称或None)
+        slot_values = {
+            "size": (["中杯", "大杯", "超大杯"], "size"),
+            "temperature": (["冰", "热", "温", "去冰", "少冰"], "temperature"),
+            "sweetness": (["标准", "半糖", "少糖", "无糖", "三分糖"], "sweetness"),
+            "milk_type": (["全脂奶", "脱脂奶", "燕麦奶", "椰奶", "豆奶"], "milk_type"),
+            "quantity": (["一", "两", "三", "1", "2", "3"], "quantity"),
+            "characteristic": (["不太甜", "提神", "健康", "低卡", "香浓", "清淡"], None),
+            "modifier": (["冰", "糖", "奶"], None),
+            "extra": (["奶油", "糖", "冰"], None),
+            "slot": (["杯型", "温度", "甜度"], None),
+            "value": (["中杯", "大杯", "超大杯", "冰", "热", "温", "去冰", "少冰"], None),
+        }
 
         for intent_name, template in self.intent_templates.items():
             generated_count = 0
             seen_texts: Set[str] = set()
             max_iterations = num_per_intent * 100  # 防止无限循环
-            iterations = 0
 
-            while generated_count < num_per_intent and iterations < max_iterations:
-                iterations += 1
+            for _ in range(max_iterations):
+                if generated_count >= num_per_intent:
+                    break
+
                 pattern = random.choice(template.patterns)
                 text = pattern
                 slots = {}
 
-                # 替换占位符
+                # 替换产品占位符（特殊处理，需要从语料库获取变体）
                 if "{product}" in text:
                     product = random.choice(products)
-                    corpus = self.product_corpus[product]
-                    # 随机选择产品的一个变体
-                    variant = random.choice(corpus.all_variants())
+                    variant = random.choice(self.product_corpus[product].all_variants())
                     text = text.replace("{product}", variant)
-                    slots["product_name"] = product  # 存储标准名称
+                    slots["product_name"] = product
 
-                if "{size}" in text:
-                    size = random.choice(sizes)
-                    text = text.replace("{size}", size)
-                    slots["size"] = size
+                # 替换其他占位符
+                for placeholder, (values, slot_name) in slot_values.items():
+                    key = "{" + placeholder + "}"
+                    if key in text:
+                        value = random.choice(values)
+                        text = text.replace(key, value)
+                        if slot_name:
+                            slots[slot_name] = value
 
-                if "{temperature}" in text:
-                    temp = random.choice(temperatures)
-                    text = text.replace("{temperature}", temp)
-                    slots["temperature"] = temp
-
-                if "{sweetness}" in text:
-                    sweet = random.choice(sweetness_levels)
-                    text = text.replace("{sweetness}", sweet)
-                    slots["sweetness"] = sweet
-
-                if "{milk_type}" in text:
-                    milk = random.choice(milk_types)
-                    text = text.replace("{milk_type}", milk)
-                    slots["milk_type"] = milk
-
-                if "{quantity}" in text:
-                    qty = random.choice(quantities)
-                    text = text.replace("{quantity}", qty)
-                    slots["quantity"] = qty
-
-                if "{characteristic}" in text:
-                    char = random.choice(characteristics)
-                    text = text.replace("{characteristic}", char)
-
-                if "{modifier}" in text:
-                    mod = random.choice(modifiers)
-                    text = text.replace("{modifier}", mod)
-
-                if "{extra}" in text:
-                    text = text.replace("{extra}", random.choice(["奶油", "糖", "冰"]))
-
-                if "{slot}" in text:
-                    text = text.replace("{slot}", random.choice(["杯型", "温度", "甜度"]))
-
-                if "{value}" in text:
-                    text = text.replace("{value}", random.choice(sizes + temperatures))
-
-                # 跳过未完全替换的模板
-                if "{" in text:
+                # 跳过未完全替换的模板或重复文本
+                if "{" in text or text in seen_texts:
                     continue
 
-                # 去重
-                if text in seen_texts:
-                    continue
                 seen_texts.add(text)
-
-                example = AugmentedExample(
+                examples.append(AugmentedExample(
                     text=text,
                     intent=intent_name,
                     slots=slots if include_slots else {},
                     source="generated",
                     augmentation_type="template",
                     original_text=pattern
-                )
-                examples.append(example)
+                ))
                 generated_count += 1
 
         self.generated_examples.extend(examples)

@@ -98,34 +98,31 @@ def get_langgraph_workflow():
 
 # ==================== 页面路由 ====================
 
+def _serve_html(filename: str, no_cache: bool = False) -> HTMLResponse:
+    """提供 HTML 页面"""
+    html_path = Path(__file__).parent.parent / "static" / filename
+    if not html_path.exists():
+        return HTMLResponse(content=f"<h1>请确保 static/{filename} 存在</h1>")
+    headers = {"Cache-Control": "no-cache, no-store, must-revalidate"} if no_cache else None
+    return HTMLResponse(content=html_path.read_text(encoding="utf-8"), headers=headers)
+
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """返回运营监控 Portal 页面（默认首页）"""
-    html_path = Path(__file__).parent.parent / "static" / "portal.html"
-    if html_path.exists():
-        return HTMLResponse(
-            content=html_path.read_text(encoding="utf-8"),
-            headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
-        )
-    return HTMLResponse(content="<h1>请确保 static/portal.html 存在</h1>")
+    return _serve_html("portal.html", no_cache=True)
 
 
 @app.get("/intent", response_class=HTMLResponse)
 async def intent_page():
     """返回意图分析 Demo 页面"""
-    html_path = Path(__file__).parent.parent / "static" / "index.html"
-    if html_path.exists():
-        return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
-    return HTMLResponse(content="<h1>请确保 static/index.html 存在</h1>")
+    return _serve_html("index.html")
 
 
 @app.get("/chat", response_class=HTMLResponse)
 async def chat_page():
     """返回多轮对话页面"""
-    html_path = Path(__file__).parent.parent / "static" / "chat.html"
-    if html_path.exists():
-        return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
-    return HTMLResponse(content="<h1>请确保 static/chat.html 存在</h1>")
+    return _serve_html("chat.html")
 
 
 # ==================== 状态 API ====================
